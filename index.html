@@ -25,6 +25,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .scr.on{display:flex;}
 @keyframes si{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
 .body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 20px 90px;}
+@media(min-width:900px){
+  html,body{overflow:auto;}
+  body{background:#F0F2F5;justify-content:flex-start;padding-left:240px;}
+  #app{max-width:430px;height:100vh;box-shadow:0 0 40px rgba(0,0,0,.18);}
+  #dt-sidebar{display:flex!important;position:fixed;left:0;top:0;bottom:0;width:240px;flex-direction:column;background:#fff;border-right:1.5px solid var(--d4);z-index:200;padding:28px 0 20px;}
+  #dt-main{display:block!important;position:fixed;left:670px;top:0;right:0;bottom:0;overflow-y:auto;padding:32px 36px;background:#F0F2F5;}
+  .bnav{display:none!important;}
+  .pgrid{grid-template-columns:1fr 1fr 1fr!important;}
+  .hdr{padding-top:24px!important;}
+}
+@media(max-width:899px){#dt-sidebar,#dt-main{display:none!important;}}
 .body::-webkit-scrollbar{display:none;}
 h2{font-size:21px;font-weight:700;color:var(--tx);}
 h3{font-size:17px;font-weight:600;color:var(--tx);}
@@ -181,6 +192,88 @@ input:checked+.sl:before{transform:translateX(22px);}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
+<!-- ===== DESKTOP SIDEBAR ===== -->
+<div id="dt-sidebar" style="display:none;">
+  <div style="padding:0 20px 24px;border-bottom:1px solid var(--d4);margin-bottom:8px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;background:var(--g2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;">👓</div>
+      <div><div style="font-size:15px;font-weight:700;color:var(--tx);">Visão Circular</div><div style="font-size:11px;color:var(--d3);">economia circular</div></div>
+    </div>
+  </div>
+  <div style="flex:1;padding:8px 12px;">
+    <div class="dt-nav-item" onclick="go('sb0')" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r2);cursor:pointer;color:var(--tx2);font-size:14px;font-weight:500;margin-bottom:2px;transition:.15s;" onmouseover="this.style.background='var(--g6)';this.style.color='var(--g2)'" onmouseout="this.style.background='';this.style.color='var(--tx2)'"><span style="font-size:18px;">🏠</span>Início</div>
+    <div class="dt-nav-item" onclick="go('sb1')" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r2);cursor:pointer;color:var(--tx2);font-size:14px;font-weight:500;margin-bottom:2px;transition:.15s;" onmouseover="this.style.background='var(--g6)';this.style.color='var(--g2)'" onmouseout="this.style.background='';this.style.color='var(--tx2)'"><span style="font-size:18px;">🔍</span>Buscar óculos</div>
+    <div class="dt-nav-item" onclick="go('sb7')" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r2);cursor:pointer;color:var(--tx2);font-size:14px;font-weight:500;margin-bottom:2px;transition:.15s;" onmouseover="this.style.background='var(--g6)';this.style.color='var(--g2)'" onmouseout="this.style.background='';this.style.color='var(--tx2)'"><span style="font-size:18px;">📦</span>Meus pedidos</div>
+    <div class="dt-nav-item" onclick="go('sd1')" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r2);cursor:pointer;color:var(--tx2);font-size:14px;font-weight:500;margin-bottom:2px;transition:.15s;" onmouseover="this.style.background='var(--g6)';this.style.color='var(--g2)'" onmouseout="this.style.background='';this.style.color='var(--tx2)'"><span style="font-size:18px;">♻️</span>Fazer doação</div>
+    <div class="dt-nav-item" onclick="go('sv0')" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r2);cursor:pointer;color:var(--tx2);font-size:14px;font-weight:500;margin-bottom:2px;transition:.15s;" onmouseover="this.style.background='var(--g6)';this.style.color='var(--g2)'" onmouseout="this.style.background='';this.style.color='var(--tx2)'"><span style="font-size:18px;">🛒</span>Vender óculos</div>
+    <div style="margin:16px 0 10px;padding:0 12px;font-size:10px;font-weight:700;color:var(--d3);text-transform:uppercase;letter-spacing:.8px;">Parceiros</div>
+    <div class="dt-nav-item" onclick="go('so1')" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r2);cursor:pointer;color:var(--tx2);font-size:14px;font-weight:500;transition:.15s;" onmouseover="this.style.background='var(--d5)'" onmouseout="this.style.background=''"><span style="font-size:18px;">🏪</span>Área da Ótica</div>
+  </div>
+  <div style="padding:14px 20px;border-top:1px solid var(--d4);margin-top:8px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="av" style="background:var(--g2);width:32px;height:32px;font-size:14px;" id="dt-avatar">?</div>
+      <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="dt-username">Visitante</div><div style="font-size:11px;color:var(--g2);cursor:pointer;" onclick="go('s1')">Fazer login</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DESKTOP MAIN PANEL ===== -->
+<div id="dt-main" style="display:none;">
+  <div style="max-width:680px;">
+    <h2 style="font-size:22px;font-weight:700;color:var(--tx);margin-bottom:4px;">Bem-vindo ao Visão Circular 👓</h2>
+    <p style="color:var(--d3);margin-bottom:28px;">Marketplace de óculos usados — doe, compre ou venda com propósito.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:28px;">
+      <div style="background:#fff;border-radius:var(--r);padding:18px;box-shadow:var(--sh);text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:var(--g2);" id="dt-stat-doacoes">—</div>
+        <div style="font-size:12px;color:var(--d3);margin-top:4px;">Doações realizadas</div>
+      </div>
+      <div style="background:#fff;border-radius:var(--r);padding:18px;box-shadow:var(--sh);text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:var(--a0);" id="dt-stat-vendas">—</div>
+        <div style="font-size:12px;color:var(--d3);margin-top:4px;">Produtos à venda</div>
+      </div>
+      <div style="background:#fff;border-radius:var(--r);padding:18px;box-shadow:var(--sh);text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:var(--b1);" id="dt-stat-parceiros">—</div>
+        <div style="font-size:12px;color:var(--d3);margin-top:4px;">Óticas parceiras</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:16px;font-weight:700;color:var(--tx);margin-bottom:14px;">Como funciona</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;">
+      <div style="background:#fff;border-radius:var(--r);padding:18px;box-shadow:var(--sh);cursor:pointer;" onclick="go('sd1')">
+        <div style="font-size:28px;margin-bottom:10px;">♻️</div>
+        <h4 style="margin-bottom:4px;color:var(--g2);">Doe seus óculos</h4>
+        <p style="font-size:13px;color:var(--d3);">Cadastre seus óculos parados. Eles chegam a quem realmente precisa, via óticas parceiras.</p>
+      </div>
+      <div style="background:#fff;border-radius:var(--r);padding:18px;box-shadow:var(--sh);cursor:pointer;" onclick="go('sb1')">
+        <div style="font-size:28px;margin-bottom:10px;">🔍</div>
+        <h4 style="margin-bottom:4px;color:var(--b1);">Encontre óculos</h4>
+        <p style="font-size:13px;color:var(--d3);">Filtre por grau e modelo. Receba por doação (gratuita) ou compre de vendedores verificados.</p>
+      </div>
+      <div style="background:#fff;border-radius:var(--r);padding:18px;box-shadow:var(--sh);cursor:pointer;" onclick="go('sv1')">
+        <div style="font-size:28px;margin-bottom:10px;">🛒</div>
+        <h4 style="margin-bottom:4px;color:var(--a0);">Venda os seus</h4>
+        <p style="font-size:13px;color:var(--d3);">Publique um anúncio em minutos. Pagamento via Mercado Pago, entrega pelos Correios.</p>
+      </div>
+      <div style="background:#fff;border-radius:var(--r);padding:18px;box-shadow:var(--sh);cursor:pointer;" onclick="go('so1')">
+        <div style="font-size:28px;margin-bottom:10px;">🏪</div>
+        <h4 style="margin-bottom:4px;">Seja parceiro</h4>
+        <p style="font-size:13px;color:var(--d3);">Óticas credenciadas recebem doações e ampliam seu alcance no app, gerenciando tudo pelo painel.</p>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,var(--g3),var(--g1));border-radius:var(--r);padding:24px;display:flex;align-items:center;gap:20px;">
+      <div style="font-size:44px;">📱</div>
+      <div style="flex:1;">
+        <h3 style="color:#fff;margin-bottom:4px;">Instale o app no celular</h3>
+        <p style="color:#A5D6A7;font-size:13px;margin-bottom:12px;">Android: abra no Chrome → menu ⋮ → "Adicionar à tela inicial"<br>iPhone: abra no Safari → compartilhar ⬆️ → "Adicionar à Tela de Início"</p>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border-radius:20px;padding:7px 16px;cursor:pointer;color:#fff;font-size:13px;font-weight:600;" onclick="go('s0')">Ver splash screen →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="app">
 <div id="inst"><h4>📲 Instalar Visão Circular</h4><p>Adicione à tela inicial para usar como app!</p><div class="inst-r"><button class="iy" onclick="installApp()">Instalar</button><button class="in" onclick="closeInst()">Agora não</button></div></div>
 
@@ -1196,6 +1289,40 @@ async function pagarComMP(){
   }
 })();
 function setStar(n){var spans=document.querySelectorAll('#star-row span');spans.forEach(function(s,i){s.textContent=i<n?'⭐':'☆';});}
+
+function atualizarSidebarUser(user){
+  var av=document.getElementById('dt-avatar');
+  var nm=document.getElementById('dt-username');
+  var ln=av&&av.nextElementSibling&&av.nextElementSibling.querySelector('div:last-child');
+  if(user){
+    var nome=(user.user_metadata&&user.user_metadata.nome)||user.email||'Usuário';
+    if(av)av.textContent=nome.charAt(0).toUpperCase();
+    if(nm)nm.textContent=nome.split(' ')[0];
+    if(ln){ln.textContent='Meu perfil';ln.onclick=function(){go('s2');};}
+  }else{
+    if(av)av.textContent='?';
+    if(nm)nm.textContent='Visitante';
+    if(ln){ln.textContent='Fazer login';ln.onclick=function(){go('s1');};}
+  }
+}
+
+async function carregarStatsDesktop(){
+  try{
+    var rd=await sb.from('doacoes').select('id',{count:'exact',head:true});
+    var rp=await sb.from('produtos').select('id',{count:'exact',head:true}).eq('status','ativo');
+    var el=document.getElementById('dt-stat-doacoes');
+    var ep=document.getElementById('dt-stat-vendas');
+    if(el&&rd.count!=null)el.textContent=rd.count;
+    if(ep&&rp.count!=null)ep.textContent=rp.count;
+    document.getElementById('dt-stat-parceiros').textContent='12';
+  }catch(e){}
+}
+
+if(window.innerWidth>=900){
+  carregarStatsDesktop();
+  sb.auth.getSession().then(function(r){atualizarSidebarUser(r.data&&r.data.session?r.data.session.user:null);});
+}
+sb.auth.onAuthStateChange(function(ev,session){atualizarSidebarUser(session?session.user:null);});
 var mf={name:'Visão Circular',short_name:'Visão Circular',description:'Marketplace de óculos — doe, compre ou venda.',start_url:'.',display:'standalone',background_color:'#fff',theme_color:'#2E7D32',icons:[{src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%232E7D32"/><text y=".9em" font-size="80">👓</text></svg>',sizes:'192x192',type:'image/svg+xml'}]};
 try{var mb=new Blob([JSON.stringify(mf)],{type:'application/json'});document.getElementById('ml').href=URL.createObjectURL(mb);}catch(e){}
 if('serviceWorker' in navigator){try{var sw='const C="vc2";self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(["./"])));});self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));});';navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'})));}catch(e){}}
