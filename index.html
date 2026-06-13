@@ -704,6 +704,65 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="bnav"><div class="ni"><span class="ic">🏠</span><span>Início</span></div><div class="ni"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni on"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
+<!-- ======== PEDIDO: DETALHE ======== -->
+<div id="sb7-det" class="scr">
+  <div class="hdr hw"><button class="btn-ic" onclick="bk()"><span style="font-size:26px;">←</span></button><h3>Detalhe do pedido</h3><div style="width:44px;"></div></div>
+  <div class="body">
+    <div class="cardf" style="margin-bottom:16px;display:flex;gap:14px;align-items:center;">
+      <div style="font-size:44px;" id="det-icone">🕶</div>
+      <div style="flex:1;">
+        <h4 id="det-titulo">—</h4>
+        <p style="font-size:13px;color:var(--d3);margin-bottom:6px;" id="det-tipo">—</p>
+        <span id="det-status-badge" style="font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--d5);color:var(--d2);">—</span>
+      </div>
+    </div>
+    <div class="ir"><span class="il">Data</span><span class="iv" id="det-data">—</span></div>
+    <div class="ir"><span class="il">Protocolo</span><span class="iv" id="det-protocolo" style="font-family:monospace;">—</span></div>
+    <div class="ir" style="border:none;"><span class="il">Valor</span><span class="iv" id="det-valor">—</span></div>
+    <div style="margin-top:28px;border-top:1px solid var(--d5);padding-top:20px;">
+      <p style="font-size:12px;color:var(--d3);text-align:center;margin-bottom:12px;">Precisa de ajuda com este pedido?</p>
+      <button class="btn" style="background:var(--d5);color:var(--d2);font-size:13px;margin-bottom:8px;" onclick="go('sb7-chat')">💬 Falar com o vendedor / doador</button>
+      <button class="btn" style="background:transparent;color:var(--d3);font-size:12px;border:1px solid var(--d4);" onclick="go('sb7-rep')">⚠️ Reportar problema à plataforma</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======== PEDIDO: CHAT ======== -->
+<div id="sb7-chat" class="scr">
+  <div class="hdr hw"><button class="btn-ic" onclick="bk()"><span style="font-size:26px;">←</span></button><div style="flex:1;"><h3 id="chat-titulo">Mensagens</h3><p style="font-size:12px;color:#BDBDBD;margin-top:2px;" id="chat-sub">—</p></div></div>
+  <div id="chat-msgs" style="padding:16px;min-height:200px;background:var(--d6);display:flex;flex-direction:column;gap:10px;">
+    <div style="text-align:center;padding:20px;color:var(--d3);font-size:13px;">Nenhuma mensagem ainda.</div>
+  </div>
+  <div style="position:sticky;bottom:0;background:#fff;border-top:1px solid var(--d5);padding:10px 12px;display:flex;gap:8px;align-items:flex-end;">
+    <textarea id="chat-input" class="fi" placeholder="Digite sua mensagem..." style="flex:1;min-height:42px;max-height:100px;resize:none;margin-bottom:0;padding:10px 12px;font-size:14px;" rows="1"></textarea>
+    <button onclick="enviarMensagem()" style="width:44px;height:44px;border-radius:50%;background:var(--g2);border:none;cursor:pointer;font-size:18px;flex-shrink:0;color:#fff;display:flex;align-items:center;justify-content:center;">➤</button>
+  </div>
+</div>
+
+<!-- ======== PEDIDO: REPORTAR PROBLEMA ======== -->
+<div id="sb7-rep" class="scr">
+  <div class="hdr hw"><button class="btn-ic" onclick="bk()"><span style="font-size:26px;">←</span></button><h3>Reportar problema</h3><div style="width:44px;"></div></div>
+  <div class="body">
+    <p style="margin-bottom:20px;font-size:14px;color:var(--d2);">Nossa equipe responderá em até 48h no seu e-mail cadastrado.</p>
+    <div class="fg">
+      <label class="fl">Assunto</label>
+      <select class="fi" id="rep-assunto">
+        <option>Produto não chegou</option>
+        <option>Produto diferente do anunciado</option>
+        <option>Problema com o vendedor / doador</option>
+        <option>Solicitei reembolso, sem retorno</option>
+        <option>Outro</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">Descreva o problema</label>
+      <textarea class="fi" id="rep-msg" style="min-height:130px;" placeholder="Explique o que aconteceu com o maior número de detalhes possível..."></textarea>
+    </div>
+    <button class="btn bg" onclick="enviarReporte()">Enviar para a plataforma</button>
+    <p style="font-size:12px;color:var(--d3);text-align:center;margin-top:10px;">Pedido referente: <span id="rep-protocolo" style="font-weight:600;">—</span></p>
+  </div>
+</div>
+
 <!-- ======== BENEFICIÁRIO: AVALIAÇÃO ======== -->
 <div id="sb8" class="scr">
   <div class="hdr hw"><button class="btn-ic" onclick="bk()"><span style="font-size:26px;">←</span></button><h3>Avaliar pedido</h3><div style="width:44px;"></div></div>
@@ -1179,7 +1238,21 @@ function tgChk(rowId,cbId,btnId){
 }
 function submitTerms(){if(chkState.chk1&&chkState.chk2&&chkState.chk3)go('sb5-sol');}
 var hist=[];var dPr=null;var donacaoAtiva=false;var planSel='bas';
-function go(id){var c=document.querySelector('.scr.on');if(c){hist.push(c.id);c.classList.remove('on');}var n=document.getElementById(id);if(n){n.classList.add('on');var b=n.querySelector('.body');if(b)b.scrollTop=0;}if(id==='sd0')carregarDoacoes();if(id==='sb7')carregarPedidos();if(id==='s2')atualizarNomes();}
+var _loginGate=['sd0','sb0','sb7','sv0','so0','so1'];
+function go(id){
+  if(_loginGate.indexOf(id)>-1&&!currentUser){
+    showToast('Faça login para acessar esta área');
+    var c=document.querySelector('.scr.on');if(c){hist.push(c.id);c.classList.remove('on');}
+    var n=document.getElementById('s1');if(n)n.classList.add('on');
+    return;
+  }
+  var c=document.querySelector('.scr.on');if(c){hist.push(c.id);c.classList.remove('on');}
+  var n=document.getElementById(id);if(n){n.classList.add('on');var b=n.querySelector('.body');if(b)b.scrollTop=0;}
+  if(id==='sd0')carregarDoacoes();
+  if(id==='sb7')carregarPedidos();
+  if(id==='s2')atualizarNomes();
+  if(id==='sb7-chat'&&__currentPedido)carregarMensagens(__currentPedido.id);
+}
 function bk(){if(!hist.length)return;var c=document.querySelector('.scr.on');if(c)c.classList.remove('on');var p=document.getElementById(hist.pop());if(p)p.classList.add('on');}
 function tg(el){var g=el.parentElement;g.querySelectorAll('.tb').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
 function tgChip(el){el.classList.toggle('on');}
@@ -1349,10 +1422,32 @@ async function carregarDoacoes(){
   }catch(e){console.warn('carregarDoacoes:',e);}
 }
 
+var __pedidosCache=[];
+var __currentPedido=null;
+
 async function carregarPedidos(){
   var el=document.getElementById('lista-pedidos');if(!el)return;
   if(!currentUser){el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><p>Faça login para ver seus pedidos.</p><button class="btn ba" style="margin-top:14px;" onclick="go(\'s1\')">Entrar</button></div>';return;}
-  el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🛒</div><p style="font-size:14px;">Você ainda não tem pedidos.</p><button class="btn ba" style="margin-top:14px;" onclick="go(\'sb0\')">Explorar óculos</button></div>';
+  try{
+    var rD=await sb.from('doacoes').select('*').eq('beneficiario_id',currentUser.id).order('criado_em',{ascending:false}).limit(20);
+    __pedidosCache=[];
+    if(rD.data&&rD.data.length)rD.data.forEach(function(d){
+      __pedidosCache.push({id:d.id,titulo:'Solicitação de doação',tipo:'doacao',status:d.status||'pendente',preco:null,criado_em:d.criado_em});
+    });
+    if(!__pedidosCache.length){
+      el.innerHTML='<div style="text-align:center;padding:32px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">📦</div><p style="font-size:14px;">Você ainda não tem pedidos.</p><button class="btn bg" style="margin-top:14px;" onclick="go(\'sb0\')">Explorar óculos</button></div>';
+      return;
+    }
+    el.innerHTML=__pedidosCache.map(function(p,i){
+      var sl={'pendente':'⏳ Pendente','aprovado':'✅ Aprovado','entregue':'📦 Entregue','recusado':'❌ Recusado','pago':'✅ Pago'};
+      var stl=sl[p.status]||p.status||'—';
+      var bc=p.status==='aprovado'||p.status==='pago'?'var(--g6);color:var(--g2)':p.status==='recusado'?'var(--b3);color:var(--b1)':'var(--a4);color:var(--a0)';
+      return '<div class="di" style="cursor:pointer;" onclick="abrirPedido('+i+')"><div class="di-ic" style="background:var(--d5);">'+(p.tipo==='doacao'?'♥':'🛒')+'</div><div style="flex:1;"><h4 style="font-size:14px;">'+p.titulo+'</h4><p style="font-size:12px;color:var(--d3);">'+new Date(p.criado_em).toLocaleDateString('pt-BR')+'</p></div><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;white-space:nowrap;background:'+bc+';">'+stl+'</span></div>';
+    }).join('');
+  }catch(e){
+    console.warn('carregarPedidos:',e);
+    el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><p>Erro ao carregar pedidos.</p></div>';
+  }
 }
 
 function gerarProtocolo(){
@@ -1370,6 +1465,75 @@ function preencherRevisao(){
   var pr='R$ '+((preco&&preco.value)?Number(preco.value.replace(/[R$\s]/g,'').replace(',','.')).toFixed(2).replace('.',','):'--');
   var sv={'sv5-titulo':t,'sv5-sub':'Usado','sv5-preco':pr,'sv5-envio':env1&&env1.classList.contains('on')?'Correios':'Entrega em mãos','sv5-video':vidPrev&&vidPrev.style.display!=='none'?'✅ Incluído':'Não incluído','sv5-local':'Ver no anúncio'};
   Object.keys(sv).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=sv[id];});
+}
+
+function abrirPedido(i){
+  __currentPedido=__pedidosCache[i]||null;
+  if(!__currentPedido)return;
+  var p=__currentPedido;
+  var sl={'pendente':'⏳ Pendente','aprovado':'✅ Aprovado','entregue':'📦 Entregue','recusado':'❌ Recusado','pago':'✅ Pago'};
+  var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  var proto='#'+p.id.substring(0,8).toUpperCase();
+  set('det-titulo',p.titulo||'—');
+  set('det-tipo',p.tipo==='doacao'?'♥ Doação recebida':'🛒 Compra');
+  set('det-data',p.criado_em?new Date(p.criado_em).toLocaleDateString('pt-BR'):'—');
+  set('det-protocolo',proto);
+  set('det-valor',p.preco?'R$ '+Number(p.preco).toFixed(2).replace('.',','):'Doação gratuita');
+  set('det-status-badge',sl[p.status]||p.status||'—');
+  set('det-icone',p.tipo==='doacao'?'♥':'🕶');
+  set('chat-titulo',p.tipo==='doacao'?'Falar com o doador':'Falar com o vendedor');
+  set('chat-sub',p.titulo||'—');
+  set('rep-protocolo',proto);
+  go('sb7-det');
+}
+
+async function carregarMensagens(pedidoId){
+  var el=document.getElementById('chat-msgs');if(!el)return;
+  el.innerHTML='<div style="text-align:center;padding:20px;color:var(--d3);font-size:13px;">Carregando...</div>';
+  try{
+    var r=await sb.from('mensagens').select('*').eq('pedido_id',pedidoId).order('criado_em',{ascending:true});
+    if(r.error)throw r.error;
+    if(!r.data||!r.data.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--d3);font-size:13px;">Nenhuma mensagem ainda.<br>Inicie a conversa!</div>';return;}
+    el.innerHTML=r.data.map(function(m){
+      var mine=currentUser&&m.remetente_id===currentUser.id;
+      var time=new Date(m.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+      return '<div style="display:flex;flex-direction:column;align-items:'+(mine?'flex-end':'flex-start')+';gap:3px;"><div style="max-width:78%;background:'+(mine?'var(--g2)':'#fff')+';color:'+(mine?'#fff':'var(--d1)')+';padding:10px 14px;border-radius:18px;border-'+(mine?'bottom-right':'bottom-left')+'-radius:4px;font-size:14px;line-height:1.4;box-shadow:0 1px 3px rgba(0,0,0,.08);">'+m.mensagem.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div><span style="font-size:11px;color:var(--d3);">'+time+'</span></div>';
+    }).join('');
+    el.scrollTop=el.scrollHeight;
+  }catch(e){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--d3);font-size:13px;">Erro ao carregar.</div>';console.warn('carregarMensagens:',e);}
+}
+
+async function enviarMensagem(){
+  if(!currentUser){showToast('Faça login para enviar mensagens');return;}
+  var input=document.getElementById('chat-input');
+  var msg=input&&input.value.trim();
+  if(!msg)return;
+  var pedidoId=__currentPedido&&__currentPedido.id;
+  if(!pedidoId){showToast('Pedido não identificado');return;}
+  input.value='';
+  try{
+    var r=await sb.from('mensagens').insert({pedido_id:pedidoId,remetente_id:currentUser.id,mensagem:msg});
+    if(r.error)throw r.error;
+    await carregarMensagens(pedidoId);
+  }catch(e){showToast('Erro ao enviar: '+e.message);if(input)input.value=msg;}
+}
+
+async function enviarReporte(){
+  if(!currentUser){showToast('Faça login para reportar');return;}
+  var assunto=document.getElementById('rep-assunto');
+  var msgEl=document.getElementById('rep-msg');
+  var msgTxt=msgEl&&msgEl.value.trim();
+  if(!msgTxt){showToast('Descreva o problema antes de enviar');return;}
+  var btn=document.querySelector('#sb7-rep .btn.bg');
+  if(btn){btn.textContent='⏳ Enviando...';btn.disabled=true;}
+  try{
+    var r=await sb.from('suporte').insert({usuario_id:currentUser.id,pedido_id:__currentPedido?__currentPedido.id:null,assunto:assunto?assunto.value:'Problema com pedido',mensagem:msgTxt});
+    if(r.error)throw r.error;
+    if(msgEl)msgEl.value='';
+    showToast('✅ Enviado! Responderemos em até 48h no seu e-mail.',4200);
+    bk();
+  }catch(e){showToast('Erro ao enviar: '+e.message);}
+  if(btn){btn.textContent='Enviar para a plataforma';btn.disabled=false;}
 }
 
 if(window.innerWidth>=900){
