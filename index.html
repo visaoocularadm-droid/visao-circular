@@ -235,7 +235,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 
 <!-- ============ ESCOLHA PERFIL ============ -->
 <div id="s2" class="scr">
-  <div class="hdr hw"><div><h2>Como você deseja<br>usar o app?</h2><p style="margin-top:4px;">Selecione uma opção abaixo.</p></div></div>
+  <div class="hdr hw"><div><h2>Como você deseja<br>usar o app?</h2><p style="margin-top:4px;">Selecione uma opção abaixo.</p></div><button onclick="signOut()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;">Sair</button></div>
   <div class="body">
     <div class="pfc2" onclick="go('sd0')"><div class="pic" style="background:var(--g6);">♻️</div><div style="flex:1;"><h4 style="color:var(--g2);">Doador</h4><p style="font-size:13px;">Quero doar meus óculos e ajudar outras pessoas.</p></div><span style="font-size:20px;color:var(--d3);">›</span></div>
     <div class="pfc2" onclick="go('sb0')"><div class="pic" style="background:var(--b3);">🔍</div><div style="flex:1;"><h4 style="color:var(--b1);">Beneficiário / Comprador</h4><p style="font-size:13px;">Quero encontrar óculos para doação ou comprar.</p></div><span style="font-size:20px;color:var(--d3);">›</span></div>
@@ -945,6 +945,16 @@ const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null;
 
+// Auth init: restores session on reload and handles Google OAuth redirect
+sb.auth.getSession().then(function(r){
+  if(r.data&&r.data.session){currentUser=r.data.session.user;setTimeout(function(){go('s2');},100);}
+});
+sb.auth.onAuthStateChange(function(event,session){
+  currentUser=session?session.user:null;
+  if(event==='SIGNED_IN')go('s2');
+  if(event==='SIGNED_OUT'){currentUser=null;go('s0');}
+});
+
 function showToast(msg,dur){
   let t=document.getElementById('vc-toast');
   if(!t){t=document.createElement('div');t.id='vc-toast';t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#212121;color:#fff;padding:11px 22px;border-radius:24px;font-size:14px;z-index:9999;max-width:85%;text-align:center;transition:opacity .3s;pointer-events:none;';document.body.appendChild(t);}
@@ -971,6 +981,12 @@ async function loginEmail(){
 
 async function loginGoogle(){
   await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href}});
+}
+
+async function signOut(){
+  await sb.auth.signOut();
+  currentUser=null;
+  go('s0');
 }
 
 async function signupEmail(){
