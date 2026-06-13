@@ -570,7 +570,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="oc2" id="pr2" onclick="selPr('pr2')"><span style="font-size:20px;">📍</span><div><h4 style="font-size:14px;">Outro ponto de retirada</h4><p style="font-size:13px;">Ver unidades disponíveis</p></div></div>
     <div class="fg" style="margin-top:14px;"><label class="fl">Mensagem (opcional)</label><textarea class="fi" placeholder="Escreva uma mensagem para a ótica..."></textarea></div>
     <div class="alert-g"><p style="font-size:13px;">📩 Você será notificado quando sua solicitação for aprovada.</p></div>
-    <button class="btn bg" onclick="go('sb5-conf')">Enviar solicitação</button>
+    <button class="btn bg" id="btn-sol" onclick="submitSolicitacao()">Enviar solicitação</button>
   </div>
 </div>
 
@@ -1010,8 +1010,9 @@ async function salvarProduto(){
   var btn=document.querySelector('#sv5 .btn.ba');
   if(btn){btn.textContent='Publicando...';btn.disabled=true;}
   try{
-    var r=await sb.from('produtos').insert({vendedor_id:currentUser.id,titulo:titulo,descricao:descTxt,preco:precoNum||null,tipo:'venda',tipo_oculos:'grau',estado:'usado',status:'ativo',plano:'basico'});
+    var r=await sb.from('produtos').insert({vendedor_id:currentUser.id,titulo:titulo,descricao:descTxt,preco:precoNum||null,tipo:'venda',tipo_oculos:'grau',estado:'usado',status:'ativo',plano:'basico',foto_url:__fotoUrls[0]||null,fotos:__fotoUrls});
     if(r.error)throw r.error;
+    __fotoUrls=[];
     showToast('Anúncio publicado! ✓');
     go('sv8');
   }catch(e){showToast('Erro ao publicar: '+e.message);}
@@ -1028,9 +1029,27 @@ async function carregarProdutos(){
       var badge=p.tipo==='doacao'?'<span class="bdg bd" style="position:absolute;top:7px;left:7px;font-size:10px;">♥ DOAÇÃO</span>':'<span class="bdg bv" style="position:absolute;top:7px;left:7px;font-size:10px;">🛒 VENDA</span>';
       var preco=p.tipo==='doacao'?'<div style="font-size:13px;font-weight:700;color:var(--g2);margin-top:3px;">Doação</div>':'<div class="pcd-pr">R$ '+(p.preco?Number(p.preco).toFixed(2).replace('.',','):'--')+'</div>';
       var desc=p.descricao?p.descricao.substring(0,36):'';
-      return '<div class="pcd" onclick="go(\'sb4\')"><div class="pcd-img">👓<div class="pcd-fv">♡</div>'+badge+'</div><div class="pcd-body"><div class="pcd-nm">'+p.titulo+'</div><div class="pcd-inf">'+desc+'</div>'+preco+'</div></div>';
+      var imgHtml=p.foto_url?'<img src="'+p.foto_url+'" style="width:100%;height:100%;object-fit:cover;border-radius:0;" onerror="this.parentElement.innerHTML=\'👓\'">':'👓';
+      return '<div class="pcd" onclick="go(\'sb4\')"><div class="pcd-img">'+imgHtml+'<div class="pcd-fv">♡</div>'+badge+'</div><div class="pcd-body"><div class="pcd-nm">'+p.titulo+'</div><div class="pcd-inf">'+desc+'</div>'+preco+'</div></div>';
     }).join('');
   }catch(e){console.warn('carregarProdutos:',e);}
+}
+
+async function submitSolicitacao(){
+  if(!currentUser){showToast('Faça login para solicitar');go('s1');return;}
+  var btn=document.getElementById('btn-sol');
+  if(btn){btn.textContent='Enviando...';btn.disabled=true;}
+  try{
+    var r=await sb.from('doacoes').insert({
+      beneficiario_id:currentUser.id,
+      receita_url:__receitaUrl||null,
+      status:'pendente'
+    });
+    if(r.error)throw r.error;
+    __receitaUrl=null;
+    go('sb5-conf');
+  }catch(e){showToast('Erro ao enviar: '+e.message);}
+  if(btn){btn.textContent='Enviar solicitação';btn.disabled=false;}
 }
 
 sb.auth.onAuthStateChange(function(event,session){
@@ -1068,9 +1087,49 @@ function selPr(t){document.getElementById('pr1').classList.toggle('on',t==='pr1'
 function selPg(t){document.getElementById('pgpix').classList.toggle('on',t==='pgpix');document.getElementById('pgcart').classList.toggle('on',t==='pgcart');}
 function selPgO(t){document.getElementById('opix').classList.toggle('on',t==='opix');document.getElementById('opix2').classList.toggle('on',t==='opix2');}
 function updateChar(fid,cid,max){var v=document.getElementById(fid);var c=document.getElementById(cid);if(v&&c)c.textContent=(v.value||'').length+'/'+max;}
-function addPhoto(input){if(input.files&&input.files.length){var msg=document.createElement('div');msg.textContent='📷 '+input.files.length+' foto(s) adicionada(s)';msg.style.cssText='font-size:13px;color:var(--g2);margin-top:8px;font-weight:600;';input.closest('.body').appendChild(msg);}}
+var __fotoUrls=[];
+async function addPhoto(input){
+  if(!input.files||!input.files.length)return;
+  var body=input.closest('.body');
+  var msg=document.createElement('div');
+  msg.style.cssText='font-size:13px;color:var(--g2);margin-top:8px;font-weight:600;';
+  body.appendChild(msg);
+  if(!currentUser){msg.textContent='⚠️ Faça login para enviar fotos';return;}
+  msg.textContent='⏳ Enviando fotos...';
+  var uploaded=0;
+  for(var i=0;i<input.files.length&&i<10;i++){
+    var file=input.files[i];
+    var path=currentUser.id+'/'+Date.now()+'_'+i+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    var r=await sb.storage.from('fotos-produtos').upload(path,file,{contentType:file.type});
+    if(!r.error){
+      var url=sb.storage.from('fotos-produtos').getPublicUrl(path).data.publicUrl;
+      __fotoUrls.push(url);
+      uploaded++;
+    }
+  }
+  msg.textContent=uploaded>0?'📷 '+uploaded+' foto(s) enviada(s) ✓':'❌ Erro ao enviar fotos';
+}
 function addVideo(input){if(input.files&&input.files.length){document.getElementById('vid-add-btn').style.display='none';document.getElementById('vid-prev').style.display='flex';}}
-function uploadReceita(){var ok=document.getElementById('rec-ok');var pup=document.getElementById('pup-rec');if(ok&&pup){pup.style.display='none';ok.style.display='block';}}
+var __receitaUrl=null;
+async function uploadReceita(){
+  var input=document.getElementById('receita-input');
+  var ok=document.getElementById('rec-ok');
+  var pup=document.getElementById('pup-rec');
+  if(!input||!input.files||!input.files.length)return;
+  if(!currentUser){showToast('Faça login para enviar receita');return;}
+  if(pup)pup.innerHTML='<span style="font-size:24px;">⏳</span><span>Enviando...</span>';
+  var file=input.files[0];
+  var path=currentUser.id+'/'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+  var r=await sb.storage.from('receitas').upload(path,file,{contentType:file.type});
+  if(!r.error){
+    __receitaUrl=path;
+    if(pup)pup.style.display='none';
+    if(ok)ok.style.display='block';
+  }else{
+    showToast('Erro ao enviar receita: '+r.error.message);
+    if(pup)pup.innerHTML='<span style="font-size:32px;">📄</span><span style="font-weight:600;">Toque para enviar a receita</span><span style="font-size:12px;color:var(--d3);">Foto ou PDF · Apenas para verificar elegibilidade</span>';
+  }
+}
 function checkDoacao(){if(donacaoAtiva){go('sb5-bloq');}else{go('sb5-rec');}}
 function selPlan(p){planSel=p;['bas','dest','prem'].forEach(function(pl){var c=document.getElementById('pl-'+pl);var r=document.getElementById('rb-'+pl);if(c&&r){var on=pl===p;c.classList.toggle('on',on);r.textContent=on?'✓':'○';r.style.background=on?'var(--g2)':'transparent';r.style.borderColor=on?'var(--g2)':'var(--d4)';r.style.color=on?'#fff':'var(--d3)';}});}
 function checkPlan(){if(planSel==='bas'){go('sv8');}else{go('sv7');}}
