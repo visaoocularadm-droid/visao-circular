@@ -444,7 +444,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <p style="font-size:12px;color:var(--g2);font-weight:600;margin-bottom:4px;">⚡ Sem necessidade de receita para comprar</p>
   </div>
   <div style="position:absolute;bottom:0;left:0;right:0;padding:14px 20px 28px;background:#fff;border-top:1px solid var(--d4);">
-    <button class="btn ba" onclick="go('sb6')">Comprar agora — R$ 180,00</button>
+    <button class="btn ba" onclick="irCheckout({titulo:'Oakley Holbrook',descricao:'Óculos Oakley Holbrook, lentes polarizadas. Excelente estado.',preco:180,id:'oakley-holbrook-demo'})">Comprar agora — R$ 180,00</button>
   </div>
 </div>
 
@@ -607,8 +607,8 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="ir"><span class="il">Frete</span><span class="iv">R$ 18,90</span></div>
     <div class="ir" style="border:none;"><span class="il" style="font-weight:700;font-size:15px;">Total</span><span class="iv" style="font-size:16px;font-weight:800;color:var(--a0);">R$ 198,90</span></div>
     <div style="height:12px;"></div>
-    <button class="btn ba" onclick="go('sb7')">💳 Pagar agora</button>
-    <p style="text-align:center;font-size:12px;color:var(--d3);margin-top:8px;">🔒 Pagamento 100% seguro</p>
+    <button class="btn ba" id="btn-pagar" onclick="pagarComMP()">💳 Pagar com Mercado Pago</button>
+    <p style="text-align:center;font-size:12px;color:var(--d3);margin-top:8px;">🔒 Pagamento 100% seguro via Mercado Pago</p>
   </div>
 </div>
 
@@ -1035,20 +1035,27 @@ async function salvarProduto(){
   if(btn){btn.textContent='Publicar anúncio';btn.disabled=false;}
 }
 
+var __produtosCache=[];
 async function carregarProdutos(){
   try{
     var r=await sb.from('produtos').select('*').eq('status','ativo').order('criado_em',{ascending:false}).limit(8);
     if(r.error||!r.data||!r.data.length)return;
+    __produtosCache=r.data;
     var grid=document.getElementById('prod-grid');
     if(!grid)return;
-    grid.innerHTML=r.data.map(function(p){
+    grid.innerHTML=r.data.map(function(p,i){
       var badge=p.tipo==='doacao'?'<span class="bdg bd" style="position:absolute;top:7px;left:7px;font-size:10px;">♥ DOAÇÃO</span>':'<span class="bdg bv" style="position:absolute;top:7px;left:7px;font-size:10px;">🛒 VENDA</span>';
       var preco=p.tipo==='doacao'?'<div style="font-size:13px;font-weight:700;color:var(--g2);margin-top:3px;">Doação</div>':'<div class="pcd-pr">R$ '+(p.preco?Number(p.preco).toFixed(2).replace('.',','):'--')+'</div>';
       var desc=p.descricao?p.descricao.substring(0,36):'';
       var imgHtml=p.foto_url?'<img src="'+p.foto_url+'" style="width:100%;height:100%;object-fit:cover;border-radius:0;" onerror="this.parentElement.innerHTML=\'👓\'">':'👓';
-      return '<div class="pcd" onclick="go(\'sb4\')"><div class="pcd-img">'+imgHtml+'<div class="pcd-fv">♡</div>'+badge+'</div><div class="pcd-body"><div class="pcd-nm">'+p.titulo+'</div><div class="pcd-inf">'+desc+'</div>'+preco+'</div></div>';
+      var dest=p.tipo==='doacao'?'sb3':'sb4';
+      return '<div class="pcd" onclick="selProduto('+i+')"><div class="pcd-img">'+imgHtml+'<div class="pcd-fv">♡</div>'+badge+'</div><div class="pcd-body"><div class="pcd-nm">'+p.titulo+'</div><div class="pcd-inf">'+desc+'</div>'+preco+'</div></div>';
     }).join('');
   }catch(e){console.warn('carregarProdutos:',e);}
+}
+function selProduto(i){
+  __currentProduct=__produtosCache[i]||null;
+  go(__currentProduct&&__currentProduct.tipo==='doacao'?'sb3':'sb4');
 }
 
 async function submitSolicitacao(){
@@ -1149,6 +1156,45 @@ async function uploadReceita(){
 function checkDoacao(){if(donacaoAtiva){go('sb5-bloq');}else{go('sb5-rec');}}
 function selPlan(p){planSel=p;['bas','dest','prem'].forEach(function(pl){var c=document.getElementById('pl-'+pl);var r=document.getElementById('rb-'+pl);if(c&&r){var on=pl===p;c.classList.toggle('on',on);r.textContent=on?'✓':'○';r.style.background=on?'var(--g2)':'transparent';r.style.borderColor=on?'var(--g2)':'var(--d4)';r.style.color=on?'#fff':'var(--d3)';}});}
 function checkPlan(){if(planSel==='bas'){go('sv8');}else{go('sv7');}}
+
+var __currentProduct=null;
+
+function irCheckout(produto){
+  if(produto)__currentProduct=produto;
+  go('sb6');
+}
+
+async function pagarComMP(){
+  var btn=document.getElementById('btn-pagar');
+  if(btn){btn.textContent='⏳ Aguarde...';btn.disabled=true;}
+  try{
+    var p=__currentProduct||{titulo:'Óculos',descricao:'Óculos via Visão Circular',preco:198.90,id:'demo'};
+    var r=await fetch(SUPABASE_URL+'/functions/v1/mp-payment',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_KEY},
+      body:JSON.stringify({titulo:p.titulo||'Óculos',descricao:p.descricao||p.titulo||'Óculos via Visão Circular',valor:parseFloat(p.preco)||198.90,produto_id:p.id||'demo',tipo:'venda'})
+    });
+    var data=await r.json();
+    if(data.init_point){location.href=data.init_point;}
+    else{throw new Error(data.error||'Erro ao criar pagamento');}
+  }catch(e){
+    showToast('Erro no pagamento: '+e.message);
+    if(btn){btn.textContent='💳 Pagar com Mercado Pago';btn.disabled=false;}
+  }
+}
+
+(function(){
+  var p=new URLSearchParams(location.search);
+  var status=p.get('payment');
+  if(status){
+    if(history.replaceState)history.replaceState({},'',location.pathname);
+    setTimeout(function(){
+      if(status==='success'){showToast('✅ Pagamento confirmado! Seu pedido foi realizado.');go('sb7');}
+      else if(status==='pending'){showToast('⏳ Pagamento pendente. Aguardando confirmação do banco.');go('sb7');}
+      else if(status==='failure'){showToast('❌ Pagamento não aprovado. Tente novamente.');}
+    },600);
+  }
+})();
 function setStar(n){var spans=document.querySelectorAll('#star-row span');spans.forEach(function(s,i){s.textContent=i<n?'⭐':'☆';});}
 var mf={name:'Visão Circular',short_name:'Visão Circular',description:'Marketplace de óculos — doe, compre ou venda.',start_url:'.',display:'standalone',background_color:'#fff',theme_color:'#2E7D32',icons:[{src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%232E7D32"/><text y=".9em" font-size="80">👓</text></svg>',sizes:'192x192',type:'image/svg+xml'}]};
 try{var mb=new Blob([JSON.stringify(mf)],{type:'application/json'});document.getElementById('ml').href=URL.createObjectURL(mb);}catch(e){}
