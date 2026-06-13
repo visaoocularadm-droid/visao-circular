@@ -340,13 +340,11 @@ input:checked+.sl:before{transform:translateX(22px);}
 
 <!-- ======== DOADOR: HOME ======== -->
 <div id="sd0" class="scr">
-  <div class="hdr"><div style="flex:1;"><p class="sub">Olá, Ana! 👋</p><h2 style="font-size:19px;">Vamos fazer a diferença hoje?</h2></div><div class="av" style="background:var(--g5);">A</div></div>
+  <div class="hdr"><div style="flex:1;"><p class="sub" id="saud-d">Olá! 👋</p><h2 style="font-size:19px;">Vamos fazer a diferença hoje?</h2></div><div class="av" style="background:var(--g5);" id="av-d">?</div></div>
   <div class="body">
     <div class="hero" onclick="go('sd1')"><div style="font-size:28px;margin-bottom:8px;">👓</div><h3 style="color:#fff;margin-bottom:3px;">Doar óculos</h3><p style="color:#A5D6A7;font-size:13px;">Transforme sua doação em novas histórias</p><div class="hero-cta">Doar agora ›</div></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;"><h3>Minhas doações</h3><span style="color:var(--g2);font-size:13px;font-weight:600;cursor:pointer;">Ver todas</span></div>
-    <div class="di" onclick="go('sd5')"><div class="di-ic">👓</div><div style="flex:1;"><h4 style="font-size:14px;">Doação #1023</h4><p style="font-size:12px;">20/05/2024</p></div><span class="bdg bd">Recebido</span></div>
-    <div class="di"><div class="di-ic">🕶</div><div style="flex:1;"><h4 style="font-size:14px;">Doação #0987</h4><p style="font-size:12px;">15/05/2024</p></div><span class="bdg bgy">Em triagem</span></div>
-    <div class="di" style="border:none;"><div class="di-ic">👓</div><div style="flex:1;"><h4 style="font-size:14px;">Doação #0765</h4><p style="font-size:12px;">02/05/2024</p></div><span class="bdg bb2">Disponível</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;"><h3>Minhas doações</h3><span style="color:var(--g2);font-size:13px;font-weight:600;cursor:pointer;" onclick="go('sd5')">Ver todas</span></div>
+    <div id="lista-doacoes-d"><div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">♻️</div><p style="font-size:14px;">Você ainda não fez nenhuma doação.</p><button class="btn bg" style="margin-top:14px;" onclick="go('sd1')">Fazer minha primeira doação</button></div></div>
   </div>
   <div class="bnav"><div class="ni on"><span class="ic">🏠</span><span>Home</span></div><div class="ni" onclick="go('sd1')"><span class="ic">➕</span><span>Doar</span></div><div class="ni" onclick="go('sd5')"><span class="ic">📋</span><span>Doações</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
@@ -406,7 +404,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="oc2 on" id="oc-col" onclick="selOc('col')"><span style="font-size:22px;">📍</span><div><h4>Ponto de coleta</h4><p style="font-size:13px;">Leve até um ponto parceiro próximo.</p></div></div>
     <div class="oc2" id="oc-ret" onclick="selOc('ret')"><span style="font-size:22px;">🚚</span><div><h4>Solicitar retirada</h4><p style="font-size:13px;">Buscamos no seu endereço.</p></div></div>
     <div class="mapc">🗺️</div>
-    <p style="text-align:center;font-size:13px;color:var(--g2);font-weight:500;margin-bottom:20px;">📍 Ótica Visão Clara — 0.8km · Av. Paulista, 1578</p>
+    <p style="text-align:center;font-size:13px;color:var(--g2);font-weight:500;margin-bottom:20px;" id="ponto-coleta-txt">📍 Buscando ponto de coleta próximo...</p>
     <button class="btn bg" onclick="go('sd4')">Confirmar</button>
   </div>
 </div>
@@ -442,7 +440,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 
 <!-- ======== BENEFICIÁRIO: HOME ======== -->
 <div id="sb0" class="scr">
-  <div class="hdr"><div style="flex:1;"><p class="sub">Olá, Lucas! 👋</p><h2 style="font-size:18px;">Encontre óculos ideais para você.</h2></div><div class="noti"><div class="av" style="background:#1976D2;">L</div><div class="nbdg">2</div></div></div>
+  <div class="hdr"><div style="flex:1;"><p class="sub" id="saud-b">Olá! 👋</p><h2 style="font-size:18px;">Encontre óculos ideais para você.</h2></div><div class="av" style="background:#1976D2;" id="av-b">?</div></div>
   <div class="body">
     <div style="display:flex;align-items:center;gap:8px;background:var(--d5);border-radius:var(--r);padding:11px 14px;margin-bottom:14px;cursor:pointer;" onclick="go('sb1')"><span style="font-size:18px;">🔍</span><span style="color:var(--d3);font-size:14px;">Buscar por grau, marca, modelo...</span><span style="margin-left:auto;font-size:18px;">⚙️</span></div>
     <div class="sc-grid">
@@ -452,12 +450,7 @@ input:checked+.sl:before{transform:translateX(22px);}
       <div class="sc-it" onclick="go('sb7')"><div class="sc-ic" style="background:var(--b3);">📦</div><span class="sc-lb">Meus pedidos</span></div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><h3>Destaques</h3><span style="color:var(--g2);font-size:13px;font-weight:600;cursor:pointer;" onclick="go('sb2')">Ver todos</span></div>
-    <div class="pgrid" id="prod-grid">
-      <div class="pcd" onclick="go('sb3')"><div class="pcd-img">🕶<div class="pcd-fv">♡</div><span class="bdg bd" style="position:absolute;top:7px;left:7px;font-size:10px;">♥ DOAÇÃO</span></div><div class="pcd-body"><div class="pcd-nm">Ray-Ban RB 5154</div><div class="pcd-inf">Grau: -2.00 · Usado</div><div style="font-size:13px;font-weight:700;color:var(--g2);margin-top:3px;">Doação</div></div></div>
-      <div class="pcd" onclick="go('sb4')"><div class="pcd-img">👓<div class="pcd-fv">♡</div><span class="bdg bv" style="position:absolute;top:7px;left:7px;font-size:10px;">🛒 VENDA</span></div><div class="pcd-body"><div class="pcd-nm">Oakley Holbrook</div><div class="pcd-inf">Grau: -1.50 · Usado</div><div class="pcd-pr">R$ 180,00</div></div></div>
-      <div class="pcd" onclick="go('sb3')"><div class="pcd-img">🕶<div class="pcd-fv">♡</div><span class="bdg bd" style="position:absolute;top:7px;left:7px;font-size:10px;">♥ DOAÇÃO</span></div><div class="pcd-body"><div class="pcd-nm">Oakley OX 3217</div><div class="pcd-inf">Grau: -2.25 · Usado</div><div style="font-size:13px;font-weight:700;color:var(--g2);margin-top:3px;">Doação</div></div></div>
-      <div class="pcd" onclick="go('sb4')"><div class="pcd-img">🕶<div class="pcd-fv">♡</div><span class="bdg bv" style="position:absolute;top:7px;left:7px;font-size:10px;">🛒 VENDA</span><span class="bdg bp" style="position:absolute;bottom:7px;left:7px;font-size:10px;">PREMIUM</span></div><div class="pcd-body"><div class="pcd-nm">Armani AX 3050</div><div class="pcd-inf">Grau: -2.75 · Usado</div><div class="pcd-pr">R$ 200,00</div></div></div>
-    </div>
+    <div class="pgrid" id="prod-grid"><div style="grid-column:1/-1;text-align:center;padding:24px 0;color:var(--d3);font-size:13px;">⏳ Carregando...</div></div>
   </div>
   <div class="bnav"><div class="ni on"><span class="ic">🏠</span><span>Início</span></div><div class="ni" onclick="go('sb1')"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni" onclick="go('sb7')"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
@@ -483,12 +476,9 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="sb2" class="scr">
   <div class="hdr hw"><button class="btn-ic" onclick="bk()"><span style="font-size:26px;">←</span></button><h3 style="flex:1;">Resultados</h3><span style="font-size:22px;cursor:pointer;">⚙️</span></div>
   <div class="body">
-    <p style="font-size:13px;color:var(--d3);margin-bottom:14px;">32 anúncios encontrados · <span style="color:var(--g2);font-weight:600;">Ordenar ↕</span></p>
+    <p style="font-size:13px;color:var(--d3);margin-bottom:14px;" id="sb2-count">Buscando anúncios... · <span style="color:var(--g2);font-weight:600;">Ordenar ↕</span></p>
     <div class="chips"><div class="chip on">Todos os tipos</div><div class="chip" onclick="tgChip(this)">♥ Doação</div><div class="chip" onclick="tgChip(this)">🛒 Venda</div></div>
-    <div class="di" onclick="go('sb3')"><div class="di-ic" style="font-size:24px;background:var(--d5);">🕶</div><div style="flex:1;"><div style="display:flex;gap:5px;align-items:center;margin-bottom:3px;"><h4 style="font-size:14px;">Ray-Ban RB 5154</h4></div><p style="font-size:12px;">Grau: -2.50 · Bom estado</p><span class="bdg bd" style="margin-top:4px;display:inline-flex;">♥ DOAÇÃO</span></div><span style="font-size:16px;color:var(--d3);">♡</span></div>
-    <div class="di" onclick="go('sb4')"><div class="di-ic" style="font-size:24px;background:var(--d5);">👓</div><div style="flex:1;"><h4 style="font-size:14px;">Vogue VO 5240</h4><p style="font-size:12px;">Grau: -3.00 · Excelente</p><span class="bdg bv" style="margin-top:4px;display:inline-flex;">🛒 VENDA</span></div><div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:var(--a0);">R$ 120</div><span style="font-size:16px;color:var(--d3);">♡</span></div></div>
-    <div class="di" onclick="go('sb3')"><div class="di-ic" style="font-size:24px;background:var(--d5);">🕶</div><div style="flex:1;"><h4 style="font-size:14px;">Oakley OX 3217</h4><p style="font-size:12px;">Grau: -2.25 · Bom estado</p><span class="bdg bd" style="margin-top:4px;display:inline-flex;">♥ DOAÇÃO</span></div><span style="font-size:16px;color:var(--d3);">♡</span></div>
-    <div class="di" style="border:none;" onclick="go('sb4')"><div class="di-ic" style="font-size:24px;background:var(--d5);">🕶</div><div style="flex:1;"><h4 style="font-size:14px;">Armani Exchange AX 3050</h4><p style="font-size:12px;">Grau: -2.75 · Excelente</p><div style="display:flex;gap:5px;margin-top:4px;"><span class="bdg bv">🛒 VENDA</span><span class="bdg bp">PREMIUM</span></div></div><div style="text-align:right;"><div style="font-size:14px;font-weight:700;color:var(--a0);">R$ 200</div></div></div>
+    <div id="lista-busca"><div style="text-align:center;padding:32px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🔍</div><p>Use os filtros acima para encontrar óculos.</p></div></div>
   </div>
   <div class="bnav"><div class="ni"><span class="ic">🏠</span><span>Início</span></div><div class="ni on"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni" onclick="go('sb7')"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
@@ -499,16 +489,15 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="body" style="padding-top:4px;padding-bottom:110px;">
     <span class="bdg bd" style="margin-bottom:10px;display:inline-flex;font-size:13px;">♥ DOAÇÃO DISPONÍVEL</span>
     <div style="background:var(--g6);border-radius:var(--r);padding:10px;margin-bottom:10px;font-size:13px;color:var(--g2);font-weight:500;text-align:center;">✅ Este óculos pode transformar a vida de alguém.</div>
-    <div class="prod-img">🕶</div>
+    <div class="prod-img" id="sb3-img">👓</div>
     <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
-    <h2 style="margin-bottom:3px;">Ray-Ban RB 5154</h2>
-    <p style="margin-bottom:12px;">Grau: -2.50 · Usado — Bom estado</p>
-    <div class="cardf"><p style="font-size:12px;color:var(--d3);margin-bottom:5px;">DESCRIÇÃO</p><p style="font-size:14px;color:var(--tx);">Óculos em ótimo estado de conservação, lentes sem arranhões. Acompanha estojo original.</p></div>
+    <h2 style="margin-bottom:3px;" id="sb3-titulo">—</h2>
+    <p style="margin-bottom:12px;" id="sb3-sub">—</p>
+    <div class="cardf"><p style="font-size:12px;color:var(--d3);margin-bottom:5px;">DESCRIÇÃO</p><p style="font-size:14px;color:var(--tx);" id="sb3-desc">—</p></div>
     <div class="cardf">
       <p style="font-size:12px;color:var(--d3);margin-bottom:8px;">INFORMAÇÕES</p>
-      <div class="ir"><span class="il">Grau</span><span class="iv">-2.50</span></div>
-      <div class="ir"><span class="il">Tipo</span><span class="iv">Longe</span></div>
-      <div class="ir" style="border:none;"><span class="il">Localização</span><span class="iv">Ótica Visão Clara · Bela Vista, SP</span></div>
+      <div class="ir"><span class="il">Estado</span><span class="iv" id="sb3-estado">—</span></div>
+      <div class="ir" style="border:none;"><span class="il">Localização</span><span class="iv" id="sb3-local">Brasil</span></div>
     </div>
   </div>
   <div style="position:absolute;bottom:0;left:0;right:0;padding:14px 20px 28px;background:#fff;border-top:1px solid var(--d4);">
@@ -522,22 +511,22 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="hdr hw"><button class="btn-ic" onclick="bk()"><span style="font-size:26px;">←</span></button><h3 style="flex:1;"></h3><span style="font-size:22px;cursor:pointer;">♡</span></div>
   <div class="body" style="padding-top:4px;padding-bottom:110px;">
     <span class="bdg bv" style="margin-bottom:10px;display:inline-flex;font-size:13px;">🛒 À VENDA</span>
-    <div class="prod-img">👓</div>
+    <div class="prod-img" id="sb4-img">👓</div>
     <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
-    <h2 style="margin-bottom:3px;">Oakley Holbrook</h2>
-    <p style="margin-bottom:8px;">Grau: -1.50 · Usado — Excelente estado</p>
-    <div class="price-big">R$ 180,00</div>
-    <p style="font-size:13px;color:var(--d3);margin-bottom:12px;">Vendido por: <span style="color:var(--g2);font-weight:600;">Ótica Visão Clara ⭐ 4.9</span></p>
-    <div class="cardf"><p style="font-size:12px;color:var(--d3);margin-bottom:5px;">DESCRIÇÃO</p><p style="font-size:14px;color:var(--tx);">Óculos original, lentes polarizadas, excelente para o dia a dia. Pouco uso, sem marcas.</p></div>
+    <h2 style="margin-bottom:3px;" id="sb4-titulo">—</h2>
+    <p style="margin-bottom:8px;" id="sb4-sub">—</p>
+    <div class="price-big" id="sb4-preco">R$ —</div>
+    <p style="font-size:13px;color:var(--d3);margin-bottom:12px;" id="sb4-vendedor">Vendedor verificado ✅</p>
+    <div class="cardf"><p style="font-size:12px;color:var(--d3);margin-bottom:5px;">DESCRIÇÃO</p><p style="font-size:14px;color:var(--tx);" id="sb4-desc">—</p></div>
     <div class="cardf">
-      <div class="ir"><span class="il">Estado</span><span class="iv">Excelente</span></div>
+      <div class="ir"><span class="il">Estado</span><span class="iv" id="sb4-estado">—</span></div>
       <div class="ir"><span class="il">Envio</span><span class="iv">📦 Correios · Cálculo automático</span></div>
-      <div class="ir" style="border:none;"><span class="il">Localização</span><span class="iv">São Paulo - SP</span></div>
+      <div class="ir" style="border:none;"><span class="il">Localização</span><span class="iv" id="sb4-local">Brasil</span></div>
     </div>
-    <p style="font-size:12px;color:var(--g2);font-weight:600;margin-bottom:4px;">⚡ Sem necessidade de receita para comprar</p>
+    <p style="font-size:12px;color:var(--g2);font-weight:600;margin-bottom:4px;">⚡ Pagamento 100% seguro via Mercado Pago</p>
   </div>
   <div style="position:absolute;bottom:0;left:0;right:0;padding:14px 20px 28px;background:#fff;border-top:1px solid var(--d4);">
-    <button class="btn ba" onclick="irCheckout({titulo:'Oakley Holbrook',descricao:'Óculos Oakley Holbrook, lentes polarizadas. Excelente estado.',preco:180,id:'oakley-holbrook-demo'})">Comprar agora — R$ 180,00</button>
+    <button class="btn ba" id="btn-comprar" onclick="irCheckout()">Comprar agora</button>
   </div>
 </div>
 
@@ -604,8 +593,8 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="dv"></div>
     <div class="cardf">
       <p style="font-size:12px;color:var(--d3);margin-bottom:8px;">PRODUTO SELECIONADO</p>
-      <div class="ir"><span class="il">Produto</span><span class="iv">Ray-Ban RB 5154</span></div>
-      <div class="ir" style="border:none;"><span class="il">Grau anunciado</span><span class="iv">-2.50</span></div>
+      <div class="ir"><span class="il">Produto</span><span class="iv" id="rec-prod-titulo">—</span></div>
+      <div class="ir" style="border:none;"><span class="il">Tipo</span><span class="iv" id="rec-prod-tipo">—</span></div>
     </div>
     <button class="btn bg" id="btn-receita" onclick="go('sb5-terms')">Continuar para os termos</button>
   </div>
@@ -659,7 +648,7 @@ input:checked+.sl:before{transform:translateX(22px);}
       <div class="ss"><div class="sd nd">3</div><div class="sl2">Confirmação</div></div>
     </div>
     <h4 style="margin-bottom:14px;">Ponto de retirada</h4>
-    <div class="oc2 on" id="pr1" onclick="selPr('pr1')"><span style="font-size:20px;">✅</span><div><h4 style="font-size:14px;">Ótica Visão Clara</h4><p style="font-size:13px;">Av. Paulista, 1578 — Bela Vista, SP</p></div></div>
+    <div class="oc2 on" id="pr1" onclick="selPr('pr1')"><span style="font-size:20px;">✅</span><div><h4 style="font-size:14px;" id="ponto-nome">Ponto de coleta parceiro</h4><p style="font-size:13px;" id="ponto-end">A ser definido pela equipe</p></div></div>
     <div class="oc2" id="pr2" onclick="selPr('pr2')"><span style="font-size:20px;">📍</span><div><h4 style="font-size:14px;">Outro ponto de retirada</h4><p style="font-size:13px;">Ver unidades disponíveis</p></div></div>
     <div class="fg" style="margin-top:14px;"><label class="fl">Mensagem (opcional)</label><textarea class="fi" placeholder="Escreva uma mensagem para a ótica..."></textarea></div>
     <div class="alert-g"><p style="font-size:13px;">📩 Você será notificado quando sua solicitação for aprovada.</p></div>
@@ -673,10 +662,10 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="si-i" style="background:var(--g2);">✓</div>
     <h2 style="margin-bottom:10px;">Solicitação enviada!</h2>
     <p>Protocolo:</p>
-    <div class="pb" style="background:var(--g6);width:100%;"><div class="pn" style="color:var(--g2);">#SOL-2045</div></div>
+    <div class="pb" style="background:var(--g6);width:100%;"><div class="pn" style="color:var(--g2);" id="sol-protocolo">#SOL-—</div></div>
     <div class="cardf" style="width:100%;text-align:left;">
-      <div class="ir"><span class="il">Produto</span><span class="iv">Ray-Ban RB 5154</span></div>
-      <div class="ir"><span class="il">Ponto de retirada</span><span class="iv">Ótica Visão Clara</span></div>
+      <div class="ir"><span class="il">Produto</span><span class="iv" id="sol-produto">—</span></div>
+      <div class="ir"><span class="il">Ponto de retirada</span><span class="iv">A ser confirmado</span></div>
       <div class="ir" style="border:none;"><span class="il">Status</span><span class="bdg bgy">Aguardando aprovação</span></div>
     </div>
     <button class="btn bg" style="margin-bottom:10px;" onclick="go('sb7')">Acompanhar pedido</button>
@@ -688,7 +677,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="sb6" class="scr">
   <div class="hdr"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><h3 style="flex:1;">Finalizar compra</h3><div style="width:44px;"></div></div>
   <div class="body">
-    <div class="cardf"><div style="display:flex;align-items:center;gap:12px;"><div style="font-size:36px;">👓</div><div><h4>Oakley Holbrook</h4><p style="font-size:13px;">Grau: -1.50 · Excelente</p></div></div></div>
+    <div class="cardf"><div style="display:flex;align-items:center;gap:12px;"><div style="font-size:36px;">👓</div><div><h4 id="ck-titulo">—</h4><p style="font-size:13px;" id="ck-sub">—</p></div></div></div>
     <h4 style="margin-bottom:12px;">Endereço de entrega</h4>
     <div class="fg"><label class="fl">CEP</label><input class="fi" placeholder="00000-000"></div>
     <div class="fg"><label class="fl">Endereço</label><input class="fi" placeholder="Rua, número, complemento"></div>
@@ -696,9 +685,9 @@ input:checked+.sl:before{transform:translateX(22px);}
     <h4 style="margin-bottom:12px;">Forma de envio</h4>
     <div class="oc2 on"><span style="font-size:20px;">📦</span><div style="flex:1;"><h4 style="font-size:14px;">Correios PAC</h4><p style="font-size:13px;">R$ 18,90 · 5-8 dias úteis</p></div></div>
     <div class="dv"></div>
-    <div class="ir"><span class="il">Produto</span><span class="iv">R$ 180,00</span></div>
-    <div class="ir"><span class="il">Frete</span><span class="iv">R$ 18,90</span></div>
-    <div class="ir" style="border:none;"><span class="il" style="font-weight:700;font-size:15px;">Total</span><span class="iv" style="font-size:16px;font-weight:800;color:var(--a0);">R$ 198,90</span></div>
+    <div class="ir"><span class="il">Produto</span><span class="iv" id="ck-preco-prod">R$ —</span></div>
+    <div class="ir"><span class="il">Frete</span><span class="iv">A calcular</span></div>
+    <div class="ir" style="border:none;"><span class="il" style="font-weight:700;font-size:15px;">Total</span><span class="iv" style="font-size:16px;font-weight:800;color:var(--a0);" id="ck-total">R$ —</span></div>
     <div style="height:12px;"></div>
     <button class="btn ba" id="btn-pagar" onclick="pagarComMP()">💳 Pagar com Mercado Pago</button>
     <p style="text-align:center;font-size:12px;color:var(--d3);margin-top:8px;">🔒 Pagamento 100% seguro via Mercado Pago</p>
@@ -710,9 +699,7 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="hdr"><div style="flex:1;"><h3>Meus Pedidos</h3></div><div style="width:44px;"></div></div>
   <div class="body">
     <div class="tog" style="margin-bottom:16px;"><button class="tb on" onclick="tg(this)">Todos</button><button class="tb" onclick="tg(this)">Doações</button><button class="tb" onclick="tg(this)">Compras</button></div>
-    <div class="di" onclick="go('sb8')"><div class="di-ic" style="font-size:22px;">🕶</div><div style="flex:1;"><h4 style="font-size:14px;">Ray-Ban RB 5154</h4><p style="font-size:12px;">Grau: -2.50 · <span class="bdg bd" style="font-size:11px;">Doação</span></p></div><span class="bdg bgy" style="font-size:11px;">Aguardando aprovação</span></div>
-    <div class="di"><div class="di-ic" style="font-size:22px;">👓</div><div style="flex:1;"><h4 style="font-size:14px;">Vogue VO 5240</h4><p style="font-size:12px;">Grau: -3.00 · <span class="bdg bd" style="font-size:11px;">Doação</span></p></div><span class="bdg bb2" style="font-size:11px;">Disponível para retirada</span></div>
-    <div class="di" style="border:none;"><div class="di-ic" style="font-size:22px;">🕶</div><div style="flex:1;"><h4 style="font-size:14px;">Oakley Holbrook</h4><p style="font-size:12px;">R$ 180,00 · <span class="bdg bv" style="font-size:11px;">Compra</span></p></div><span class="bgy bdg" style="font-size:11px;">Pago · Em envio</span></div>
+    <div id="lista-pedidos"><div style="text-align:center;padding:32px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">📦</div><p style="font-size:14px;">Você ainda não tem pedidos.</p><button class="btn bg" style="margin-top:14px;" onclick="go('sb0')">Explorar óculos</button></div></div>
   </div>
   <div class="bnav"><div class="ni"><span class="ic">🏠</span><span>Início</span></div><div class="ni"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni on"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
@@ -723,7 +710,7 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="body" style="text-align:center;padding-top:30px;">
     <div style="font-size:60px;margin-bottom:16px;">⭐</div>
     <h3 style="margin-bottom:6px;">Como foi sua experiência?</h3>
-    <p style="margin-bottom:16px;">Ray-Ban RB 5154 · Doação</p>
+    <p style="margin-bottom:16px;" id="aval-produto">—</p>
     <div class="stars" style="justify-content:center;" id="star-row">
       <span onclick="setStar(1)" style="cursor:pointer;">⭐</span><span onclick="setStar(2)" style="cursor:pointer;">⭐</span><span onclick="setStar(3)" style="cursor:pointer;">⭐</span><span onclick="setStar(4)" style="cursor:pointer;">⭐</span><span onclick="setStar(5)" style="cursor:pointer;">☆</span>
     </div>
@@ -736,12 +723,11 @@ input:checked+.sl:before{transform:translateX(22px);}
 
 <!-- ======== VENDEDOR: HOME ======== -->
 <div id="sv0" class="scr">
-  <div class="hdr ha"><div style="flex:1;"><p class="sub">Olá, Carlos! 👋</p><h2 style="font-size:19px;">Seus anúncios.</h2></div><div class="av" style="background:#BF360C;">C</div></div>
+  <div class="hdr ha"><div style="flex:1;"><p class="sub" id="saud-v">Olá! 👋</p><h2 style="font-size:19px;">Seus anúncios.</h2></div><div class="av" style="background:#BF360C;" id="av-v">?</div></div>
   <div class="body">
     <div class="hero" style="background:linear-gradient(135deg,var(--a1),var(--a0));" onclick="go('sv1')"><div style="font-size:28px;margin-bottom:8px;">🛒</div><h3 style="color:#fff;margin-bottom:3px;">Publicar anúncio</h3><p style="color:#FFCC80;font-size:13px;">Alcance compradores em todo o Brasil</p><div class="hero-cta">Vender agora ›</div></div>
     <h3 style="margin-bottom:12px;">Meus anúncios</h3>
-    <div class="di"><div class="di-ic" style="background:var(--a4);">🕶</div><div style="flex:1;"><h4 style="font-size:14px;">Ray-Ban RB 5154 Preto</h4><p style="font-size:12px;">R$ 150,00 · 12 visualizações</p></div><span class="bdg bv">Ativo</span></div>
-    <div class="di" style="border:none;"><div class="di-ic" style="background:var(--a4);">👓</div><div style="flex:1;"><h4 style="font-size:14px;">Oakley Radar EV</h4><p style="font-size:12px;">R$ 280,00 · 5 visualizações</p></div><span class="bdg bp">Destaque ⭐</span></div>
+    <div id="lista-anuncios-v"><div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🛒</div><p style="font-size:14px;">Você ainda não tem anúncios.</p><button class="btn ba" style="margin-top:14px;" onclick="go('sv1')">Publicar meu primeiro anúncio</button></div></div>
   </div>
   <div class="bnav"><div class="ni on" style="color:var(--a0)"><span class="ic">🏠</span><span>Home</span></div><div class="ni" onclick="go('sv1')"><span class="ic">➕</span><span>Vender</span></div><div class="ni"><span class="ic">📋</span><span>Anúncios</span></div><div class="ni"><span class="ic">💬</span><span>Mensagens</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
@@ -821,9 +807,9 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="hdr ha"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><p class="sub" style="font-size:11px;">PASSO 4 DE 5</p><h3>Descrição completa</h3></div></div>
   <div class="body">
     <p style="margin-bottom:14px;">Crie um título atrativo e descreva seu produto com detalhes.</p>
-    <div class="fg"><label class="fl">Título do anúncio</label><input class="fi" id="titulo-v" value="Ray-Ban RB 5154 Preto - Grau -2.00" oninput="updateChar('titulo-v','cc-t',80)"><div class="char-c" id="cc-t">36/80</div></div>
-    <div class="fg"><label class="fl">Descrição detalhada</label><textarea class="fi" id="desc-v" style="min-height:120px;" placeholder="Óculos Ray-Ban modelo RB 5154, cor preta, lentes com grau -2.00..." oninput="updateChar('desc-v','cc-v',500)">Óculos Ray-Ban modelo RB 5154, cor preta, lentes com grau -2.00. Produto usado, em ótimo estado de conservação. Acompanha estojo original.</textarea><div class="char-c" id="cc-v">143/500</div></div>
-    <button class="btn ba" onclick="go('sv5')">Revisar anúncio</button>
+    <div class="fg"><label class="fl">Título do anúncio</label><input class="fi" id="titulo-v" value="" placeholder="Ex: Ray-Ban RB 5154 Preto - Grau -2.00" oninput="updateChar('titulo-v','cc-t',80)"><div class="char-c" id="cc-t">0/80</div></div>
+    <div class="fg"><label class="fl">Descrição detalhada</label><textarea class="fi" id="desc-v" style="min-height:120px;" placeholder="Descreva o produto com detalhes: modelo, grau, estado de conservação, acessórios inclusos..." oninput="updateChar('desc-v','cc-v',500)"></textarea><div class="char-c" id="cc-v">0/500</div></div>
+    <button class="btn ba" onclick="go('sv5');preencherRevisao()">Revisar anúncio</button>
   </div>
 </div>
 
@@ -831,10 +817,10 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="sv5" class="scr">
   <div class="hdr ha"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><p class="sub" style="font-size:11px;">PASSO 5 DE 5</p><h3>Revisar anúncio</h3></div></div>
   <div class="body">
-    <div class="cardf" style="display:flex;gap:14px;align-items:center;margin-bottom:16px;"><div style="font-size:50px;">🕶</div><div><h4>Ray-Ban RB 5154 Preto</h4><p style="font-size:13px;">Grau: -2.00 · Usado</p><div style="font-size:15px;font-weight:700;color:var(--a0);margin-top:3px;">R$ 150,00</div></div></div>
-    <div class="ir"><span class="il">Forma de envio</span><span class="iv">Correios</span></div>
-    <div class="ir"><span class="il">Localização</span><span class="iv">São Paulo - SP</span></div>
-    <div class="ir" style="border:none;"><span class="il">Vídeo</span><span class="iv">✅ Incluído</span></div>
+    <div class="cardf" style="display:flex;gap:14px;align-items:center;margin-bottom:16px;"><div style="font-size:50px;">🕶</div><div><h4 id="sv5-titulo">—</h4><p style="font-size:13px;" id="sv5-sub">—</p><div style="font-size:15px;font-weight:700;color:var(--a0);margin-top:3px;" id="sv5-preco">—</div></div></div>
+    <div class="ir"><span class="il">Forma de envio</span><span class="iv" id="sv5-envio">—</span></div>
+    <div class="ir"><span class="il">Localização</span><span class="iv" id="sv5-local">—</span></div>
+    <div class="ir" style="border:none;"><span class="il">Vídeo</span><span class="iv" id="sv5-video">—</span></div>
     <div class="dv"></div>
     <p style="font-size:13px;color:var(--d3);margin-bottom:16px;">Revise todas as informações antes de publicar.</p>
     <button class="btn ba" style="margin-bottom:10px;" onclick="salvarProduto()">Publicar anúncio</button>
@@ -991,7 +977,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="oc2 on" id="opix" onclick="selPgO('opix')"><span style="font-size:22px;">💳</span><div><h4>Cartão de crédito</h4><p style="font-size:13px;">Pague com cartão de crédito</p></div></div>
     <div class="oc2" id="opix2" onclick="selPgO('opix2')"><span style="font-size:22px;">💚</span><div><h4>Pix</h4><p style="font-size:13px;">Pague via Pix</p></div></div>
     <div style="height:14px;"></div>
-    <button class="btn bg" onclick="go('so7')">Confirmar pagamento</button>
+    <button class="btn bg" onclick="go('so7');gerarProtocolo()">Confirmar pagamento</button>
     <p style="text-align:center;font-size:12px;color:var(--d3);margin-top:6px;">🔒 Pagamento 100% seguro</p>
   </div>
 </div>
@@ -1002,14 +988,14 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="si-i" style="background:var(--g2);">✓</div>
     <h2 style="margin-bottom:10px;">Ótica parceira ativada!</h2>
     <p>Sua assinatura foi realizada com sucesso. Sua ótica já é um ponto oficial no Visão Circular.</p>
-    <div class="pb" style="background:var(--g6);width:100%;"><p style="font-size:12px;color:var(--g2);margin-bottom:3px;">NÚMERO DO PARCEIRO</p><div class="pn" style="color:var(--g2);">#OTC-2024-0158</div></div>
+    <div class="pb" style="background:var(--g6);width:100%;"><p style="font-size:12px;color:var(--g2);margin-bottom:3px;">NÚMERO DO PARCEIRO</p><div class="pn" style="color:var(--g2);" id="so7-protocolo">—</div></div>
     <button class="btn bg" onclick="go('so8')">Ir para o painel</button>
   </div>
 </div>
 
 <!-- ======== ÓTICA: DASHBOARD ======== -->
 <div id="so8" class="scr">
-  <div class="hdr hdk"><div style="flex:1;"><p style="color:#BDBDBD;font-size:13px;">Olá, Ótica Visão Clara! 👋</p><h2 style="font-size:18px;">Bem-vinda ao painel parceiro.</h2></div><div class="av" style="background:#555;">O</div></div>
+  <div class="hdr hdk"><div style="flex:1;"><p style="color:#BDBDBD;font-size:13px;" id="saud-o">Olá! 👋</p><h2 style="font-size:18px;">Bem-vinda ao painel parceiro.</h2></div><div class="av" style="background:#555;" id="av-o">?</div></div>
   <div class="body">
     <div class="cardf" style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;align-items:center;"><div><p style="font-size:12px;color:var(--d3);">PLANO ATIVO</p><h4>Ótica Parceira</h4><p style="font-size:13px;color:var(--g2);font-weight:600;">R$ 49,90 / mês</p></div><button class="btn" style="width:auto;padding:8px 14px;background:var(--d5);color:var(--d2);font-size:13px;">Ver detalhes</button></div></div>
     <h4 style="margin-bottom:12px;">O que você deseja fazer?</h4>
@@ -1022,10 +1008,10 @@ input:checked+.sl:before{transform:translateX(22px);}
       <div class="dm-i"><span style="font-size:26px;">📊</span><span class="dm-lb">Relatórios</span></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
-      <div class="mc2"><div class="mv2">128</div><div class="ml2">Doações recebidas</div></div>
-      <div class="mc2"><div class="mv2" style="color:var(--a2);">34</div><div class="ml2">Pendentes triagem</div></div>
-      <div class="mc2"><div class="mv2">94</div><div class="ml2">Aprovados</div></div>
-      <div class="mc2"><div class="mv2" style="color:var(--b1);">76</div><div class="ml2">No app</div></div>
+      <div class="mc2"><div class="mv2" id="stat-o-recebidas">0</div><div class="ml2">Doações recebidas</div></div>
+      <div class="mc2"><div class="mv2" style="color:var(--a2);" id="stat-o-pendentes">0</div><div class="ml2">Pendentes triagem</div></div>
+      <div class="mc2"><div class="mv2" id="stat-o-aprovados">0</div><div class="ml2">Aprovados</div></div>
+      <div class="mc2"><div class="mv2" style="color:var(--b1);" id="stat-o-noapp">0</div><div class="ml2">No app</div></div>
     </div>
   </div>
   <div class="bnav"><div class="ni on" style="color:var(--d2);"><span class="ic">🏠</span><span>Home</span></div><div class="ni" style=""><span class="ic">♥️</span><span>Doações</span></div><div class="ni"><span class="ic">🛒</span><span>Vendas</span></div><div class="ni"><span class="ic">🏷️</span><span>Cupons</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
@@ -1044,7 +1030,7 @@ sb.auth.getSession().then(function(r){
 });
 sb.auth.onAuthStateChange(function(event,session){
   currentUser=session?session.user:null;
-  if(event==='SIGNED_IN')go('s2');
+  if(event==='SIGNED_IN'){atualizarNomes();carregarProdutos();go('s2');}
   if(event==='SIGNED_OUT'){currentUser=null;go('s0');}
 });
 
@@ -1148,6 +1134,7 @@ async function carregarProdutos(){
 }
 function selProduto(i){
   __currentProduct=__produtosCache[i]||null;
+  if(__currentProduct)atualizarDetalheProduto(__currentProduct);
   go(__currentProduct&&__currentProduct.tipo==='doacao'?'sb3':'sb4');
 }
 
@@ -1175,7 +1162,7 @@ sb.auth.onAuthStateChange(function(event,session){
 
 document.addEventListener('DOMContentLoaded',function(){
   sb.auth.getSession().then(function(r){
-    if(r.data&&r.data.session){currentUser=r.data.session.user;carregarProdutos();}
+    if(r.data&&r.data.session){currentUser=r.data.session.user;atualizarNomes();carregarProdutos();}
   });
 });
 
@@ -1192,7 +1179,7 @@ function tgChk(rowId,cbId,btnId){
 }
 function submitTerms(){if(chkState.chk1&&chkState.chk2&&chkState.chk3)go('sb5-sol');}
 var hist=[];var dPr=null;var donacaoAtiva=false;var planSel='bas';
-function go(id){var c=document.querySelector('.scr.on');if(c){hist.push(c.id);c.classList.remove('on');}var n=document.getElementById(id);if(n){n.classList.add('on');var b=n.querySelector('.body');if(b)b.scrollTop=0;}}
+function go(id){var c=document.querySelector('.scr.on');if(c){hist.push(c.id);c.classList.remove('on');}var n=document.getElementById(id);if(n){n.classList.add('on');var b=n.querySelector('.body');if(b)b.scrollTop=0;}if(id==='sd0')carregarDoacoes();if(id==='sb7')carregarPedidos();if(id==='s2')atualizarNomes();}
 function bk(){if(!hist.length)return;var c=document.querySelector('.scr.on');if(c)c.classList.remove('on');var p=document.getElementById(hist.pop());if(p)p.classList.add('on');}
 function tg(el){var g=el.parentElement;g.querySelectorAll('.tb').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
 function tgChip(el){el.classList.toggle('on');}
@@ -1316,6 +1303,73 @@ async function carregarStatsDesktop(){
     if(ep&&rp.count!=null)ep.textContent=rp.count;
     document.getElementById('dt-stat-parceiros').textContent='12';
   }catch(e){}
+}
+
+function getNome(user){if(!user)return'Visitante';return(user.user_metadata&&user.user_metadata.nome)||user.email||'Usuário';}
+function getLetra(user){return getNome(user).charAt(0).toUpperCase()||'?';}
+
+function atualizarNomes(){
+  var nome=getNome(currentUser);
+  var pnome=nome.split(' ')[0];
+  var letra=getLetra(currentUser);
+  var saud='Olá, '+pnome+'! 👋';
+  [['saud-d',saud],['av-d',letra],['saud-b',saud],['av-b',letra],['saud-v',saud],['av-v',letra]].forEach(function(p){var el=document.getElementById(p[0]);if(el)el.textContent=p[1];});
+}
+
+function atualizarDetalheProduto(p){
+  if(!p)return;
+  var fmtPreco=function(v){return p.tipo==='doacao'?'Doação gratuita':'R$ '+(v?Number(v).toFixed(2).replace('.',','):'--');};
+  var campos={
+    'sb3-titulo':p.titulo||'—','sb3-sub':(p.tipo==='doacao'?'♥ Doação':'🛒 Venda')+' · '+(p.estado||'usado'),
+    'sb3-desc':p.descricao||'Sem descrição.','sb3-estado':p.estado||'—','sb3-local':p.local||'—',
+    'sb4-titulo':p.titulo||'—','sb4-sub':(p.estado||'Usado')+(p.tipo_oculos?' · '+p.tipo_oculos:''),
+    'sb4-preco':fmtPreco(p.preco),'sb4-vendedor':'Vendedor verificado','sb4-desc':p.descricao||'Sem descrição.',
+    'sb4-estado':p.estado||'—','sb4-local':p.local||'—',
+    'rec-prod-titulo':p.titulo||'—','rec-prod-tipo':p.tipo==='doacao'?'♥ Doação':'🛒 Venda',
+    'ck-titulo':p.titulo||'—','ck-sub':'1 item','ck-preco-prod':fmtPreco(p.preco),'ck-total':fmtPreco(p.preco),
+    'aval-produto':p.titulo||'—'
+  };
+  Object.keys(campos).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=campos[id];});
+  ['sb3-img','sb4-img'].forEach(function(id){var el=document.getElementById(id);if(el){el.style.display=p.foto_url?'block':'none';if(p.foto_url)el.src=p.foto_url;}});
+  var btnC=document.getElementById('btn-comprar');
+  if(btnC)btnC.textContent=p.tipo==='doacao'?'♥ Solicitar doação':'🛒 Comprar agora';
+}
+
+async function carregarDoacoes(){
+  if(!currentUser)return;
+  var el=document.getElementById('lista-doacoes-d');
+  if(!el)return;
+  try{
+    var r=await sb.from('doacoes').select('*').eq('beneficiario_id',currentUser.id).order('criado_em',{ascending:false}).limit(10);
+    if(r.error||!r.data||!r.data.length){el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">♥</div><p style="font-size:14px;">Você ainda não fez nenhuma solicitação.</p><button class="btn ba" style="margin-top:14px;" onclick="go(\'sb0\')">Ver óculos disponíveis</button></div>';return;}
+    el.innerHTML=r.data.map(function(d){
+      var status={'pendente':'⏳ Pendente','aprovado':'✅ Aprovado','entregue':'📦 Entregue','recusado':'❌ Recusado'}[d.status]||d.status;
+      return '<div class="di"><div class="di-ic" style="background:var(--d5);">♥</div><div style="flex:1;"><h4 style="font-size:14px;">Solicitação #'+d.id.substring(0,8).toUpperCase()+'</h4><p style="font-size:12px;">'+new Date(d.criado_em).toLocaleDateString('pt-BR')+'</p></div><span class="bdg bd">'+status+'</span></div>';
+    }).join('');
+  }catch(e){console.warn('carregarDoacoes:',e);}
+}
+
+async function carregarPedidos(){
+  var el=document.getElementById('lista-pedidos');if(!el)return;
+  if(!currentUser){el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><p>Faça login para ver seus pedidos.</p><button class="btn ba" style="margin-top:14px;" onclick="go(\'s1\')">Entrar</button></div>';return;}
+  el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🛒</div><p style="font-size:14px;">Você ainda não tem pedidos.</p><button class="btn ba" style="margin-top:14px;" onclick="go(\'sb0\')">Explorar óculos</button></div>';
+}
+
+function gerarProtocolo(){
+  var n='OTC-'+new Date().getFullYear()+'-'+Math.floor(1000+Math.random()*9000);
+  var el=document.getElementById('so7-protocolo');if(el)el.textContent='#'+n;
+}
+
+function preencherRevisao(){
+  var titulo=document.getElementById('titulo-v');
+  var desc=document.getElementById('desc-v');
+  var preco=document.getElementById('sv-preco');
+  var env1=document.getElementById('env1');
+  var vidPrev=document.getElementById('vid-prev');
+  var t=(titulo&&titulo.value.trim())||'—';
+  var pr='R$ '+((preco&&preco.value)?Number(preco.value.replace(/[R$\s]/g,'').replace(',','.')).toFixed(2).replace('.',','):'--');
+  var sv={'sv5-titulo':t,'sv5-sub':'Usado','sv5-preco':pr,'sv5-envio':env1&&env1.classList.contains('on')?'Correios':'Entrega em mãos','sv5-video':vidPrev&&vidPrev.style.display!=='none'?'✅ Incluído':'Não incluído','sv5-local':'Ver no anúncio'};
+  Object.keys(sv).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=sv[id];});
 }
 
 if(window.innerWidth>=900){
