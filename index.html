@@ -330,6 +330,10 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="s2" class="scr">
   <div class="hdr hw"><div><h2>Como você deseja<br>usar o app?</h2><p style="margin-top:4px;">Selecione uma opção abaixo.</p></div><button onclick="signOut()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;">Sair</button></div>
   <div class="body">
+    <div style="background:#FFF8E1;border:1px solid #FFE082;border-radius:var(--r);padding:10px 14px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;">
+      <span style="font-size:18px;flex-shrink:0;">🧪</span>
+      <div><p style="font-size:13px;font-weight:600;color:#E65100;margin-bottom:2px;">Versão Beta</p><p style="font-size:12px;color:#BF360C;line-height:1.4;">Este app está em fase de testes. Pode conter erros. Reporte problemas pelo menu Pedidos → Reportar.</p></div>
+    </div>
     <div class="pfc2" onclick="go('sd0')"><div class="pic" style="background:var(--g6);">♻️</div><div style="flex:1;"><h4 style="color:var(--g2);">Doador</h4><p style="font-size:13px;">Quero doar meus óculos e ajudar outras pessoas.</p></div><span style="font-size:20px;color:var(--d3);">›</span></div>
     <div class="pfc2" onclick="go('sb0')"><div class="pic" style="background:var(--b3);">🔍</div><div style="flex:1;"><h4 style="color:var(--b1);">Beneficiário / Comprador</h4><p style="font-size:13px;">Quero encontrar óculos para doação ou comprar.</p></div><span style="font-size:20px;color:var(--d3);">›</span></div>
     <div class="pfc2" onclick="go('sv0')"><div class="pic" style="background:var(--a4);">🛒</div><div style="flex:1;"><h4 style="color:var(--a0);">Vendedor</h4><p style="font-size:13px;">Quero vender meus óculos e alcançar mais pessoas.</p></div><span style="font-size:20px;color:var(--d3);">›</span></div>
@@ -346,7 +350,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;"><h3>Minhas doações</h3><span style="color:var(--g2);font-size:13px;font-weight:600;cursor:pointer;" onclick="go('sd5')">Ver todas</span></div>
     <div id="lista-doacoes-d"><div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">♻️</div><p style="font-size:14px;">Você ainda não fez nenhuma doação.</p><button class="btn bg" style="margin-top:14px;" onclick="go('sd1')">Fazer minha primeira doação</button></div></div>
   </div>
-  <div class="bnav"><div class="ni on"><span class="ic">🏠</span><span>Home</span></div><div class="ni" onclick="go('sd1')"><span class="ic">➕</span><span>Doar</span></div><div class="ni" onclick="go('sd5')"><span class="ic">📋</span><span>Doações</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni on"><span class="ic">🏠</span><span>Home</span></div><div class="ni" onclick="go('sd1')"><span class="ic">➕</span><span>Doar</span></div><div class="ni" onclick="go('sd5')"><span class="ic">📋</span><span>Doações</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <!-- ======== DOADOR: CADASTRAR ======== -->
@@ -355,27 +359,34 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="body">
     <div class="fg"><label class="fl">Tipo de óculos</label><div class="tog"><button class="tb on" onclick="tg(this)">Grau</button><button class="tb" onclick="tg(this)">Sol</button></div></div>
     <div class="fg"><label class="fl" style="margin-bottom:8px;">Grau (se aplicável)</label>
-      <div class="rx-block">
-        <span class="od-badge">OD · Olho Direito</span>
-        <input class="fi" placeholder="ESF: Ex: -2.00 · +0.75 · PL" oninput="expandEye(this,'od-d')" style="margin-bottom:0;">
-        <div class="rx-expand" id="od-d">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-            <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.50"></div>
-            <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 180"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--d5);border-radius:var(--r);cursor:pointer;" onclick="toggleGrau('d')">
+        <div id="icon-sem-grau-d" style="width:20px;height:20px;border:2px solid var(--d4);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;"></div>
+        <span style="font-size:13px;color:var(--d2);">Não sei o grau / Óculos sem grau</span>
+      </div>
+      <div id="rx-grau-d">
+        <div class="rx-block">
+          <span class="od-badge">OD · Olho Direito</span>
+          <input class="fi" placeholder="ESF: Ex: -2.00 · +0.75 · PL" oninput="expandEye(this,'od-d')" style="margin-bottom:0;">
+          <div class="rx-expand" id="od-d">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+              <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.50"></div>
+              <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 180"></div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="rx-block">
-        <span class="oe-badge">OE · Olho Esquerdo</span>
-        <input class="fi" placeholder="ESF: Ex: -0.75 · +1.25 · PL" oninput="expandEye(this,'oe-d')" style="margin-bottom:0;">
-        <div class="rx-expand" id="oe-d">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-            <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.25"></div>
-            <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 170"></div>
+        <div class="rx-block">
+          <span class="oe-badge">OE · Olho Esquerdo</span>
+          <input class="fi" placeholder="ESF: Ex: -0.75 · +1.25 · PL" oninput="expandEye(this,'oe-d')" style="margin-bottom:0;">
+          <div class="rx-expand" id="oe-d">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+              <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.25"></div>
+              <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 170"></div>
+            </div>
           </div>
         </div>
+        <div class="rx-hint">CIL e Eixo aparecem ao digitar · Use "PL" para olho sem grau</div>
       </div>
-      <div class="rx-hint">CIL e Eixo aparecem ao digitar · Use "PL" para olho sem grau</div>
+      <div id="msg-sem-grau-d" style="display:none;font-size:13px;color:var(--g2);padding:10px 12px;background:#E8F5E9;border-radius:var(--r);">✅ Grau não informado — O beneficiário/comprador será orientado a consultar um profissional óptico antes do uso.</div>
     </div>
     <div class="fg"><label class="fl">Estado</label><div class="tog"><button class="tb" onclick="tg(this)">Novo</button><button class="tb on" onclick="tg(this)">Usado</button></div></div>
     <div class="fg"><label class="fl">Descrição</label><textarea class="fi" id="desc-d" placeholder="Ex: Óculos de grau, armação preta, lentes antirrreflexo..." oninput="updateChar('desc-d','cc-d',500)"></textarea><span class="char-c" id="cc-d">0/500</span></div>
@@ -452,7 +463,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><h3>Destaques</h3><span style="color:var(--g2);font-size:13px;font-weight:600;cursor:pointer;" onclick="go('sb2')">Ver todos</span></div>
     <div class="pgrid" id="prod-grid"><div style="grid-column:1/-1;text-align:center;padding:24px 0;color:var(--d3);font-size:13px;">⏳ Carregando...</div></div>
   </div>
-  <div class="bnav"><div class="ni on"><span class="ic">🏠</span><span>Início</span></div><div class="ni" onclick="go('sb1')"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni" onclick="go('sb7')"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni on"><span class="ic">🏠</span><span>Início</span></div><div class="ni" onclick="go('sb1')"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni" onclick="go('sb7')"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <!-- ======== BENEFICIÁRIO: FILTRO ======== -->
@@ -480,7 +491,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="chips"><div class="chip on">Todos os tipos</div><div class="chip" onclick="tgChip(this)">♥ Doação</div><div class="chip" onclick="tgChip(this)">🛒 Venda</div></div>
     <div id="lista-busca"><div style="text-align:center;padding:32px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🔍</div><p>Use os filtros acima para encontrar óculos.</p></div></div>
   </div>
-  <div class="bnav"><div class="ni"><span class="ic">🏠</span><span>Início</span></div><div class="ni on"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni" onclick="go('sb7')"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni"><span class="ic">🏠</span><span>Início</span></div><div class="ni on"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni" onclick="go('sb7')"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <!-- ======== BENEFICIÁRIO: DETALHE DOAÇÃO ======== -->
@@ -525,7 +536,10 @@ input:checked+.sl:before{transform:translateX(22px);}
     </div>
     <p style="font-size:12px;color:var(--g2);font-weight:600;margin-bottom:4px;">⚡ Pagamento 100% seguro via Mercado Pago</p>
   </div>
-  <div style="position:absolute;bottom:0;left:0;right:0;padding:14px 20px 28px;background:#fff;border-top:1px solid var(--d4);">
+  <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 20px 24px;background:#fff;border-top:1px solid var(--d4);">
+    <div style="background:#FFF8E1;border-left:3px solid var(--a0);padding:8px 10px;border-radius:0 var(--r) var(--r) 0;margin-bottom:10px;">
+      <p style="font-size:12px;color:var(--a1);">⚕️ Óculos usados com grau devem ser avaliados por profissional óptico antes do uso regular.</p>
+    </div>
     <button class="btn ba" id="btn-comprar" onclick="irCheckout()">Comprar agora</button>
   </div>
 </div>
@@ -569,27 +583,34 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="dv"></div>
     <h4 style="margin-bottom:6px;">2. Informe seu grau</h4>
     <p style="font-size:13px;color:var(--d3);margin-bottom:10px;">Preencha conforme sua receita. Você é o único responsável pela precisão dos dados.</p>
-    <div class="rx-block">
-      <span class="od-badge">OD · Olho Direito</span>
-      <input class="fi" placeholder="ESF: Ex: -2.00 · +0.75 · PL" oninput="expandEye(this,'od-b')" style="margin-bottom:0;">
-      <div class="rx-expand" id="od-b">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-          <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.50"></div>
-          <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 180"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--d5);border-radius:var(--r);cursor:pointer;" onclick="toggleGrau('b')">
+      <div id="icon-sem-grau-b" style="width:20px;height:20px;border:2px solid var(--d4);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;"></div>
+      <span style="font-size:13px;color:var(--d2);">Não sei meu grau ainda</span>
+    </div>
+    <div id="rx-grau-b">
+      <div class="rx-block">
+        <span class="od-badge">OD · Olho Direito</span>
+        <input class="fi" placeholder="ESF: Ex: -2.00 · +0.75 · PL" oninput="expandEye(this,'od-b')" style="margin-bottom:0;">
+        <div class="rx-expand" id="od-b">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+            <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.50"></div>
+            <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 180"></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="rx-block">
-      <span class="oe-badge">OE · Olho Esquerdo</span>
-      <input class="fi" placeholder="ESF: Ex: -0.75 · +1.25 · PL" oninput="expandEye(this,'oe-b')" style="margin-bottom:0;">
-      <div class="rx-expand" id="oe-b">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-          <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.25"></div>
-          <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 170"></div>
+      <div class="rx-block">
+        <span class="oe-badge">OE · Olho Esquerdo</span>
+        <input class="fi" placeholder="ESF: Ex: -0.75 · +1.25 · PL" oninput="expandEye(this,'oe-b')" style="margin-bottom:0;">
+        <div class="rx-expand" id="oe-b">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+            <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.25"></div>
+            <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 170"></div>
+          </div>
         </div>
       </div>
+      <div class="rx-hint">CIL e Eixo aparecem automaticamente ao digitar · Use "PL" para olho sem grau</div>
     </div>
-    <div class="rx-hint">CIL e Eixo aparecem automaticamente ao digitar · Use "PL" para olho sem grau</div>
+    <div id="msg-sem-grau-b" style="display:none;font-size:13px;color:var(--g2);padding:10px 12px;background:#E8F5E9;border-radius:var(--r);margin-bottom:10px;">✅ Grau não informado — Você será orientado a consultar um profissional óptico antes de usar os óculos recebidos.</div>
     <div class="dv"></div>
     <div class="cardf">
       <p style="font-size:12px;color:var(--d3);margin-bottom:8px;">PRODUTO SELECIONADO</p>
@@ -617,7 +638,9 @@ input:checked+.sl:before{transform:translateX(22px);}
       <div class="clause-t">5. Natureza do produto doado</div>
       <div class="clause-b">Os óculos são de segunda mão, validados por parceiros ópticos quanto ao estado de conservação. A plataforma não garante correspondência exata entre o grau anunciado pelo doador e as lentes do produto. Recomenda-se conferência com profissional óptico antes do uso regular.</div>
       <div class="clause-t">6. Limite de doações</div>
-      <div class="clause-b" style="margin-bottom:0;">Cada beneficiário pode solicitar até <strong>1 (um) par de óculos por doação a cada 6 meses</strong>, a fim de ampliar o alcance do programa a mais pessoas necessitadas.</div>
+      <div class="clause-b">Cada beneficiário pode solicitar até <strong>1 (um) par de óculos por doação a cada 6 meses</strong>, a fim de ampliar o alcance do programa a mais pessoas necessitadas.</div>
+      <div class="clause-t">7. Avaliação profissional obrigatória</div>
+      <div class="clause-b" style="margin-bottom:0;">O uso de óculos de grau requer avaliação por <strong>profissional habilitado (óptico ou oftalmologista)</strong> antes do uso regular. O Visão Circular recomenda fortemente que todo beneficiário passe por consulta profissional antes de utilizar o produto, independentemente do grau informado. <strong>A plataforma não se responsabiliza por problemas decorrentes do uso sem avaliação profissional prévia.</strong></div>
     </div>
     <div id="chk1" class="chk-row" onclick="tgChk('chk1','cb1','conf-btn')">
       <div class="chk-box" id="cb1"></div>
@@ -630,6 +653,10 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div id="chk3" class="chk-row" onclick="tgChk('chk3','cb3','conf-btn')">
       <div class="chk-box" id="cb3"></div>
       <div class="chk-text">Assumo <strong>total responsabilidade</strong> pelo grau informado. A Visão Circular e o doador não respondem por incompatibilidade óptica decorrente de erro no preenchimento.</div>
+    </div>
+    <div id="chk4" class="chk-row" onclick="tgChk('chk4','cb4','conf-btn')">
+      <div class="chk-box" id="cb4"></div>
+      <div class="chk-text">Estou ciente de que devo <strong>consultar um profissional óptico ou oftalmologista</strong> antes de usar os óculos recebidos, independentemente do grau informado.</div>
     </div>
     <button class="btn" id="conf-btn" style="background:var(--d4);color:var(--d3);margin-top:6px;cursor:not-allowed;" onclick="submitTerms()">Concordar e continuar</button>
     <p style="font-size:11px;color:var(--d3);text-align:center;margin-top:6px;">Assinatura eletrônica · Lei nº 14.063/2020</p>
@@ -679,14 +706,20 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="body">
     <div class="cardf"><div style="display:flex;align-items:center;gap:12px;"><div style="font-size:36px;">👓</div><div><h4 id="ck-titulo">—</h4><p style="font-size:13px;" id="ck-sub">—</p></div></div></div>
     <h4 style="margin-bottom:12px;">Endereço de entrega</h4>
-    <div class="fg"><label class="fl">CEP</label><input class="fi" placeholder="00000-000"></div>
+    <div class="fg"><label class="fl">CEP de entrega</label><input class="fi" id="cep-entrega" placeholder="00000-000" maxlength="9" oninput="this.value=this.value.replace(/\D/g,'').replace(/^(\d{5})(\d)/,'$1-$2');if(this.value.replace(/\D/g,'').length>=8)calcularFrete();" onblur="calcularFrete()"></div>
     <div class="fg"><label class="fl">Endereço</label><input class="fi" placeholder="Rua, número, complemento"></div>
     <div class="dv"></div>
-    <h4 style="margin-bottom:12px;">Forma de envio</h4>
-    <div class="oc2 on"><span style="font-size:20px;">📦</span><div style="flex:1;"><h4 style="font-size:14px;">Correios PAC</h4><p style="font-size:13px;">R$ 18,90 · 5-8 dias úteis</p></div></div>
+    <h4 style="margin-bottom:6px;">Forma de envio</h4>
+    <p style="font-size:12px;color:var(--d3);margin-bottom:10px;">Frete por conta do comprador — estimativa pela tabela dos Correios.</p>
+    <div class="oc2 on" id="frete-opt-pac" onclick="selecionarFrete('pac')" style="cursor:pointer;">
+      <span style="font-size:20px;">📦</span><div style="flex:1;"><h4 style="font-size:14px;">Correios PAC</h4><p class="frete-pr" style="font-size:13px;">Digite o CEP para calcular</p></div>
+    </div>
+    <div class="oc2" id="frete-opt-sedex" onclick="selecionarFrete('sedex')" style="cursor:pointer;margin-top:8px;">
+      <span style="font-size:20px;">🚀</span><div style="flex:1;"><h4 style="font-size:14px;">Correios SEDEX</h4><p class="frete-pr" style="font-size:13px;">Digite o CEP para calcular</p></div>
+    </div>
     <div class="dv"></div>
     <div class="ir"><span class="il">Produto</span><span class="iv" id="ck-preco-prod">R$ —</span></div>
-    <div class="ir"><span class="il">Frete</span><span class="iv">A calcular</span></div>
+    <div class="ir"><span class="il">Frete</span><span class="iv" id="frete-valor">Calcular CEP</span></div>
     <div class="ir" style="border:none;"><span class="il" style="font-weight:700;font-size:15px;">Total</span><span class="iv" style="font-size:16px;font-weight:800;color:var(--a0);" id="ck-total">R$ —</span></div>
     <div style="height:12px;"></div>
     <button class="btn ba" id="btn-pagar" onclick="pagarComMP()">💳 Pagar com Mercado Pago</button>
@@ -701,7 +734,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="tog" style="margin-bottom:16px;"><button class="tb on" onclick="tg(this)">Todos</button><button class="tb" onclick="tg(this)">Doações</button><button class="tb" onclick="tg(this)">Compras</button></div>
     <div id="lista-pedidos"><div style="text-align:center;padding:32px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">📦</div><p style="font-size:14px;">Você ainda não tem pedidos.</p><button class="btn bg" style="margin-top:14px;" onclick="go('sb0')">Explorar óculos</button></div></div>
   </div>
-  <div class="bnav"><div class="ni"><span class="ic">🏠</span><span>Início</span></div><div class="ni"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni on"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni"><span class="ic">🏠</span><span>Início</span></div><div class="ni"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni on"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <!-- ======== PEDIDO: DETALHE ======== -->
@@ -788,7 +821,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <h3 style="margin-bottom:12px;">Meus anúncios</h3>
     <div id="lista-anuncios-v"><div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🛒</div><p style="font-size:14px;">Você ainda não tem anúncios.</p><button class="btn ba" style="margin-top:14px;" onclick="go('sv1')">Publicar meu primeiro anúncio</button></div></div>
   </div>
-  <div class="bnav"><div class="ni on" style="color:var(--a0)"><span class="ic">🏠</span><span>Home</span></div><div class="ni" onclick="go('sv1')"><span class="ic">➕</span><span>Vender</span></div><div class="ni"><span class="ic">📋</span><span>Anúncios</span></div><div class="ni"><span class="ic">💬</span><span>Mensagens</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni on" style="color:var(--a0)"><span class="ic">🏠</span><span>Home</span></div><div class="ni" onclick="go('sv1')"><span class="ic">➕</span><span>Vender</span></div><div class="ni"><span class="ic">📋</span><span>Anúncios</span></div><div class="ni"><span class="ic">💬</span><span>Mensagens</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <!-- ======== VENDEDOR: CAD PRODUTO ======== -->
@@ -798,27 +831,34 @@ input:checked+.sl:before{transform:translateX(22px);}
     <p style="margin-bottom:16px;">Preencha os dados do seu óculos para venda.</p>
     <div class="fg"><label class="fl">Tipo de óculos</label><div class="tog"><button class="tb on" onclick="tg(this)">Grau</button><button class="tb" onclick="tg(this)">Sol</button></div></div>
     <div class="fg"><label class="fl" style="margin-bottom:8px;">Grau dos óculos</label>
-      <div class="rx-block">
-        <span class="od-badge">OD · Olho Direito</span>
-        <input class="fi" placeholder="ESF: Ex: -2.00 · +0.75 · PL" oninput="expandEye(this,'od-v')" style="margin-bottom:0;">
-        <div class="rx-expand" id="od-v">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-            <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.50"></div>
-            <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 180"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--d5);border-radius:var(--r);cursor:pointer;" onclick="toggleGrau('v')">
+        <div id="icon-sem-grau-v" style="width:20px;height:20px;border:2px solid var(--d4);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;"></div>
+        <span style="font-size:13px;color:var(--d2);">Não sei o grau / Óculos sem grau</span>
+      </div>
+      <div id="rx-grau-v">
+        <div class="rx-block">
+          <span class="od-badge">OD · Olho Direito</span>
+          <input class="fi" placeholder="ESF: Ex: -2.00 · +0.75 · PL" oninput="expandEye(this,'od-v')" style="margin-bottom:0;">
+          <div class="rx-expand" id="od-v">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+              <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.50"></div>
+              <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 180"></div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="rx-block">
-        <span class="oe-badge">OE · Olho Esquerdo</span>
-        <input class="fi" placeholder="ESF: Ex: -0.75 · PL" oninput="expandEye(this,'oe-v')" style="margin-bottom:0;">
-        <div class="rx-expand" id="oe-v">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-            <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.25"></div>
-            <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 170"></div>
+        <div class="rx-block">
+          <span class="oe-badge">OE · Olho Esquerdo</span>
+          <input class="fi" placeholder="ESF: Ex: -0.75 · PL" oninput="expandEye(this,'oe-v')" style="margin-bottom:0;">
+          <div class="rx-expand" id="oe-v">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+              <div><label class="fl">CIL (astigmatismo)</label><input class="fi" placeholder="Ex: -0.25"></div>
+              <div><label class="fl">Eixo (0°–180°)</label><input class="fi" placeholder="Ex: 170"></div>
+            </div>
           </div>
         </div>
+        <div class="rx-hint">CIL e Eixo aparecem ao digitar · Use "PL" para olho sem grau</div>
       </div>
-      <div class="rx-hint">CIL e Eixo aparecem ao digitar · Use "PL" para olho sem grau</div>
+      <div id="msg-sem-grau-v" style="display:none;font-size:13px;color:var(--g2);padding:10px 12px;background:#E8F5E9;border-radius:var(--r);">✅ Grau não informado — O comprador será orientado a consultar um profissional óptico antes do uso.</div>
     </div>
     <div class="fg"><label class="fl">Marca (opcional)</label><input class="fi" id="sv-marca" placeholder="Ex: Ray-Ban, Oakley, Vogue..."></div>
     <div class="fg"><label class="fl">Estado de conservação</label><div class="tog"><button class="tb" onclick="tg(this)">Novo</button><button class="tb on" onclick="tg(this)">Usado</button></div></div>
@@ -1073,7 +1113,7 @@ input:checked+.sl:before{transform:translateX(22px);}
       <div class="mc2"><div class="mv2" style="color:var(--b1);" id="stat-o-noapp">0</div><div class="ml2">No app</div></div>
     </div>
   </div>
-  <div class="bnav"><div class="ni on" style="color:var(--d2);"><span class="ic">🏠</span><span>Home</span></div><div class="ni" style=""><span class="ic">♥️</span><span>Doações</span></div><div class="ni"><span class="ic">🛒</span><span>Vendas</span></div><div class="ni"><span class="ic">🏷️</span><span>Cupons</span></div><div class="ni"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni on" style="color:var(--d2);"><span class="ic">🏠</span><span>Home</span></div><div class="ni" style=""><span class="ic">♥️</span><span>Doações</span></div><div class="ni"><span class="ic">🛒</span><span>Vendas</span></div><div class="ni"><span class="ic">🏷️</span><span>Cupons</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <script>
@@ -1226,17 +1266,17 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 function expandEye(input,id){var el=document.getElementById(id);if(el)el.classList.toggle('show',input.value.trim().length>0);}
-var chkState={chk1:false,chk2:false,chk3:false};
+var chkState={chk1:false,chk2:false,chk3:false,chk4:false};
 function tgChk(rowId,cbId,btnId){
   chkState[rowId]=!chkState[rowId];
   var row=document.getElementById(rowId),cb=document.getElementById(cbId);
   if(row)row.classList.toggle('on',chkState[rowId]);
   if(cb){cb.classList.toggle('on',chkState[rowId]);cb.textContent=chkState[rowId]?'✓':'';}
-  var all=chkState.chk1&&chkState.chk2&&chkState.chk3;
+  var all=chkState.chk1&&chkState.chk2&&chkState.chk3&&chkState.chk4;
   var btn=document.getElementById(btnId);
   if(btn){btn.style.background=all?'var(--g2)':'var(--d4)';btn.style.color=all?'#fff':'var(--d3)';btn.style.cursor=all?'pointer':'not-allowed';}
 }
-function submitTerms(){if(chkState.chk1&&chkState.chk2&&chkState.chk3)go('sb5-sol');}
+function submitTerms(){if(chkState.chk1&&chkState.chk2&&chkState.chk3&&chkState.chk4)go('sb5-sol');}
 var hist=[];var dPr=null;var donacaoAtiva=false;var planSel='bas';
 var _loginGate=['sd0','sb0','sb7','sv0','so0','so1'];
 function go(id){
@@ -1534,6 +1574,55 @@ async function enviarReporte(){
     bk();
   }catch(e){showToast('Erro ao enviar: '+e.message);}
   if(btn){btn.textContent='Enviar para a plataforma';btn.disabled=false;}
+}
+
+function toggleGrau(tipo){
+  var icon=document.getElementById('icon-sem-grau-'+tipo);
+  var rx=document.getElementById('rx-grau-'+tipo);
+  var msg=document.getElementById('msg-sem-grau-'+tipo);
+  if(!icon)return;
+  var on=icon.textContent==='✓';
+  if(on){icon.textContent='';icon.style.background='';icon.style.borderColor='var(--d4)';icon.style.color='';if(rx)rx.style.display='';if(msg)msg.style.display='none';}
+  else{icon.textContent='✓';icon.style.background='var(--g2)';icon.style.borderColor='var(--g2)';icon.style.color='#fff';if(rx)rx.style.display='none';if(msg)msg.style.display='block';}
+}
+
+var _freteVal=0;var _freteTipo='pac';
+function calcularFrete(){
+  var cepEl=document.getElementById('cep-entrega');
+  var cep=cepEl&&cepEl.value.replace(/\D/g,'');
+  if(!cep||cep.length<2){return;}
+  var p=parseInt(cep.substring(0,2));
+  var pac;
+  if(p<=9)pac=14.90;else if(p<=19)pac=16.90;else if(p<=28)pac=18.90;
+  else if(p<=39)pac=17.90;else if(p<=49)pac=23.90;else if(p<=56)pac=22.90;
+  else if(p<=59)pac=24.90;else if(p<=63)pac=25.90;else if(p<=64)pac=26.90;
+  else if(p<=66)pac=27.90;else if(p<=67)pac=29.90;else if(p<=68)pac=31.90;
+  else if(p<=69)pac=33.90;else if(p<=73)pac=20.90;else if(p<=79)pac=22.90;
+  else if(p<=87)pac=18.90;else if(p<=89)pac=18.90;else pac=20.90;
+  var sedex=Math.floor(pac*1.85)+0.90;
+  var dias=p<=28?'3-5 dias úteis':p<=49?'5-8 dias úteis':'7-12 dias úteis';
+  var optPac=document.getElementById('frete-opt-pac');
+  var optSed=document.getElementById('frete-opt-sedex');
+  if(optPac){optPac.__val=pac;var pr=optPac.querySelector('.frete-pr');if(pr)pr.textContent='R$ '+pac.toFixed(2).replace('.',',')+' · '+dias;}
+  if(optSed){optSed.__val=sedex;var pr=optSed.querySelector('.frete-pr');if(pr)pr.textContent='R$ '+sedex.toFixed(2).replace('.',',')+' · 1-3 dias úteis';}
+  selecionarFrete('pac',pac);
+}
+function selecionarFrete(tipo,val){
+  _freteTipo=tipo;
+  var pac=document.getElementById('frete-opt-pac');
+  var sed=document.getElementById('frete-opt-sedex');
+  if(pac)pac.classList.toggle('on',tipo==='pac');
+  if(sed)sed.classList.toggle('on',tipo==='sedex');
+  _freteVal=val!==undefined?val:(tipo==='pac'?(pac&&pac.__val||0):(sed&&sed.__val||0));
+  var freteEl=document.getElementById('frete-valor');
+  if(freteEl)freteEl.textContent=_freteVal>0?'R$ '+_freteVal.toFixed(2).replace('.',','):'Calcular CEP';
+  atualizarTotalCheckout();
+}
+function atualizarTotalCheckout(){
+  var prod=__currentProduct&&__currentProduct.preco?parseFloat(__currentProduct.preco):0;
+  var total=prod+_freteVal;
+  var totalEl=document.getElementById('ck-total');
+  if(totalEl&&total>0)totalEl.textContent='R$ '+total.toFixed(2).replace('.',',');
 }
 
 if(window.innerWidth>=900){
