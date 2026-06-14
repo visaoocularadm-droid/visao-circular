@@ -577,7 +577,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <span class="bdg bd" style="margin-bottom:10px;display:inline-flex;font-size:13px;">♥ DOAÇÃO DISPONÍVEL</span>
     <div style="background:var(--g6);border-radius:var(--r);padding:10px;margin-bottom:10px;font-size:13px;color:var(--g2);font-weight:500;text-align:center;">✅ Este óculos pode transformar a vida de alguém.</div>
     <div class="prod-img" id="sb3-img">👓</div>
-    <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots" id="sb3-dots"><div class="dot on"></div></div>
     <h2 style="margin-bottom:3px;" id="sb3-titulo">—</h2>
     <p style="margin-bottom:12px;" id="sb3-sub">—</p>
     <div class="cardf"><p style="font-size:12px;color:var(--d3);margin-bottom:5px;">DESCRIÇÃO</p><p style="font-size:14px;color:var(--tx);" id="sb3-desc">—</p></div>
@@ -599,7 +599,7 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="body" style="padding-top:4px;padding-bottom:110px;">
     <span class="bdg bv" style="margin-bottom:10px;display:inline-flex;font-size:13px;">🛒 À VENDA</span>
     <div class="prod-img" id="sb4-img">👓</div>
-    <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots" id="sb4-dots"><div class="dot on"></div></div>
     <h2 style="margin-bottom:3px;" id="sb4-titulo">—</h2>
     <p style="margin-bottom:8px;" id="sb4-sub">—</p>
     <div class="price-big" id="sb4-preco">R$ —</div>
@@ -1468,9 +1468,9 @@ async function salvarProduto(){
   var btn=document.querySelector('#sv5 .btn.ba');
   if(btn){btn.textContent='Publicando...';btn.disabled=true;}
   try{
-    var r=await sb.from('produtos').insert({vendedor_id:currentUser.id,titulo:titulo,descricao:descTxt,preco:precoNum||null,tipo:'venda',tipo_oculos:'grau',estado:'usado',status:'ativo',plano:'basico',foto_url:__fotoUrls[0]||null,fotos:__fotoUrls});
+    var r=await sb.from('produtos').insert({vendedor_id:currentUser.id,titulo:titulo,descricao:descTxt,preco:precoNum||null,tipo:'venda',tipo_oculos:'grau',estado:'usado',status:'ativo',plano:'basico',foto_url:__fotoUrls[0]||null,fotos:__fotoUrls,video_url:__videoUrl||null});
     if(r.error)throw r.error;
-    __fotoUrls=[];
+    __fotoUrls=[];__videoUrl=null;
     showToast('Anúncio publicado! ✓');
     go('sv8');
   }catch(e){showToast('Erro ao publicar: '+e.message);}
@@ -1573,6 +1573,7 @@ function selPg(t){document.getElementById('pgpix').classList.toggle('on',t==='pg
 function selPgO(t){document.getElementById('opix').classList.toggle('on',t==='opix');document.getElementById('opix2').classList.toggle('on',t==='opix2');}
 function updateChar(fid,cid,max){var v=document.getElementById(fid);var c=document.getElementById(cid);if(v&&c)c.textContent=(v.value||'').length+'/'+max;}
 var __fotoUrls=[];
+var __videoUrl=null;
 async function addPhoto(input){
   if(!input.files||!input.files.length)return;
   var body=input.closest('.body');
@@ -1594,7 +1595,26 @@ async function addPhoto(input){
   }
   msg.textContent=uploaded>0?'📷 '+uploaded+' foto(s) enviada(s) ✓':'❌ Erro ao enviar fotos';
 }
-function addVideo(input){if(input.files&&input.files.length){document.getElementById('vid-add-btn').style.display='none';document.getElementById('vid-prev').style.display='flex';}}
+async function addVideo(input){
+  if(!input.files||!input.files.length)return;
+  if(!currentUser){showToast('Faça login para enviar vídeo');return;}
+  document.getElementById('vid-add-btn').style.display='none';
+  var prevEl=document.getElementById('vid-prev');
+  prevEl.style.display='flex';
+  prevEl.innerHTML='⏳ Enviando vídeo...';
+  var file=input.files[0];
+  var path=currentUser.id+'/vid_'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+  var r=await sb.storage.from('fotos-produtos').upload(path,file,{contentType:file.type});
+  if(r.error){
+    showToast('Erro ao enviar vídeo: '+r.error.message);
+    prevEl.innerHTML='❌ Erro · <span onclick="document.getElementById(\'vid-add-btn\').style.display=\'flex\';this.parentElement.style.display=\'none\';" style="text-decoration:underline;cursor:pointer;">Tentar novamente</span>';
+    __videoUrl=null;
+  } else {
+    __videoUrl=sb.storage.from('fotos-produtos').getPublicUrl(path).data.publicUrl;
+    prevEl.innerHTML='▶️<div class="vid-ov">🎬 Vídeo enviado ✓ · <span onclick="document.getElementById(\'vid-input\').click();" style="text-decoration:underline;cursor:pointer;">Regravar</span></div>';
+    showToast('🎬 Vídeo enviado ✓');
+  }
+}
 var __receitaUrl=null;
 async function uploadReceita(){
   var input=document.getElementById('receita-input');
@@ -1929,6 +1949,47 @@ async function carregarDashboardOtica(dias){
 }
 function filtrarDashO(dias,el){if(el)_filtroTb(el);carregarDashboardOtica(dias);}
 
+function _goSlide(imgId,dotsId,idx){
+  var el=document.getElementById(imgId);
+  if(el)el.scrollTo({left:idx*el.offsetWidth,behavior:'smooth'});
+}
+function buildCarrossel(imgId,dotsId,fotos,fallbackUrl,videoUrl){
+  var el=document.getElementById(imgId);
+  var dotsEl=document.getElementById(dotsId);
+  if(!el)return;
+  var urls=(fotos&&fotos.length>0)?fotos:(fallbackUrl?[fallbackUrl]:[]);
+  var totalSlides=urls.length+(videoUrl?1:0);
+  if(totalSlides===0){
+    el.style.cssText='background:var(--d5);height:210px;display:flex;align-items:center;justify-content:center;border-radius:var(--r);margin-bottom:13px;font-size:76px;';
+    el.innerHTML='👓';
+    if(dotsEl)dotsEl.innerHTML='';
+    return;
+  }
+  el.style.cssText='background:var(--d5);height:210px;border-radius:var(--r);margin-bottom:13px;overflow-x:scroll;display:flex;flex-direction:row;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;';
+  var slides=urls.map(function(url){
+    return '<div style="flex-shrink:0;width:100%;height:100%;scroll-snap-align:start;overflow:hidden;">'
+      +'<img src="'+url+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\'">'
+      +'</div>';
+  });
+  if(videoUrl){
+    slides.push('<div style="flex-shrink:0;width:100%;height:100%;scroll-snap-align:start;background:#111;display:flex;align-items:center;justify-content:center;">'
+      +'<video src="'+videoUrl+'" style="width:100%;height:100%;object-fit:contain;" controls preload="none"></video>'
+      +'</div>');
+  }
+  el.innerHTML=slides.join('');
+  if(dotsEl){
+    if(totalSlides<=1){dotsEl.innerHTML='';}
+    else{
+      dotsEl.innerHTML=Array.from({length:totalSlides},function(_,i){
+        return '<div class="dot'+(i===0?' on':'')+'" style="cursor:pointer;" onclick="_goSlide(\''+imgId+'\',\''+dotsId+'\','+i+')"></div>';
+      }).join('');
+      el.onscroll=function(){
+        var idx=Math.round(el.scrollLeft/el.offsetWidth);
+        dotsEl.querySelectorAll('.dot').forEach(function(d,i){d.classList.toggle('on',i===idx);});
+      };
+    }
+  }
+}
 function atualizarDetalheProduto(p){
   if(!p)return;
   var fmtPreco=function(v){return p.tipo==='doacao'?'Doação gratuita':'R$ '+(v?Number(v).toFixed(2).replace('.',','):'--');};
@@ -1943,7 +2004,8 @@ function atualizarDetalheProduto(p){
     'aval-produto':p.titulo||'—'
   };
   Object.keys(campos).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=campos[id];});
-  ['sb3-img','sb4-img'].forEach(function(id){var el=document.getElementById(id);if(el){if(p.foto_url){el.innerHTML='<img src="'+p.foto_url+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r);" onerror="this.parentElement.innerHTML=\'👓\'">';}else{el.innerHTML='👓';}}});
+  buildCarrossel('sb3-img','sb3-dots',p.fotos,p.foto_url,p.video_url);
+  buildCarrossel('sb4-img','sb4-dots',p.fotos,p.foto_url,p.video_url);
   var btnC=document.getElementById('btn-comprar');
   if(btnC)btnC.textContent=p.tipo==='doacao'?'♥ Solicitar doação':'🛒 Comprar agora';
 }
