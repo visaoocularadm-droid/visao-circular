@@ -358,12 +358,16 @@ input:checked+.sl:before{transform:translateX(22px);}
       <div class="fg"><label class="fl">UF</label><input class="fi" id="perf-uf" placeholder="SP" maxlength="2" style="text-transform:uppercase;"></div>
     </div>
     <button class="btn bg" style="margin-top:6px;" onclick="salvarPerfil()">Salvar perfil</button>
+    <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--d5);text-align:center;">
+      <button class="btn" style="background:#FFEBEE;color:#B71C1C;border:1.5px solid #FFCDD2;font-weight:700;font-size:15px;gap:8px;transition:all .2s;" onclick="logoutComConfirmacao(this)">🚪 Sair da conta</button>
+      <p style="font-size:11px;color:var(--d3);margin-top:10px;line-height:1.5;">A sessão será encerrada e todos os dados de login removidos deste dispositivo.</p>
+    </div>
   </div>
 </div>
 
 <!-- ============ ESCOLHA PERFIL ============ -->
 <div id="s2" class="scr">
-  <div class="hdr hw"><div><h2>Como você deseja<br>usar o app?</h2><p style="margin-top:4px;">Selecione uma opção abaixo.</p></div><button onclick="signOut()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;">Sair</button></div>
+  <div class="hdr hw"><div><h2>Como você deseja<br>usar o app?</h2><p style="margin-top:4px;">Selecione uma opção abaixo.</p></div><button id="btn-sair-s2" onclick="logoutComConfirmacao(this)" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;transition:all .2s;">🚪 Sair</button></div>
   <div class="body">
     <div style="background:#FFF8E1;border:1px solid #FFE082;border-radius:var(--r);padding:10px 14px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;">
       <span style="font-size:18px;flex-shrink:0;">🧪</span>
@@ -1291,9 +1295,44 @@ async function loginGoogle(){
 }
 
 async function signOut(){
-  await sb.auth.signOut();
+  showToast('Saindo...');
+  // 1. Invalida a sessão no servidor (Supabase global scope)
+  try{await sb.auth.signOut({scope:'global'});}catch(e){}
+  // 2. Limpa localStorage (onde o Supabase guarda os tokens)
+  try{localStorage.clear();}catch(e){}
+  // 3. Limpa sessionStorage
+  try{sessionStorage.clear();}catch(e){}
+  // 4. Limpa cookies do domínio
+  try{
+    document.cookie.split(';').forEach(function(c){
+      var n=c.trim().split('=')[0];
+      document.cookie=n+'=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;';
+      document.cookie=n+'=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;domain='+location.hostname+';';
+    });
+  }catch(e){}
   currentUser=null;
-  go('s0');
+  // 5. Recarrega a página via replace() — substitui o histórico em vez de empilhar,
+  //    impedindo que o botão Voltar restaure a sessão anterior
+  setTimeout(function(){window.location.replace(location.origin+location.pathname);},420);
+}
+
+// Logout com confirmação de 2 toques (evita sair acidentalmente em celular compartilhado)
+function logoutComConfirmacao(btn){
+  if(btn.dataset.step==='1'){
+    signOut();
+  }else{
+    var orig=btn.innerHTML;
+    btn.innerHTML='⚠️ Toque novamente para confirmar';
+    btn.style.background='#B71C1C';btn.style.color='#fff';btn.style.borderColor='#B71C1C';
+    btn.dataset.step='1';
+    setTimeout(function(){
+      if(btn.dataset.step==='1'){
+        btn.innerHTML=orig;
+        btn.style.background='#FFEBEE';btn.style.color='#B71C1C';btn.style.borderColor='#FFCDD2';
+        delete btn.dataset.step;
+      }
+    },3500);
+  }
 }
 
 async function signupEmail(){
