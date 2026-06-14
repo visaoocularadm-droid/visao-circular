@@ -474,11 +474,20 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="sd2" class="scr">
   <div class="hdr"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><p class="sub" style="font-size:11px;">PASSO 2 DE 3</p><h3>Fotos do produto</h3></div></div>
   <div class="body">
-    <p style="margin-bottom:14px;">Adicione fotos nítidas dos seus óculos.</p>
-    <label><input type="file" accept="image/*" capture="environment" multiple style="display:none" onchange="addPhoto(this)">
-      <div class="pup"><span style="font-size:34px;">📷</span><span>Toque para fotografar</span><span style="font-size:12px;">Adicione até 5 fotos em diferentes ângulos</span></div>
+    <p style="margin-bottom:10px;">Adicione fotos nítidas dos seus óculos.</p>
+    <div id="sd2-foto-grid" data-fotogrid="sd2-foto-grid" style="display:flex;gap:8px;overflow-x:auto;padding:4px 0 6px;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-height:90px;align-items:flex-start;margin-bottom:6px;"></div>
+    <label style="display:flex;align-items:center;gap:8px;padding:11px;border:2px dashed var(--d4);border-radius:var(--r);cursor:pointer;color:var(--d3);font-size:13px;margin-bottom:4px;">
+      <input type="file" accept="image/*" capture="environment" multiple style="display:none" onchange="addPhoto(this)">
+      <span style="font-size:18px;">📷</span> Adicionar fotos (até 10)
     </label>
-    <div class="imgs-row" id="photos-d"><div class="img-t">🕶</div><div class="img-t">🔲</div></div>
+    <p style="font-size:11px;color:var(--d3);margin-bottom:14px;">Toque na foto para definir como capa · × para remover</p>
+    <div class="dv"></div>
+    <h4 style="margin-bottom:6px;">🎬 Vídeo do produto</h4>
+    <p style="font-size:13px;color:var(--d3);margin-bottom:8px;">Grave até 15 segundos mostrando o produto.</p>
+    <label id="vid-label-d"><input type="file" accept="video/*" capture="environment" id="vid-input-d" style="display:none" onchange="addVideoDoacao(this)">
+      <div class="vid-add" id="vid-add-btn-d"><span style="font-size:28px;">🎬</span><div><div style="font-weight:700;">Gravar vídeo</div><div style="font-size:12px;color:var(--d3);">Opcional · Máx. 15 segundos</div></div></div>
+    </label>
+    <div id="vid-prev-d" style="display:none;" class="vid-prev">▶️<div class="vid-ov">🎬 Vídeo enviado ✓</div></div>
     <div class="dv"></div>
     <button class="btn bg" onclick="go('sd3')">Continuar</button>
   </div>
@@ -492,7 +501,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="oc2" id="oc-ret" onclick="selOc('ret')"><span style="font-size:22px;">🚚</span><div><h4>Solicitar retirada</h4><p style="font-size:13px;">Buscamos no seu endereço.</p></div></div>
     <div class="mapc">🗺️</div>
     <p style="text-align:center;font-size:13px;color:var(--g2);font-weight:500;margin-bottom:20px;" id="ponto-coleta-txt">📍 Buscando ponto de coleta próximo...</p>
-    <button class="btn bg" onclick="go('sd4')">Confirmar</button>
+    <button class="btn bg" id="btn-confirmar-doacao" onclick="salvarDoacao()">Confirmar</button>
   </div>
 </div>
 
@@ -894,6 +903,10 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="hdr ha"><div style="flex:1;"><p class="sub" id="saud-v">Olá! 👋</p><h2 style="font-size:19px;">Seus anúncios.</h2></div><div class="av" style="background:#BF360C;" id="av-v">?</div></div>
   <div class="body">
     <div class="hero" style="background:linear-gradient(135deg,var(--a1),var(--a0));" onclick="go('sv1')"><div style="font-size:28px;margin-bottom:8px;">🛒</div><h3 style="color:#fff;margin-bottom:3px;">Publicar anúncio</h3><p style="color:#FFCC80;font-size:13px;">Alcance compradores em todo o Brasil</p><div class="hero-cta">Vender agora ›</div></div>
+    <div id="secao-postagem" style="display:none;background:#FFF3E0;border-left:4px solid var(--a0);border-radius:0 var(--r) var(--r) 0;padding:14px;margin-bottom:16px;">
+      <div style="font-weight:700;color:#E65100;margin-bottom:8px;font-size:14px;">⏰ Vendas aguardando postagem</div>
+      <div id="lista-postagem"></div>
+    </div>
     <h3 style="margin-bottom:12px;">Meus anúncios</h3>
     <div id="lista-anuncios-v"><div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🛒</div><p style="font-size:14px;">Você ainda não tem anúncios.</p><button class="btn ba" style="margin-top:14px;" onclick="go('sv1')">Publicar meu primeiro anúncio</button></div></div>
   </div>
@@ -947,11 +960,13 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="sv2" class="scr">
   <div class="hdr ha"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><p class="sub" style="font-size:11px;">PASSO 2 DE 5</p><h3>Fotos do produto</h3></div></div>
   <div class="body">
-    <p style="margin-bottom:14px;">Adicione fotos nítidas do seu óculos em diferentes ângulos.</p>
-    <label><input type="file" accept="image/*" capture="environment" multiple style="display:none" onchange="addPhoto(this)">
-      <div class="pup"><span style="font-size:34px;">📷</span><span style="font-weight:600;">Adicionar fotos</span><span style="font-size:12px;">Até 10 fotos · Boa iluminação melhora as vendas!</span></div>
+    <p style="margin-bottom:10px;">Adicione fotos nítidas do seu óculos em diferentes ângulos.</p>
+    <div id="sv2-foto-grid" data-fotogrid="sv2-foto-grid" style="display:flex;gap:8px;overflow-x:auto;padding:4px 0 6px;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-height:90px;align-items:flex-start;margin-bottom:6px;"></div>
+    <label style="display:flex;align-items:center;gap:8px;padding:11px;border:2px dashed var(--d4);border-radius:var(--r);cursor:pointer;color:var(--d3);font-size:13px;margin-bottom:4px;">
+      <input type="file" accept="image/*" capture="environment" multiple style="display:none" onchange="addPhoto(this)">
+      <span style="font-size:18px;">📷</span> Adicionar fotos (até 10)
     </label>
-    <div class="imgs-row"><div class="img-t">🕶</div><div class="img-t">🔲</div><div class="img-t">🔲</div><div class="img-a">+</div></div>
+    <p style="font-size:11px;color:var(--d3);margin-bottom:14px;">Toque na foto para definir como capa · × para remover</p>
     <div class="dv"></div>
     <h4 style="margin-bottom:6px;">🎬 Vídeo do produto</h4>
     <p style="font-size:13px;color:var(--d3);margin-bottom:8px;">Grave até 15 segundos mostrando o produto. Vídeos aumentam as vendas em até 3x!</p>
@@ -1074,7 +1089,12 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="fg"><label class="fl">Título</label><input class="fi" id="sv-edit-titulo" placeholder="Ex: Óculos de grau Ray-Ban"></div>
     <div class="fg"><label class="fl">Descrição</label><textarea class="fi" id="sv-edit-desc" style="min-height:100px;" placeholder="Descreva o estado, armação, marca..."></textarea></div>
     <div class="fg"><label class="fl">Preço (R$)</label><input class="fi" id="sv-edit-preco" type="number" step="0.01" min="0" placeholder="0,00"></div>
-    <div class="fg"><label class="fl">Status do anúncio</label><div class="tog" id="sv-edit-status"><button class="tb on" onclick="tg(this)">Ativo</button><button class="tb" onclick="tg(this)">Pausado</button></div></div>
+    <div class="fg"><label class="fl">Status do anúncio</label><div class="tog" id="sv-edit-status"><button class="tb on" onclick="tg(this);_toggleRastreio()">Ativo</button><button class="tb" onclick="tg(this);_toggleRastreio()">Pausado</button><button class="tb" onclick="tg(this);_toggleRastreio()">Vendido</button></div></div>
+    <div class="fg" id="sv-edit-rastreio-box" style="display:none;">
+      <label class="fl">Código de rastreio</label>
+      <input class="fi" id="sv-edit-rastreio" placeholder="Ex: BR123456789BR" oninput="this.value=this.value.toUpperCase()">
+      <p style="font-size:12px;color:var(--d3);margin-top:4px;">⏰ Prazo de postagem: 1 dia útil após a venda. O código será enviado ao comprador.</p>
+    </div>
     <button class="btn ba" style="margin-bottom:12px;" onclick="salvarEdicaoAnuncio()">💾 Salvar alterações</button>
     <button class="btn" style="border:1px solid #D32F2F;color:#D32F2F;background:none;" onclick="if(__editProduto)excluirAnuncio(__editProduto.id)">🗑️ Excluir anúncio</button>
   </div>
@@ -1202,9 +1222,9 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="dm-grid">
       <div class="dm-i"><span style="font-size:26px;">📦</span><span class="dm-lb">Receber doações</span></div>
       <div class="dm-i"><span style="font-size:26px;">✅</span><span class="dm-lb">Validar produtos</span></div>
-      <div class="dm-i"><span style="font-size:26px;">🛒</span><span class="dm-lb">Publicar vendas</span></div>
+      <div class="dm-i" onclick="go('sv1')"><span style="font-size:26px;">🛒</span><span class="dm-lb">Publicar vendas</span></div>
       <div class="dm-i"><span style="font-size:26px;">🏷️</span><span class="dm-lb">Gerenciar cupons</span></div>
-      <div class="dm-i"><span style="font-size:26px;">📋</span><span class="dm-lb">Meus pedidos</span></div>
+      <div class="dm-i" onclick="go('sv0')"><span style="font-size:26px;">📋</span><span class="dm-lb">Meus anúncios</span></div>
       <div class="dm-i"><span style="font-size:26px;">📊</span><span class="dm-lb">Relatórios</span></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
@@ -1262,8 +1282,12 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
       <div style="background:#FFF3E0;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dv-ativos" style="font-size:36px;font-weight:900;color:var(--a0);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">ANÚNCIOS ATIVOS</div></div>
       <div style="background:var(--g6);border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dv-total" style="font-size:36px;font-weight:900;color:var(--g2);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">TOTAL PRODUTOS</div></div>
-      <div style="background:#EDE7F6;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dv-receita" style="font-size:20px;font-weight:900;color:#4527A0;">R$&nbsp;—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">VALOR EM ESTOQUE</div></div>
+      <div style="background:#EDE7F6;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dv-receita" style="font-size:18px;font-weight:900;color:#4527A0;">R$&nbsp;—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">VALOR EM ESTOQUE</div></div>
       <div style="background:#E3F2FD;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dv-vendidos" style="font-size:36px;font-weight:900;color:var(--b1);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">VENDIDOS</div></div>
+    </div>
+    <div style="background:linear-gradient(135deg,#1B5E20,#2E7D32);border-radius:var(--r);padding:18px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
+      <div><div style="font-size:10px;font-weight:700;letter-spacing:.5px;color:rgba(255,255,255,.75);margin-bottom:4px;">A RECEBER (APÓS TAXA 15%)</div><div id="dv-a-receber" style="font-size:24px;font-weight:900;color:#fff;">R$ —</div><div style="font-size:11px;color:rgba(255,255,255,.65);margin-top:2px;">Produtos vendidos × 85%</div></div>
+      <div style="font-size:36px;">💰</div>
     </div>
     <div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:12px;">
       <h4 style="font-size:12px;font-weight:700;color:var(--d3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px;">Status dos Anúncios</h4>
@@ -1295,6 +1319,10 @@ input:checked+.sl:before{transform:translateX(22px);}
       <div style="background:var(--g6);border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="do-produtos" style="font-size:36px;font-weight:900;color:var(--g2);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">PRODUTOS ATIVOS</div></div>
       <div style="background:#FFF3E0;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="do-pendentes" style="font-size:36px;font-weight:900;color:var(--a0);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">TRIAGEM PENDENTE</div></div>
       <div style="background:#E3F2FD;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="do-aprovados" style="font-size:36px;font-weight:900;color:var(--b1);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">APROVADOS</div></div>
+    </div>
+    <div style="background:linear-gradient(135deg,#1B5E20,#2E7D32);border-radius:var(--r);padding:18px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
+      <div><div style="font-size:10px;font-weight:700;letter-spacing:.5px;color:rgba(255,255,255,.75);margin-bottom:4px;">A RECEBER (APÓS TAXA 15%)</div><div id="do-a-receber" style="font-size:24px;font-weight:900;color:#fff;">R$ —</div><div style="font-size:11px;color:rgba(255,255,255,.65);margin-top:2px;">Produtos vendidos × 85%</div></div>
+      <div style="font-size:36px;">💰</div>
     </div>
     <div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:12px;">
       <h4 style="font-size:12px;font-weight:700;color:var(--d3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px;">Status do Estoque</h4>
@@ -1563,8 +1591,10 @@ function go(id){
   }
   var c=document.querySelector('.scr.on');if(c){hist.push(c.id);c.classList.remove('on');}
   var n=document.getElementById(id);if(n){n.classList.add('on');var b=n.querySelector('.body');if(b)b.scrollTop=0;}
-  if(id==='sv0')carregarAnunciosVendedor();
+  if(id==='sv0'){carregarAnunciosVendedor();carregarPostagensVendedor();}
   if(id==='sd0')carregarDoacoes();
+  if(id==='sd1'){__fotoUrls=[];__videoUrl=null;var _g1=document.getElementById('sd2-foto-grid');if(_g1)_g1.innerHTML='';var _ab=document.getElementById('vid-add-btn-d');if(_ab)_ab.style.display='flex';var _pv=document.getElementById('vid-prev-d');if(_pv)_pv.style.display='none';}
+  if(id==='sv1'){__fotoUrls=[];__videoUrl=null;var _g2=document.getElementById('sv2-foto-grid');if(_g2)_g2.innerHTML='';var _ab2=document.getElementById('vid-add-btn');if(_ab2)_ab2.style.display='flex';var _pv2=document.getElementById('vid-prev');if(_pv2)_pv2.style.display='none';}
   if(id==='sb7')carregarPedidos();
   if(id==='s2'){atualizarNomes();atualizarCardS2();}
   if(id==='s-perfil-edit')carregarPerfil();
@@ -1587,45 +1617,118 @@ var __fotoUrls=[];
 var __videoUrl=null;
 async function addPhoto(input){
   if(!input.files||!input.files.length)return;
+  if(!currentUser){showToast('⚠️ Faça login para enviar fotos');return;}
   var body=input.closest('.body');
-  var msg=document.createElement('div');
-  msg.style.cssText='font-size:13px;color:var(--g2);margin-top:8px;font-weight:600;';
-  body.appendChild(msg);
-  if(!currentUser){msg.textContent='⚠️ Faça login para enviar fotos';return;}
-  msg.textContent='⏳ Enviando fotos...';
+  var gridEl=body?body.querySelector('[data-fotogrid]'):null;
+  var gridId=gridEl?gridEl.getAttribute('data-fotogrid'):null;
+  showToast('⏳ Enviando fotos...');
   var uploaded=0;
-  for(var i=0;i<input.files.length&&i<10;i++){
+  for(var i=0;i<input.files.length&&__fotoUrls.length<10;i++){
     var file=input.files[i];
     var path=currentUser.id+'/'+Date.now()+'_'+i+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
     var r=await sb.storage.from('fotos-produtos').upload(path,file,{contentType:file.type});
-    if(!r.error){
-      var url=sb.storage.from('fotos-produtos').getPublicUrl(path).data.publicUrl;
-      __fotoUrls.push(url);
-      uploaded++;
-    }
+    if(!r.error){__fotoUrls.push(sb.storage.from('fotos-produtos').getPublicUrl(path).data.publicUrl);uploaded++;}
   }
-  msg.textContent=uploaded>0?'📷 '+uploaded+' foto(s) enviada(s) ✓':'❌ Erro ao enviar fotos';
+  if(gridId)_renderFotoGrid(gridId,__fotoUrls);
+  showToast(uploaded>0?'📷 '+uploaded+' foto(s) enviada(s) ✓':'❌ Erro ao enviar fotos');
 }
-async function addVideo(input){
-  if(!input.files||!input.files.length)return;
+function _renderFotoGrid(gridId,urls){
+  var el=document.getElementById(gridId);
+  if(!el)return;
+  if(!urls||!urls.length){el.innerHTML='';return;}
+  el.innerHTML=urls.map(function(url,i){
+    var cap=i===0;
+    return '<div style="position:relative;flex-shrink:0;" onclick="_setCapaFotoAdd('+i+',\''+gridId+'\')">'
+      +'<img src="'+url+'" style="width:80px;height:80px;object-fit:cover;border-radius:var(--r);border:2px solid '+(cap?'var(--a0)':'transparent')+';display:block;">'
+      +(cap?'<div style="position:absolute;bottom:2px;left:2px;background:var(--a0);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;pointer-events:none;">CAPA</div>':'')
+      +'<button onclick="event.stopPropagation();_removeFotoAdd('+i+',\''+gridId+'\')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#D32F2F;color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;">×</button>'
+      +'</div>';
+  }).join('');
+}
+function _setCapaFotoAdd(idx,gridId){
+  if(idx===0)return;
+  var url=__fotoUrls.splice(idx,1)[0];__fotoUrls.unshift(url);
+  _renderFotoGrid(gridId,__fotoUrls);showToast('✓ Foto definida como capa');
+}
+function _removeFotoAdd(idx,gridId){__fotoUrls.splice(idx,1);_renderFotoGrid(gridId,__fotoUrls);}
+async function _uploadVideo(file,addBtnId,prevId){
   if(!currentUser){showToast('Faça login para enviar vídeo');return;}
-  document.getElementById('vid-add-btn').style.display='none';
-  var prevEl=document.getElementById('vid-prev');
-  prevEl.style.display='flex';
-  prevEl.innerHTML='⏳ Enviando vídeo...';
-  var file=input.files[0];
+  var ab=document.getElementById(addBtnId);var pv=document.getElementById(prevId);
+  if(ab)ab.style.display='none';
+  if(pv){pv.style.display='flex';pv.innerHTML='⏳ Enviando vídeo...';}
   var path=currentUser.id+'/vid_'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
   var r=await sb.storage.from('fotos-produtos').upload(path,file,{contentType:file.type});
   if(r.error){
-    showToast('Erro ao enviar vídeo: '+r.error.message);
-    prevEl.innerHTML='❌ Erro · <span onclick="document.getElementById(\'vid-add-btn\').style.display=\'flex\';this.parentElement.style.display=\'none\';" style="text-decoration:underline;cursor:pointer;">Tentar novamente</span>';
+    showToast('Erro ao enviar vídeo');
+    if(pv)pv.innerHTML='❌ Erro · <span onclick="document.getElementById(\''+addBtnId+'\').style.display=\'flex\';this.parentElement.style.display=\'none\';" style="text-decoration:underline;cursor:pointer;">Tentar novamente</span>';
     __videoUrl=null;
   } else {
     __videoUrl=sb.storage.from('fotos-produtos').getPublicUrl(path).data.publicUrl;
-    prevEl.innerHTML='▶️<div class="vid-ov">🎬 Vídeo enviado ✓ · <span onclick="document.getElementById(\'vid-input\').click();" style="text-decoration:underline;cursor:pointer;">Regravar</span></div>';
+    if(pv)pv.innerHTML='▶️<div class="vid-ov">🎬 Vídeo enviado ✓</div>';
     showToast('🎬 Vídeo enviado ✓');
   }
 }
+async function addVideo(input){if(!input.files||!input.files.length)return;await _uploadVideo(input.files[0],'vid-add-btn','vid-prev');}
+async function addVideoDoacao(input){if(!input.files||!input.files.length)return;await _uploadVideo(input.files[0],'vid-add-btn-d','vid-prev-d');}
+
+async function salvarDoacao(){
+  if(!currentUser){showToast('Faça login para continuar');return;}
+  var btn=document.getElementById('btn-confirmar-doacao');
+  if(btn){btn.textContent='Registrando...';btn.disabled=true;}
+  var descEl=document.getElementById('desc-d');var desc=descEl?descEl.value.trim():'';
+  var tipoBtn=document.querySelector('#sd1 .tog .tb.on');
+  var tipoTxt=tipoBtn?tipoBtn.textContent.toLowerCase():'grau';
+  var r=await sb.from('produtos').insert({
+    vendedor_id:currentUser.id,
+    titulo:'Óculos '+(tipoTxt==='grau'?'de grau':'de sol')+' para doação',
+    descricao:desc||null,tipo:'doacao',tipo_oculos:tipoTxt,estado:'usado',
+    status:'ativo',plano:'basico',
+    foto_url:__fotoUrls[0]||null,fotos:__fotoUrls,video_url:__videoUrl||null
+  });
+  if(r.error){showToast('Erro: '+r.error.message);if(btn){btn.textContent='Confirmar';btn.disabled=false;}return;}
+  __fotoUrls=[];__videoUrl=null;
+  var g=document.getElementById('sd2-foto-grid');if(g)g.innerHTML='';
+  var ab=document.getElementById('vid-add-btn-d');if(ab)ab.style.display='flex';
+  var pv=document.getElementById('vid-prev-d');if(pv)pv.style.display='none';
+  if(btn){btn.textContent='Confirmar';btn.disabled=false;}
+  showToast('✓ Doação registrada!');go('sd4');
+}
+
+async function carregarPostagensVendedor(){
+  if(!currentUser)return;
+  var sec=document.getElementById('secao-postagem');var lista=document.getElementById('lista-postagem');
+  if(!sec||!lista)return;
+  var r=await sb.from('produtos').select('id,titulo,preco,foto_url,codigo_rastreio').eq('vendedor_id',currentUser.id).eq('status','vendido');
+  var data=(r.data||[]).filter(function(p){return!p.codigo_rastreio;});
+  if(!data.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  lista.innerHTML=data.map(function(p){
+    var img=p.foto_url?'<img src="'+p.foto_url+'" style="width:44px;height:44px;object-fit:cover;border-radius:var(--r);flex-shrink:0;">'
+      :'<div style="width:44px;height:44px;background:#fff3;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👓</div>';
+    return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">'
+      +img+'<div style="flex:1;min-width:0;">'
+      +'<div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;">'+p.titulo+'</div>'
+      +'<input id="rastreio-'+p.id+'" placeholder="Código de rastreio" style="width:100%;border:1px solid rgba(0,0,0,.2);border-radius:6px;padding:5px 8px;font-size:12px;background:#fff;" oninput="this.value=this.value.toUpperCase()">'
+      +'</div>'
+      +'<button onclick="salvarRastreio(\''+p.id+'\')" class="btn ba" style="padding:6px 10px;font-size:12px;width:auto;flex-shrink:0;">OK</button>'
+      +'</div>';
+  }).join('');
+}
+async function salvarRastreio(prodId){
+  var inp=document.getElementById('rastreio-'+prodId);
+  var codigo=inp?inp.value.trim():'';
+  if(!codigo){showToast('Digite o código de rastreio');return;}
+  var r=await sb.from('produtos').update({codigo_rastreio:codigo}).eq('id',prodId).eq('vendedor_id',currentUser.id);
+  if(r.error){showToast('Erro: '+r.error.message);return;}
+  showToast('📦 Código salvo! Comprador notificado.');
+  carregarPostagensVendedor();carregarAnunciosVendedor();
+}
+function _toggleRastreio(){
+  var btn=document.querySelector('#sv-edit-status .tb.on');
+  var box=document.getElementById('sv-edit-rastreio-box');
+  if(box)box.style.display=(btn&&btn.textContent==='Vendido')?'block':'none';
+}
+
 var __receitaUrl=null;
 async function uploadReceita(){
   var input=document.getElementById('receita-input');
@@ -1903,9 +2006,12 @@ async function carregarDashboardVendedor(dias){
   var pausados=all.filter(function(p){return p.status==='pausado';}).length;
   var outros=all.length-ativos-vendidos-pausados;
   var receita=all.filter(function(p){return p.status==='ativo';}).reduce(function(s,p){return s+(parseFloat(p.preco)||0);},0);
+  var aReceber=all.filter(function(p){return p.status==='vendido';}).reduce(function(s,p){return s+(parseFloat(p.preco)||0)*0.85;},0);
+  var fmt=function(v){return'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});};
   var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
   set('dv-ativos',ativos);set('dv-total',all.length);set('dv-vendidos',vendidos);
-  var elR=document.getElementById('dv-receita');if(elR)elR.textContent='R$ '+receita.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  var elR=document.getElementById('dv-receita');if(elR)elR.textContent=fmt(receita);
+  var elAR=document.getElementById('dv-a-receber');if(elAR)elAR.textContent=fmt(aReceber);
   _mkChart('dash-v-donut','doughnut',{
     labels:['Ativo','Vendido','Pausado','Outro'],
     datasets:[{data:[ativos,vendidos,pausados,outros],backgroundColor:['#2E7D32','#1565C0','#FFB300','#9E9E9E'],borderWidth:0,hoverOffset:8}]
@@ -1936,8 +2042,11 @@ async function carregarDashboardOtica(dias){
   var pendentes=prods.filter(function(p){return!p.status||p.status==='pendente';}).length;
   var aprovados=prods.filter(function(p){return p.status==='aprovado'||p.status==='ativo';}).length;
   var vendidos=prods.filter(function(p){return p.status==='vendido';}).length;
+  var aReceber=prods.filter(function(p){return p.status==='vendido';}).reduce(function(s,p){return s+(parseFloat(p.preco)||0)*0.85;},0);
+  var fmt=function(v){return'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});};
   var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
   set('do-doacoes',doacoes.length);set('do-produtos',ativos);set('do-pendentes',pendentes);set('do-aprovados',aprovados);
+  var elAR=document.getElementById('do-a-receber');if(elAR)elAR.textContent=fmt(aReceber);
   _mkChart('dash-o-donut','doughnut',{
     labels:['Disponível','Vendido','Pendente'],
     datasets:[{data:[ativos,vendidos,pendentes],backgroundColor:['#2E7D32','#1565C0','#FFB300'],borderWidth:0,hoverOffset:8}]
@@ -2136,10 +2245,14 @@ function abrirEditAnuncio(p){
   renderEditVideo();
   var s=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};
   s('sv-edit-titulo',p.titulo);s('sv-edit-desc',p.descricao);s('sv-edit-preco',p.preco);
+  s('sv-edit-rastreio',p.codigo_rastreio);
   document.querySelectorAll('#sv-edit-status .tb').forEach(function(b){
     b.classList.remove('on');
-    if((b.textContent==='Ativo'&&p.status==='ativo')||(b.textContent==='Pausado'&&p.status!=='ativo'))b.classList.add('on');
+    var match=(b.textContent==='Ativo'&&p.status==='ativo')||(b.textContent==='Pausado'&&p.status==='pausado')||(b.textContent==='Vendido'&&p.status==='vendido');
+    if(match)b.classList.add('on');
   });
+  if(!document.querySelector('#sv-edit-status .tb.on'))document.querySelector('#sv-edit-status .tb').classList.add('on');
+  _toggleRastreio();
   go('sv-edit');
 }
 async function salvarEdicaoAnuncio(){
@@ -2149,8 +2262,9 @@ async function salvarEdicaoAnuncio(){
   var desc=document.getElementById('sv-edit-desc').value.trim();
   var precoStr=document.getElementById('sv-edit-preco').value.replace(',','.');
   var statusBtn=document.querySelector('#sv-edit-status .tb.on');
-  var status=statusBtn?(statusBtn.textContent==='Ativo'?'ativo':'pausado'):'ativo';
-  var r=await sb.from('produtos').update({titulo:titulo,descricao:desc,preco:precoStr?parseFloat(precoStr):null,status:status,fotos:__editFotos,foto_url:__editFotos[0]||null,video_url:__editVideoUrl||null}).eq('id',__editProduto.id).eq('vendedor_id',currentUser.id);
+  var status=statusBtn?({'Ativo':'ativo','Pausado':'pausado','Vendido':'vendido'}[statusBtn.textContent]||'ativo'):'ativo';
+  var rastreio=(document.getElementById('sv-edit-rastreio')||{}).value||null;
+  var r=await sb.from('produtos').update({titulo:titulo,descricao:desc,preco:precoStr?parseFloat(precoStr):null,status:status,fotos:__editFotos,foto_url:__editFotos[0]||null,video_url:__editVideoUrl||null,codigo_rastreio:rastreio||null}).eq('id',__editProduto.id).eq('vendedor_id',currentUser.id);
   if(r.error){showToast('Erro: '+r.error.message);return;}
   showToast('✅ Anúncio atualizado!');
   go('sv0');
@@ -2169,14 +2283,20 @@ async function carregarDoacoes(){
   var el=document.getElementById('lista-doacoes-d');
   if(!el)return;
   try{
-    var r=await sb.from('doacoes').select('*').eq('beneficiario_id',currentUser.id).order('criado_em',{ascending:false}).limit(10);
-    if(r.error||!r.data||!r.data.length){el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">♥</div><p style="font-size:14px;">Você ainda não fez nenhuma solicitação.</p><button class="btn ba" style="margin-top:14px;" onclick="go(\'sb0\')">Ver óculos disponíveis</button></div>';return;}
-    el.innerHTML=r.data.map(function(d){
-      var status={'pendente':'⏳ Pendente','aprovado':'✅ Aprovado','entregue':'📦 Entregue','recusado':'❌ Recusado'}[d.status]||d.status;
-      return '<div class="di"><div class="di-ic" style="background:var(--d5);">♥</div><div style="flex:1;"><h4 style="font-size:14px;">Solicitação #'+d.id.substring(0,8).toUpperCase()+'</h4><p style="font-size:12px;">'+new Date(d.criado_em).toLocaleDateString('pt-BR')+'</p></div><span class="bdg bd">'+status+'</span></div>';
+    var r=await sb.from('produtos').select('*').eq('vendedor_id',currentUser.id).eq('tipo','doacao').order('criado_em',{ascending:false}).limit(10);
+    if(r.error||!r.data||!r.data.length){el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">♻️</div><p style="font-size:14px;">Você ainda não cadastrou nenhuma doação.</p><button class="btn bg" style="margin-top:14px;" onclick="go(\'sd1\')">Cadastrar doação</button></div>';return;}
+    window._doacoesCache=r.data;
+    el.innerHTML=r.data.map(function(d,i){
+      var status={'ativo':'✅ Disponível','pausado':'⏸️ Pausado','vendido':'📦 Doado'}[d.status]||'⏳ Pendente';
+      var img=d.foto_url?'<img src="'+d.foto_url+'" style="width:56px;height:56px;object-fit:cover;border-radius:var(--r);flex-shrink:0;">':'<div style="width:56px;height:56px;background:var(--g6);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">👓</div>';
+      return '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--d5);">'
+        +img+'<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+d.titulo+'</div><div style="font-size:12px;color:var(--d3);margin-top:2px;">'+status+'</div></div>'
+        +'<button class="btn bg" style="padding:5px 12px;font-size:12px;width:auto;" onclick="_editDoacaoIdx('+i+')">Editar</button>'
+        +'</div>';
     }).join('');
   }catch(e){console.warn('carregarDoacoes:',e);}
 }
+function _editDoacaoIdx(i){if(window._doacoesCache&&window._doacoesCache[i])abrirEditAnuncio(window._doacoesCache[i]);}
 
 var __pedidosCache=[];
 var __currentPedido=null;
