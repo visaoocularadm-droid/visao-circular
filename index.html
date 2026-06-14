@@ -1850,7 +1850,7 @@ function filtrarDashD(dias,el){if(el)_filtroTb(el);carregarDashboardDoador(dias)
 // --- VENDEDOR ---
 async function carregarDashboardVendedor(dias){
   if(!currentUser)return;
-  var rA=await sb.from('produtos').select('*').eq('criado_por',currentUser.id);
+  var rA=await sb.from('produtos').select('*').eq('vendedor_id',currentUser.id);
   var all=rA.data||[];
   var ativos=all.filter(function(p){return p.status==='ativo';}).length;
   var vendidos=all.filter(function(p){return p.status==='vendido';}).length;
@@ -1883,7 +1883,7 @@ function filtrarDashV(dias,el){if(el)_filtroTb(el);carregarDashboardVendedor(dia
 async function carregarDashboardOtica(dias){
   if(!currentUser)return;
   var desde=new Date();desde.setDate(desde.getDate()-dias);
-  var rP=await sb.from('produtos').select('*').eq('criado_por',currentUser.id);
+  var rP=await sb.from('produtos').select('*').eq('vendedor_id',currentUser.id);
   var rD=await sb.from('doacoes').select('*').gte('criado_em',desde.toISOString());
   var prods=rP.data||[];var doacoes=rD.data||[];
   var ativos=prods.filter(function(p){return p.status==='ativo';}).length;
