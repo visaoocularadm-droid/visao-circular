@@ -1172,7 +1172,7 @@ input:checked+.sl:before{transform:translateX(22px);}
       <div class="best-tag" style="background:var(--g2);">Mais Popular</div>
       <div style="text-align:center;padding-top:8px;">
         <h3 style="color:var(--g2);">ÓTICA PARCEIRA</h3>
-        <div style="font-size:28px;font-weight:800;color:var(--g2);margin:8px 0;">R$ 49,90<span style="font-size:16px;font-weight:400;color:var(--d3);"> / mês</span></div>
+        <div id="so5-preco" style="font-size:28px;font-weight:800;color:var(--g2);margin:8px 0;">R$ 49,90<span style="font-size:16px;font-weight:400;color:var(--d3);"> / mês</span></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
         <p style="font-size:13px;">✅ Ponto de retirada oficial</p>
@@ -1183,7 +1183,15 @@ input:checked+.sl:before{transform:translateX(22px);}
         <p style="font-size:13px;">✅ Suporte exclusivo</p>
       </div>
     </div>
-    <button class="btn bg" onclick="go('so6')">Assinar plano</button>
+    <div style="margin-top:14px;">
+      <label class="fl">Código de cupom <span style="font-weight:400;color:var(--d3);">(opcional)</span></label>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <input class="fi" id="so-cupom-input" placeholder="Ex: SENAC" style="flex:1;text-transform:uppercase;">
+        <button class="btn" style="width:auto;padding:10px 18px;background:var(--d5);color:var(--d2);" onclick="aplicarCupomOtica()">Aplicar</button>
+      </div>
+      <div id="so-cupom-msg" style="display:none;font-size:13px;margin-top:6px;padding:8px 10px;border-radius:8px;"></div>
+    </div>
+    <button class="btn bg" id="so5-btn" onclick="go('so6')" style="margin-top:16px;">Assinar plano — R$ 49,90/mês</button>
   </div>
 </div>
 
@@ -1217,7 +1225,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="so8" class="scr">
   <div class="hdr hdk"><div style="flex:1;"><p style="color:#BDBDBD;font-size:13px;" id="saud-o">Olá! 👋</p><h2 style="font-size:18px;">Bem-vinda ao painel parceiro.</h2></div><div class="av" style="background:#555;" id="av-o">?</div></div>
   <div class="body">
-    <div class="cardf" style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;align-items:center;"><div><p style="font-size:12px;color:var(--d3);">PLANO ATIVO</p><h4>Ótica Parceira</h4><p style="font-size:13px;color:var(--g2);font-weight:600;">R$ 49,90 / mês</p></div><button class="btn" style="width:auto;padding:8px 14px;background:var(--d5);color:var(--d2);font-size:13px;">Ver detalhes</button></div></div>
+    <div class="cardf" style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;align-items:center;"><div><p style="font-size:12px;color:var(--d3);">PLANO ATIVO</p><h4>Ótica Parceira</h4><p id="so8-plano-preco" style="font-size:13px;color:var(--g2);font-weight:600;">R$ 49,90 / mês</p></div><button class="btn" style="width:auto;padding:8px 14px;background:var(--d5);color:var(--d2);font-size:13px;">Ver detalhes</button></div></div>
     <h4 style="margin-bottom:12px;">O que você deseja fazer?</h4>
     <div class="dm-grid">
       <div class="dm-i"><span style="font-size:26px;">📦</span><span class="dm-lb">Receber doações</span></div>
@@ -1601,6 +1609,8 @@ function go(id){
   if(id==='sd-dash')carregarDashboardDoador(30);
   if(id==='sv-dash')carregarDashboardVendedor(30);
   if(id==='so-dash')carregarDashboardOtica(30);
+  if(id==='so5')_resetCupomOtica();
+  if(id==='so8'){var _pp=document.getElementById('so8-plano-preco');if(_pp)_pp.textContent=(__oticaCupom==='SENAC')?'Plano SENAC — Gratuito':'R$ 49,90 / mês';}
   if(id==='sb7-chat'&&__currentPedido)carregarMensagens(__currentPedido.id);
 }
 function bk(){if(!hist.length)return;var c=document.querySelector('.scr.on');if(c)c.classList.remove('on');var p=document.getElementById(hist.pop());if(p)p.classList.add('on');}
@@ -1613,6 +1623,45 @@ function selPr(t){document.getElementById('pr1').classList.toggle('on',t==='pr1'
 function selPg(t){document.getElementById('pgpix').classList.toggle('on',t==='pgpix');document.getElementById('pgcart').classList.toggle('on',t==='pgcart');}
 function selPgO(t){document.getElementById('opix').classList.toggle('on',t==='opix');document.getElementById('opix2').classList.toggle('on',t==='opix2');}
 function updateChar(fid,cid,max){var v=document.getElementById(fid);var c=document.getElementById(cid);if(v&&c)c.textContent=(v.value||'').length+'/'+max;}
+
+var __oticaCupom=null;
+function aplicarCupomOtica(){
+  var v=(document.getElementById('so-cupom-input').value||'').trim().toUpperCase();
+  var msg=document.getElementById('so-cupom-msg');
+  var preco=document.getElementById('so5-preco');
+  var btn=document.getElementById('so5-btn');
+  if(v==='SENAC'){
+    __oticaCupom='SENAC';
+    msg.style.display='block';
+    msg.style.background='#E8F5E9';
+    msg.style.color='var(--g2)';
+    msg.textContent='✅ Cupom SENAC aplicado — Acesso gratuito!';
+    if(preco)preco.innerHTML='Gratuito<span style="font-size:16px;font-weight:400;color:var(--d3);"> — Plano SENAC</span>';
+    if(btn){btn.textContent='✅ Ativar com cupom SENAC';btn.onclick=function(){go('so7');gerarProtocolo();};}
+  }else if(v===''){
+    __oticaCupom=null;
+    msg.style.display='none';
+    if(preco)preco.innerHTML='R$ 49,90<span style="font-size:16px;font-weight:400;color:var(--d3);"> / mês</span>';
+    if(btn){btn.textContent='Assinar plano — R$ 49,90/mês';btn.onclick=function(){go('so6');};}
+  }else{
+    __oticaCupom=null;
+    msg.style.display='block';
+    msg.style.background='#FFEBEE';
+    msg.style.color='#C62828';
+    msg.textContent='❌ Cupom inválido. Verifique o código e tente novamente.';
+    if(preco)preco.innerHTML='R$ 49,90<span style="font-size:16px;font-weight:400;color:var(--d3);"> / mês</span>';
+    if(btn){btn.textContent='Assinar plano — R$ 49,90/mês';btn.onclick=function(){go('so6');};}
+  }
+}
+function _resetCupomOtica(){
+  __oticaCupom=null;
+  var inp=document.getElementById('so-cupom-input');if(inp)inp.value='';
+  var msg=document.getElementById('so-cupom-msg');if(msg)msg.style.display='none';
+  var preco=document.getElementById('so5-preco');
+  if(preco)preco.innerHTML='R$ 49,90<span style="font-size:16px;font-weight:400;color:var(--d3);"> / mês</span>';
+  var btn=document.getElementById('so5-btn');
+  if(btn){btn.textContent='Assinar plano — R$ 49,90/mês';btn.onclick=function(){go('so6');};}
+}
 var __fotoUrls=[];
 var __videoUrl=null;
 async function addPhoto(input){
