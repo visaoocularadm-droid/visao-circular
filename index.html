@@ -1055,6 +1055,20 @@ input:checked+.sl:before{transform:translateX(22px);}
   </div>
 </div>
 
+<!-- ======== VENDEDOR: EDITAR ANÚNCIO ======== -->
+<div id="sv-edit" class="scr">
+  <div class="hdr ha"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><h3>Editar anúncio</h3></div></div>
+  <div class="body">
+    <div class="prod-img" id="sv-edit-img" style="margin-bottom:20px;width:100%;max-width:320px;height:200px;align-self:center;display:flex;align-items:center;justify-content:center;background:var(--d5);border-radius:var(--r);overflow:hidden;font-size:48px;">👓</div>
+    <div class="fg"><label class="fl">Título</label><input class="fi" id="sv-edit-titulo" placeholder="Ex: Óculos de grau Ray-Ban"></div>
+    <div class="fg"><label class="fl">Descrição</label><textarea class="fi" id="sv-edit-desc" style="min-height:100px;" placeholder="Descreva o estado, armação, marca..."></textarea></div>
+    <div class="fg"><label class="fl">Preço (R$)</label><input class="fi" id="sv-edit-preco" type="number" step="0.01" min="0" placeholder="0,00"></div>
+    <div class="fg"><label class="fl">Status do anúncio</label><div class="tog" id="sv-edit-status"><button class="tb on" onclick="tg(this)">Ativo</button><button class="tb" onclick="tg(this)">Pausado</button></div></div>
+    <button class="btn ba" style="margin-bottom:12px;" onclick="salvarEdicaoAnuncio()">💾 Salvar alterações</button>
+    <button class="btn" style="border:1px solid #D32F2F;color:#D32F2F;background:none;" onclick="if(__editProduto)excluirAnuncio(__editProduto.id)">🗑️ Excluir anúncio</button>
+  </div>
+</div>
+
 <!-- ======== ÓTICA: LOGIN ESPECÍFICO ======== -->
 <div id="so1" class="scr">
   <div style="background:var(--d2);padding:58px 20px 34px;text-align:center;flex-shrink:0;"><div style="font-size:44px;margin-bottom:8px;">🏪</div><div style="font-size:22px;font-weight:800;color:#fff;">Visão <span style="color:#A5D6A7">Circular</span></div><p style="color:#BDBDBD;font-size:13px;margin-top:3px;">Acesse o painel da sua ótica ou ONG.</p></div>
@@ -1528,7 +1542,7 @@ function tgChk(rowId,cbId,btnId){
 }
 function submitTerms(){if(chkState.chk1&&chkState.chk2&&chkState.chk3&&chkState.chk4)go('sb5-sol');}
 var hist=[];var dPr=null;var donacaoAtiva=false;var planSel='bas';
-var _loginGate=['sd0','sb0','sb7','sv0','so0','so1','s-perfil-edit','sd-dash','sv-dash','so-dash'];
+var _loginGate=['sd0','sb0','sb7','sv0','so0','so1','s-perfil-edit','sd-dash','sv-dash','so-dash','sv-edit'];
 function go(id){
   if(_loginGate.indexOf(id)>-1&&!currentUser){
     showToast('Faça login para acessar esta área');
@@ -1538,6 +1552,7 @@ function go(id){
   }
   var c=document.querySelector('.scr.on');if(c){hist.push(c.id);c.classList.remove('on');}
   var n=document.getElementById(id);if(n){n.classList.add('on');var b=n.querySelector('.body');if(b)b.scrollTop=0;}
+  if(id==='sv0')carregarAnunciosVendedor();
   if(id==='sd0')carregarDoacoes();
   if(id==='sb7')carregarPedidos();
   if(id==='s2'){atualizarNomes();atualizarCardS2();}
@@ -1928,9 +1943,80 @@ function atualizarDetalheProduto(p){
     'aval-produto':p.titulo||'—'
   };
   Object.keys(campos).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=campos[id];});
-  ['sb3-img','sb4-img'].forEach(function(id){var el=document.getElementById(id);if(el){el.style.display=p.foto_url?'block':'none';if(p.foto_url)el.src=p.foto_url;}});
+  ['sb3-img','sb4-img'].forEach(function(id){var el=document.getElementById(id);if(el){if(p.foto_url){el.innerHTML='<img src="'+p.foto_url+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r);" onerror="this.parentElement.innerHTML=\'👓\'">';}else{el.innerHTML='👓';}}});
   var btnC=document.getElementById('btn-comprar');
   if(btnC)btnC.textContent=p.tipo==='doacao'?'♥ Solicitar doação':'🛒 Comprar agora';
+}
+
+var __editProduto=null;
+async function carregarAnunciosVendedor(){
+  if(!currentUser)return;
+  var el=document.getElementById('lista-anuncios-v');
+  if(!el)return;
+  el.innerHTML='<div style="text-align:center;padding:24px;color:var(--d3);">Carregando...</div>';
+  var r=await sb.from('produtos').select('*').eq('vendedor_id',currentUser.id).order('criado_em',{ascending:false});
+  var data=r.data;
+  if(!data||data.length===0){
+    el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🛒</div><p style="font-size:14px;">Você ainda não tem anúncios.</p><button class="btn ba" style="margin-top:14px;" onclick="go(\'sv1\')">Publicar meu primeiro anúncio</button></div>';
+    return;
+  }
+  el.innerHTML=data.map(function(p,i){
+    var badge=p.status==='ativo'
+      ?'<span style="background:#E8F5E9;color:#2E7D32;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;">● Ativo</span>'
+      :'<span style="background:#FFF3E0;color:#E65100;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;">● Pausado</span>';
+    var imgHtml=p.foto_url
+      ?'<img src="'+p.foto_url+'" style="width:64px;height:64px;object-fit:cover;border-radius:var(--r);flex-shrink:0;" onerror="this.outerHTML=\'<div style=width:64px;height:64px;background:var(--d5);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:26px;>👓</div>\'">'
+      :'<div style="width:64px;height:64px;background:var(--d5);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:26px;">👓</div>';
+    var preco=p.tipo==='doacao'?'Doação gratuita':'R$ '+(p.preco?Number(p.preco).toFixed(2).replace('.',','):'--');
+    var pid=p.id;
+    return '<div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--d5);">'
+      +imgHtml
+      +'<div style="flex:1;min-width:0;">'
+        +'<div style="font-weight:700;font-size:14px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+p.titulo+'</div>'
+        +'<div style="font-size:13px;color:var(--a0);font-weight:600;margin-bottom:4px;">'+preco+'</div>'
+        +badge
+      +'</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;">'
+        +'<button class="btn ba" style="padding:6px 14px;font-size:12px;" onclick="_editIdx('+i+')">Editar</button>'
+        +'<button style="border:1px solid #D32F2F;color:#D32F2F;background:none;border-radius:var(--r);padding:6px 14px;font-size:12px;cursor:pointer;" onclick="excluirAnuncio(\''+pid+'\')">Excluir</button>'
+      +'</div>'
+    +'</div>';
+  }).join('');
+  window._anunciosCache=data;
+}
+function _editIdx(i){if(window._anunciosCache&&window._anunciosCache[i])abrirEditAnuncio(window._anunciosCache[i]);}
+function abrirEditAnuncio(p){
+  __editProduto=p;
+  var imgEl=document.getElementById('sv-edit-img');
+  if(imgEl){imgEl.innerHTML=p.foto_url?'<img src="'+p.foto_url+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r);" onerror="this.parentElement.innerHTML=\'👓\'">':'👓';}
+  var s=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};
+  s('sv-edit-titulo',p.titulo);s('sv-edit-desc',p.descricao);s('sv-edit-preco',p.preco);
+  document.querySelectorAll('#sv-edit-status .tb').forEach(function(b){
+    b.classList.remove('on');
+    if((b.textContent==='Ativo'&&p.status==='ativo')||(b.textContent==='Pausado'&&p.status!=='ativo'))b.classList.add('on');
+  });
+  go('sv-edit');
+}
+async function salvarEdicaoAnuncio(){
+  if(!__editProduto||!currentUser)return;
+  var titulo=document.getElementById('sv-edit-titulo').value.trim();
+  if(!titulo){showToast('Preencha o título');return;}
+  var desc=document.getElementById('sv-edit-desc').value.trim();
+  var precoStr=document.getElementById('sv-edit-preco').value.replace(',','.');
+  var statusBtn=document.querySelector('#sv-edit-status .tb.on');
+  var status=statusBtn?(statusBtn.textContent==='Ativo'?'ativo':'pausado'):'ativo';
+  var r=await sb.from('produtos').update({titulo:titulo,descricao:desc,preco:precoStr?parseFloat(precoStr):null,status:status}).eq('id',__editProduto.id).eq('vendedor_id',currentUser.id);
+  if(r.error){showToast('Erro: '+r.error.message);return;}
+  showToast('✅ Anúncio atualizado!');
+  go('sv0');
+}
+async function excluirAnuncio(id){
+  if(!confirm('Excluir este anúncio permanentemente? Esta ação não pode ser desfeita.'))return;
+  var r=await sb.from('produtos').delete().eq('id',id).eq('vendedor_id',currentUser.id);
+  if(r.error){showToast('Erro: '+r.error.message);return;}
+  showToast('Anúncio excluído.');
+  __editProduto=null;
+  go('sv0');
 }
 
 async function carregarDoacoes(){
