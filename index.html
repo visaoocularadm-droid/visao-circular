@@ -190,6 +190,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 .in{flex:1;padding:9px;border-radius:var(--r2);font-size:13px;font-weight:600;cursor:pointer;border:none;background:rgba(255,255,255,.15);color:#fff;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -389,7 +390,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;"><h3>Minhas doações</h3><span style="color:var(--g2);font-size:13px;font-weight:600;cursor:pointer;" onclick="go('sd5')">Ver todas</span></div>
     <div id="lista-doacoes-d"><div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">♻️</div><p style="font-size:14px;">Você ainda não fez nenhuma doação.</p><button class="btn bg" style="margin-top:14px;" onclick="go('sd1')">Fazer minha primeira doação</button></div></div>
   </div>
-  <div class="bnav"><div class="ni on" onclick="go('s2')"><span class="ic">🏠</span><span>Home</span></div><div class="ni" onclick="go('sd1')"><span class="ic">➕</span><span>Doar</span></div><div class="ni" onclick="go('sd5')"><span class="ic">📋</span><span>Doações</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni on" onclick="go('s2')"><span class="ic">🏠</span><span>Home</span></div><div class="ni" onclick="go('sd1')"><span class="ic">➕</span><span>Doar</span></div><div class="ni" onclick="go('sd-dash')"><span class="ic">📊</span><span>Dashboard</span></div><div class="ni" onclick="go('s-perfil-edit')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <!-- ======== DOADOR: CADASTRAR ======== -->
@@ -502,7 +503,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><h3>Destaques</h3><span style="color:var(--g2);font-size:13px;font-weight:600;cursor:pointer;" onclick="go('sb2')">Ver todos</span></div>
     <div class="pgrid" id="prod-grid"><div style="grid-column:1/-1;text-align:center;padding:24px 0;color:var(--d3);font-size:13px;">⏳ Carregando...</div></div>
   </div>
-  <div class="bnav"><div class="ni on" onclick="go('s2')"><span class="ic">🏠</span><span>Início</span></div><div class="ni" onclick="go('sb1')"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni" onclick="go('sb7')"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni on" onclick="go('s2')"><span class="ic">🏠</span><span>Início</span></div><div class="ni" onclick="go('sb1')"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni" onclick="go('sb7')"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni" onclick="go('s-perfil-edit')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <!-- ======== BENEFICIÁRIO: FILTRO ======== -->
@@ -530,7 +531,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="chips"><div class="chip on">Todos os tipos</div><div class="chip" onclick="tgChip(this)">♥ Doação</div><div class="chip" onclick="tgChip(this)">🛒 Venda</div></div>
     <div id="lista-busca"><div style="text-align:center;padding:32px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🔍</div><p>Use os filtros acima para encontrar óculos.</p></div></div>
   </div>
-  <div class="bnav"><div class="ni" onclick="go('s2')"><span class="ic">🏠</span><span>Início</span></div><div class="ni on"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni" onclick="go('sb7')"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni" onclick="go('s2')"><span class="ic">🏠</span><span>Início</span></div><div class="ni on"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni" onclick="go('sb7')"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni" onclick="go('s-perfil-edit')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <!-- ======== BENEFICIÁRIO: DETALHE DOAÇÃO ======== -->
@@ -773,7 +774,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="tog" style="margin-bottom:16px;"><button class="tb on" onclick="tg(this)">Todos</button><button class="tb" onclick="tg(this)">Doações</button><button class="tb" onclick="tg(this)">Compras</button></div>
     <div id="lista-pedidos"><div style="text-align:center;padding:32px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">📦</div><p style="font-size:14px;">Você ainda não tem pedidos.</p><button class="btn bg" style="margin-top:14px;" onclick="go('sb0')">Explorar óculos</button></div></div>
   </div>
-  <div class="bnav"><div class="ni" onclick="go('s2')"><span class="ic">🏠</span><span>Início</span></div><div class="ni"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni on"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni" onclick="go('s2')"><span class="ic">🏠</span><span>Início</span></div><div class="ni"><span class="ic">🔍</span><span>Buscar</span></div><div class="ni"><span class="ic">❤️</span><span>Favoritos</span></div><div class="ni on"><span class="ic">📦</span><span>Pedidos</span></div><div class="ni" onclick="go('s-perfil-edit')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <!-- ======== PEDIDO: DETALHE ======== -->
@@ -860,7 +861,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <h3 style="margin-bottom:12px;">Meus anúncios</h3>
     <div id="lista-anuncios-v"><div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🛒</div><p style="font-size:14px;">Você ainda não tem anúncios.</p><button class="btn ba" style="margin-top:14px;" onclick="go('sv1')">Publicar meu primeiro anúncio</button></div></div>
   </div>
-  <div class="bnav"><div class="ni on" style="color:var(--a0)" onclick="go('s2')"><span class="ic">🏠</span><span>Home</span></div><div class="ni" onclick="go('sv1')"><span class="ic">➕</span><span>Vender</span></div><div class="ni"><span class="ic">📋</span><span>Anúncios</span></div><div class="ni"><span class="ic">💬</span><span>Mensagens</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni on" style="color:var(--a0)" onclick="go('s2')"><span class="ic">🏠</span><span>Home</span></div><div class="ni" onclick="go('sv1')"><span class="ic">➕</span><span>Vender</span></div><div class="ni" onclick="go('sv-dash')"><span class="ic">📊</span><span>Dashboard</span></div><div class="ni"><span class="ic">💬</span><span>Mensagens</span></div><div class="ni" onclick="go('s-perfil-edit')"><span class="ic">👤</span><span>Perfil</span></div></div>
 </div>
 
 <!-- ======== VENDEDOR: CAD PRODUTO ======== -->
@@ -1152,7 +1153,101 @@ input:checked+.sl:before{transform:translateX(22px);}
       <div class="mc2"><div class="mv2" style="color:var(--b1);" id="stat-o-noapp">0</div><div class="ml2">No app</div></div>
     </div>
   </div>
-  <div class="bnav"><div class="ni on" style="color:var(--d2);" onclick="go('s2')"><span class="ic">🏠</span><span>Home</span></div><div class="ni" style=""><span class="ic">♥️</span><span>Doações</span></div><div class="ni"><span class="ic">🛒</span><span>Vendas</span></div><div class="ni"><span class="ic">🏷️</span><span>Cupons</span></div><div class="ni" onclick="go('s2')"><span class="ic">👤</span><span>Perfil</span></div></div>
+  <div class="bnav"><div class="ni on" style="color:var(--d2);" onclick="go('s2')"><span class="ic">🏠</span><span>Home</span></div><div class="ni" style=""><span class="ic">♥️</span><span>Doações</span></div><div class="ni"><span class="ic">🛒</span><span>Vendas</span></div><div class="ni" onclick="go('so-dash')"><span class="ic">📊</span><span>Dashboard</span></div><div class="ni" onclick="go('s-perfil-edit')"><span class="ic">👤</span><span>Perfil</span></div></div>
+</div>
+
+<!-- ======== DOADOR: DASHBOARD ======== -->
+<div id="sd-dash" class="scr">
+  <div class="hdr"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><h3>Meu Impacto</h3></div><div style="width:36px;height:36px;border-radius:50%;background:var(--g5);display:flex;align-items:center;justify-content:center;font-size:18px;">♻️</div></div>
+  <div class="body">
+    <div style="display:flex;gap:6px;margin-bottom:16px;">
+      <button class="tb on" onclick="filtrarDashD(7,this)">7d</button>
+      <button class="tb" onclick="filtrarDashD(30,this)">30d</button>
+      <button class="tb" onclick="filtrarDashD(90,this)">3m</button>
+      <button class="tb" onclick="filtrarDashD(365,this)">12m</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div style="background:var(--g6);border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dd-total" style="font-size:36px;font-weight:900;color:var(--g2);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">TOTAL DOAÇÕES</div></div>
+      <div style="background:#E3F2FD;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dd-entregue" style="font-size:36px;font-weight:900;color:var(--b1);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">ENTREGUES</div></div>
+      <div style="background:#FFF8E1;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dd-pendente" style="font-size:36px;font-weight:900;color:var(--a0);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">PENDENTES</div></div>
+      <div style="background:#E8F5E9;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dd-aprovado" style="font-size:36px;font-weight:900;color:var(--g1);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">APROVADAS</div></div>
+    </div>
+    <div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:12px;">
+      <h4 style="font-size:12px;font-weight:700;color:var(--d3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px;">Status das Doações</h4>
+      <div style="position:relative;height:195px;"><canvas id="dash-d-donut"></canvas></div>
+    </div>
+    <div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:12px;">
+      <h4 style="font-size:12px;font-weight:700;color:var(--d3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px;">Doações por Mês</h4>
+      <div style="position:relative;height:175px;"><canvas id="dash-d-bar"></canvas></div>
+    </div>
+    <div style="background:linear-gradient(135deg,var(--g1),var(--g2));border-radius:var(--r);padding:20px;text-align:center;color:#fff;margin-bottom:16px;">
+      <div style="font-size:34px;margin-bottom:8px;">🌟</div>
+      <h3 style="margin-bottom:6px;font-size:16px;">Seu impacto real</h3>
+      <p id="dd-impacto" style="font-size:14px;opacity:.9;line-height:1.5;">Carregando...</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== VENDEDOR: DASHBOARD ======== -->
+<div id="sv-dash" class="scr">
+  <div class="hdr" style="background:var(--a0);"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><h3>Meu Painel</h3></div><div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;">📊</div></div>
+  <div class="body">
+    <div style="display:flex;gap:6px;margin-bottom:16px;">
+      <button class="tb on" onclick="filtrarDashV(7,this)">7d</button>
+      <button class="tb" onclick="filtrarDashV(30,this)">30d</button>
+      <button class="tb" onclick="filtrarDashV(90,this)">3m</button>
+      <button class="tb" onclick="filtrarDashV(365,this)">12m</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div style="background:#FFF3E0;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dv-ativos" style="font-size:36px;font-weight:900;color:var(--a0);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">ANÚNCIOS ATIVOS</div></div>
+      <div style="background:var(--g6);border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dv-total" style="font-size:36px;font-weight:900;color:var(--g2);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">TOTAL PRODUTOS</div></div>
+      <div style="background:#EDE7F6;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dv-receita" style="font-size:20px;font-weight:900;color:#4527A0;">R$&nbsp;—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">VALOR EM ESTOQUE</div></div>
+      <div style="background:#E3F2FD;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="dv-vendidos" style="font-size:36px;font-weight:900;color:var(--b1);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">VENDIDOS</div></div>
+    </div>
+    <div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:12px;">
+      <h4 style="font-size:12px;font-weight:700;color:var(--d3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px;">Status dos Anúncios</h4>
+      <div style="position:relative;height:195px;"><canvas id="dash-v-donut"></canvas></div>
+    </div>
+    <div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:12px;">
+      <h4 style="font-size:12px;font-weight:700;color:var(--d3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px;">Novos Anúncios — Últimos 6 Meses</h4>
+      <div style="position:relative;height:175px;"><canvas id="dash-v-line"></canvas></div>
+    </div>
+    <div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:16px;">
+      <h4 style="font-size:12px;font-weight:700;color:var(--d3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px;">Produtos por Categoria</h4>
+      <div style="position:relative;height:175px;"><canvas id="dash-v-bar"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== ÓTICA: DASHBOARD ANALÍTICO ======== -->
+<div id="so-dash" class="scr">
+  <div class="hdr hdk"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><h3>Painel Analítico</h3></div><span style="font-size:22px;">📊</span></div>
+  <div class="body">
+    <div style="display:flex;gap:6px;margin-bottom:16px;">
+      <button class="tb on" onclick="filtrarDashO(30,this)">30d</button>
+      <button class="tb" onclick="filtrarDashO(90,this)">3m</button>
+      <button class="tb" onclick="filtrarDashO(180,this)">6m</button>
+      <button class="tb" onclick="filtrarDashO(365,this)">12m</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div style="background:#E8EAF6;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="do-doacoes" style="font-size:36px;font-weight:900;color:#283593;">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">DOAÇÕES RECEBIDAS</div></div>
+      <div style="background:var(--g6);border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="do-produtos" style="font-size:36px;font-weight:900;color:var(--g2);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">PRODUTOS ATIVOS</div></div>
+      <div style="background:#FFF3E0;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="do-pendentes" style="font-size:36px;font-weight:900;color:var(--a0);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">TRIAGEM PENDENTE</div></div>
+      <div style="background:#E3F2FD;border-radius:var(--r);padding:16px 12px;text-align:center;"><div id="do-aprovados" style="font-size:36px;font-weight:900;color:var(--b1);">—</div><div style="font-size:10px;color:var(--d2);font-weight:700;margin-top:2px;letter-spacing:.4px;">APROVADOS</div></div>
+    </div>
+    <div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:12px;">
+      <h4 style="font-size:12px;font-weight:700;color:var(--d3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px;">Status do Estoque</h4>
+      <div style="position:relative;height:195px;"><canvas id="dash-o-donut"></canvas></div>
+    </div>
+    <div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:12px;">
+      <h4 style="font-size:12px;font-weight:700;color:var(--d3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px;">Atividade Mensal</h4>
+      <div style="position:relative;height:175px;"><canvas id="dash-o-bar"></canvas></div>
+    </div>
+    <div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:16px;">
+      <h4 style="font-size:12px;font-weight:700;color:var(--d3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.6px;">Tipos de Óculos (Área Polar)</h4>
+      <div style="position:relative;height:200px;"><canvas id="dash-o-tipo"></canvas></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1317,7 +1412,7 @@ function tgChk(rowId,cbId,btnId){
 }
 function submitTerms(){if(chkState.chk1&&chkState.chk2&&chkState.chk3&&chkState.chk4)go('sb5-sol');}
 var hist=[];var dPr=null;var donacaoAtiva=false;var planSel='bas';
-var _loginGate=['sd0','sb0','sb7','sv0','so0','so1'];
+var _loginGate=['sd0','sb0','sb7','sv0','so0','so1','s-perfil-edit','sd-dash','sv-dash','so-dash'];
 function go(id){
   if(_loginGate.indexOf(id)>-1&&!currentUser){
     showToast('Faça login para acessar esta área');
@@ -1331,6 +1426,9 @@ function go(id){
   if(id==='sb7')carregarPedidos();
   if(id==='s2'){atualizarNomes();atualizarCardS2();}
   if(id==='s-perfil-edit')carregarPerfil();
+  if(id==='sd-dash')carregarDashboardDoador(30);
+  if(id==='sv-dash')carregarDashboardVendedor(30);
+  if(id==='so-dash')carregarDashboardOtica(30);
   if(id==='sb7-chat'&&__currentPedido)carregarMensagens(__currentPedido.id);
 }
 function bk(){if(!hist.length)return;var c=document.querySelector('.scr.on');if(c)c.classList.remove('on');var p=document.getElementById(hist.pop());if(p)p.classList.add('on');}
@@ -1438,7 +1536,7 @@ function atualizarSidebarUser(user){
     var nome=(user.user_metadata&&user.user_metadata.nome)||user.email||'Usuário';
     if(av)av.textContent=nome.charAt(0).toUpperCase();
     if(nm)nm.textContent=nome.split(' ')[0];
-    if(ln){ln.textContent='Meu perfil';ln.onclick=function(){go('s2');};}
+    if(ln){ln.textContent='Meu perfil';ln.onclick=function(){go('s-perfil-edit');};}
   }else{
     if(av)av.textContent='?';
     if(nm)nm.textContent='Visitante';
@@ -1577,6 +1675,126 @@ async function buscarEnderecoCEP(){
     set('perf-uf',d.uf);
   }catch(e){}
 }
+
+// ===== DASHBOARDS =====
+var _dashCharts={};
+function _destroyChart(id){if(_dashCharts[id]){try{_dashCharts[id].destroy();}catch(e){}delete _dashCharts[id];}}
+function _mkChart(id,type,data,opts){
+  _destroyChart(id);
+  var el=document.getElementById(id);if(!el)return;
+  _dashCharts[id]=new Chart(el,{type:type,data:data,options:Object.assign({responsive:true,maintainAspectRatio:false,animation:{duration:600}},opts||{})});
+}
+function _meses6(){
+  var r=[];
+  for(var i=5;i>=0;i--){var d=new Date();d.setMonth(d.getMonth()-i);r.push(d.toLocaleDateString('pt-BR',{month:'short'}));}
+  return r;
+}
+function _countMes(arr,field){
+  return Array.from({length:6},function(_,i){
+    var d=new Date();d.setMonth(d.getMonth()-(5-i));
+    var ym=d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0');
+    return arr.filter(function(x){return x[field]&&x[field].startsWith(ym);}).length;
+  });
+}
+function _filtroTb(el){
+  var body=el.closest('.body');
+  if(body)body.querySelectorAll('.tb').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+}
+var _chartDefaults={
+  plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12,boxWidth:14}}},
+  scales:{y:{beginAtZero:true,ticks:{font:{size:11}},grid:{color:'rgba(0,0,0,.05)'}},x:{ticks:{font:{size:11}},grid:{display:false}}}
+};
+
+// --- DOADOR ---
+async function carregarDashboardDoador(dias){
+  if(!currentUser)return;
+  var desde=new Date();desde.setDate(desde.getDate()-dias);
+  var rF=await sb.from('doacoes').select('*').eq('beneficiario_id',currentUser.id).gte('criado_em',desde.toISOString());
+  var rA=await sb.from('doacoes').select('*').eq('beneficiario_id',currentUser.id);
+  var data=rF.data||[];var all=rA.data||[];
+  var st={pendente:0,aprovado:0,entregue:0,recusado:0};
+  data.forEach(function(d){var s=d.status||'pendente';if(st[s]!=null)st[s]++;else st.pendente++;});
+  var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  set('dd-total',data.length);set('dd-entregue',st.entregue);set('dd-pendente',st.pendente);set('dd-aprovado',st.aprovado);
+  set('dd-impacto',all.length>0?'Você já fez '+all.length+' doação(ões) e ajudou '+(st.entregue||0)+' pessoa(s) a enxergar melhor! ❤️':'Faça sua primeira doação e comece a transformar vidas! ♥');
+  _mkChart('dash-d-donut','doughnut',{
+    labels:['Pendente','Aprovado','Entregue','Recusado'],
+    datasets:[{data:[st.pendente,st.aprovado,st.entregue,st.recusado],backgroundColor:['#FFB300','#2E7D32','#1565C0','#C62828'],borderWidth:0,hoverOffset:8}]
+  },{plugins:_chartDefaults.plugins});
+  _mkChart('dash-d-bar','bar',{
+    labels:_meses6(),
+    datasets:[{label:'Doações',data:_countMes(all,'criado_em'),backgroundColor:'rgba(46,125,50,0.82)',borderRadius:8,borderSkipped:false}]
+  },{plugins:{legend:{display:false}},scales:_chartDefaults.scales});
+}
+function filtrarDashD(dias,el){if(el)_filtroTb(el);carregarDashboardDoador(dias);}
+
+// --- VENDEDOR ---
+async function carregarDashboardVendedor(dias){
+  if(!currentUser)return;
+  var rA=await sb.from('produtos').select('*').eq('criado_por',currentUser.id);
+  var all=rA.data||[];
+  var ativos=all.filter(function(p){return p.status==='ativo';}).length;
+  var vendidos=all.filter(function(p){return p.status==='vendido';}).length;
+  var pausados=all.filter(function(p){return p.status==='pausado';}).length;
+  var outros=all.length-ativos-vendidos-pausados;
+  var receita=all.filter(function(p){return p.status==='ativo';}).reduce(function(s,p){return s+(parseFloat(p.preco)||0);},0);
+  var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  set('dv-ativos',ativos);set('dv-total',all.length);set('dv-vendidos',vendidos);
+  var elR=document.getElementById('dv-receita');if(elR)elR.textContent='R$ '+receita.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  _mkChart('dash-v-donut','doughnut',{
+    labels:['Ativo','Vendido','Pausado','Outro'],
+    datasets:[{data:[ativos,vendidos,pausados,outros],backgroundColor:['#2E7D32','#1565C0','#FFB300','#9E9E9E'],borderWidth:0,hoverOffset:8}]
+  },{plugins:_chartDefaults.plugins});
+  _mkChart('dash-v-line','line',{
+    labels:_meses6(),
+    datasets:[{label:'Anúncios',data:_countMes(all,'criado_em'),borderColor:'#E65100',backgroundColor:'rgba(230,81,0,.12)',tension:.4,fill:true,pointBackgroundColor:'#E65100',pointRadius:5,pointHoverRadius:7}]
+  },{plugins:{legend:{display:false}},scales:_chartDefaults.scales});
+  var tipoMap={};
+  all.forEach(function(p){var t=p.tipo_oculos||p.tipo||'Outros';tipoMap[t]=(tipoMap[t]||0)+1;});
+  var tl=Object.keys(tipoMap),td=tl.map(function(k){return tipoMap[k];});
+  var bColors=['#E65100','#F57C00','#FFB300','#2E7D32','#1565C0','#6A1B9A'];
+  _mkChart('dash-v-bar','bar',{
+    labels:tl.length?tl:['Sem dados'],
+    datasets:[{label:'Qtd',data:td.length?td:[0],backgroundColor:bColors.slice(0,Math.max(tl.length,1)),borderRadius:8,borderSkipped:false}]
+  },{plugins:{legend:{display:false}},scales:_chartDefaults.scales});
+}
+function filtrarDashV(dias,el){if(el)_filtroTb(el);carregarDashboardVendedor(dias);}
+
+// --- ÓTICA ---
+async function carregarDashboardOtica(dias){
+  if(!currentUser)return;
+  var desde=new Date();desde.setDate(desde.getDate()-dias);
+  var rP=await sb.from('produtos').select('*').eq('criado_por',currentUser.id);
+  var rD=await sb.from('doacoes').select('*').gte('criado_em',desde.toISOString());
+  var prods=rP.data||[];var doacoes=rD.data||[];
+  var ativos=prods.filter(function(p){return p.status==='ativo';}).length;
+  var pendentes=prods.filter(function(p){return!p.status||p.status==='pendente';}).length;
+  var aprovados=prods.filter(function(p){return p.status==='aprovado'||p.status==='ativo';}).length;
+  var vendidos=prods.filter(function(p){return p.status==='vendido';}).length;
+  var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  set('do-doacoes',doacoes.length);set('do-produtos',ativos);set('do-pendentes',pendentes);set('do-aprovados',aprovados);
+  _mkChart('dash-o-donut','doughnut',{
+    labels:['Disponível','Vendido','Pendente'],
+    datasets:[{data:[ativos,vendidos,pendentes],backgroundColor:['#2E7D32','#1565C0','#FFB300'],borderWidth:0,hoverOffset:8}]
+  },{plugins:_chartDefaults.plugins});
+  var mc=_countMes(prods,'criado_em'),md=_countMes(doacoes,'criado_em');
+  _mkChart('dash-o-bar','bar',{
+    labels:_meses6(),
+    datasets:[
+      {label:'Produtos',data:mc,backgroundColor:'rgba(46,125,50,.82)',borderRadius:6,borderSkipped:false},
+      {label:'Doações',data:md,backgroundColor:'rgba(21,101,192,.82)',borderRadius:6,borderSkipped:false}
+    ]
+  },{plugins:{legend:{position:'top',labels:{font:{size:11},padding:10,boxWidth:12}}},scales:_chartDefaults.scales});
+  var tipoMap={};
+  prods.forEach(function(p){var t=p.tipo_oculos||'Outros';tipoMap[t]=(tipoMap[t]||0)+1;});
+  var tl=Object.keys(tipoMap),td=tl.map(function(k){return tipoMap[k];});
+  _mkChart('dash-o-tipo','polarArea',{
+    labels:tl.length?tl:['Sem dados'],
+    datasets:[{data:td.length?td:[1],backgroundColor:['rgba(46,125,50,.75)','rgba(21,101,192,.75)','rgba(230,81,0,.75)','rgba(194,40,40,.75)','rgba(255,179,0,.75)'],borderWidth:0}]
+  },{plugins:{legend:{position:'right',labels:{font:{size:11},padding:8,boxWidth:12}}}});
+}
+function filtrarDashO(dias,el){if(el)_filtroTb(el);carregarDashboardOtica(dias);}
 
 function atualizarDetalheProduto(p){
   if(!p)return;
