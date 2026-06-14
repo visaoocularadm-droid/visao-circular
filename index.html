@@ -1059,7 +1059,18 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="sv-edit" class="scr">
   <div class="hdr ha"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><h3>Editar anúncio</h3></div></div>
   <div class="body">
-    <div class="prod-img" id="sv-edit-img" style="margin-bottom:20px;width:100%;max-width:320px;height:200px;align-self:center;display:flex;align-items:center;justify-content:center;background:var(--d5);border-radius:var(--r);overflow:hidden;font-size:48px;">👓</div>
+    <div class="fg">
+      <label class="fl">Fotos <span style="color:var(--d3);font-weight:400;font-size:11px;">· toque para definir capa · × para remover</span></label>
+      <div id="sv-edit-fotos-row" style="display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-height:90px;align-items:flex-start;"></div>
+      <label style="display:flex;align-items:center;gap:8px;padding:10px;border:2px dashed var(--d4);border-radius:var(--r);cursor:pointer;color:var(--d3);font-size:13px;">
+        <input type="file" accept="image/*" multiple style="display:none" onchange="adicionarFotosEdicao(this)">
+        <span style="font-size:18px;">📷</span> Adicionar fotos
+      </label>
+    </div>
+    <div class="fg">
+      <label class="fl">Vídeo do produto</label>
+      <div id="sv-edit-video-area"></div>
+    </div>
     <div class="fg"><label class="fl">Título</label><input class="fi" id="sv-edit-titulo" placeholder="Ex: Óculos de grau Ray-Ban"></div>
     <div class="fg"><label class="fl">Descrição</label><textarea class="fi" id="sv-edit-desc" style="min-height:100px;" placeholder="Descreva o estado, armação, marca..."></textarea></div>
     <div class="fg"><label class="fl">Preço (R$)</label><input class="fi" id="sv-edit-preco" type="number" step="0.01" min="0" placeholder="0,00"></div>
@@ -2011,6 +2022,76 @@ function atualizarDetalheProduto(p){
 }
 
 var __editProduto=null;
+var __editFotos=[];
+var __editVideoUrl=null;
+function renderEditFotos(){
+  var row=document.getElementById('sv-edit-fotos-row');
+  if(!row)return;
+  if(__editFotos.length===0){
+    row.innerHTML='<div style="width:80px;height:80px;background:var(--d5);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--d3);flex-shrink:0;">👓</div>';
+    return;
+  }
+  row.innerHTML=__editFotos.map(function(url,i){
+    var isCapa=i===0;
+    return '<div style="position:relative;flex-shrink:0;" onclick="_setCapaFoto('+i+')">'
+      +'<img src="'+url+'" style="width:80px;height:80px;object-fit:cover;border-radius:var(--r);border:2px solid '+(isCapa?'var(--a0)':'transparent')+';display:block;">'
+      +(isCapa?'<div style="position:absolute;bottom:2px;left:2px;background:var(--a0);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;pointer-events:none;">CAPA</div>':'')
+      +'<button onclick="event.stopPropagation();_removeFotoEdicao('+i+')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#D32F2F;color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;">×</button>'
+      +'</div>';
+  }).join('');
+}
+function _setCapaFoto(idx){
+  if(idx===0)return;
+  var url=__editFotos.splice(idx,1)[0];
+  __editFotos.unshift(url);
+  renderEditFotos();
+  showToast('✓ Foto definida como capa');
+}
+function _removeFotoEdicao(idx){
+  __editFotos.splice(idx,1);
+  renderEditFotos();
+}
+async function adicionarFotosEdicao(input){
+  if(!input.files||!input.files.length)return;
+  if(!currentUser){showToast('Faça login primeiro');return;}
+  showToast('⏳ Enviando fotos...');
+  var uploaded=0;
+  for(var i=0;i<input.files.length&&__editFotos.length<10;i++){
+    var file=input.files[i];
+    var path=currentUser.id+'/edit_'+Date.now()+'_'+i+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    var r=await sb.storage.from('fotos-produtos').upload(path,file,{contentType:file.type});
+    if(!r.error){__editFotos.push(sb.storage.from('fotos-produtos').getPublicUrl(path).data.publicUrl);uploaded++;}
+  }
+  renderEditFotos();
+  showToast(uploaded>0?'📷 '+uploaded+' foto(s) adicionada(s) ✓':'❌ Erro ao enviar fotos');
+}
+function renderEditVideo(){
+  var area=document.getElementById('sv-edit-video-area');
+  if(!area)return;
+  if(__editVideoUrl){
+    area.innerHTML='<div style="position:relative;background:#111;border-radius:var(--r);overflow:hidden;height:110px;display:flex;align-items:center;justify-content:center;">'
+      +'<video src="'+__editVideoUrl+'" style="height:100%;max-width:100%;object-fit:contain;" controls preload="none"></video>'
+      +'<button onclick="__editVideoUrl=null;renderEditVideo();" style="position:absolute;top:4px;right:4px;background:#D32F2F;color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>'
+      +'</div>';
+  } else {
+    area.innerHTML='<label style="display:flex;align-items:center;gap:8px;padding:10px;border:2px dashed var(--g3);border-radius:var(--r);cursor:pointer;color:var(--g2);font-size:13px;background:#F1F8E9;">'
+      +'<input type="file" accept="video/*" style="display:none" onchange="trocarVideoEdicao(this)">'
+      +'<span style="font-size:20px;">🎬</span> Adicionar vídeo (opcional)'
+      +'</label>';
+  }
+}
+async function trocarVideoEdicao(input){
+  if(!input.files||!input.files.length)return;
+  if(!currentUser){showToast('Faça login primeiro');return;}
+  showToast('⏳ Enviando vídeo...');
+  var file=input.files[0];
+  var path=currentUser.id+'/vid_e'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+  var r=await sb.storage.from('fotos-produtos').upload(path,file,{contentType:file.type});
+  if(r.error){showToast('Erro ao enviar vídeo: '+r.error.message);return;}
+  __editVideoUrl=sb.storage.from('fotos-produtos').getPublicUrl(path).data.publicUrl;
+  renderEditVideo();
+  showToast('🎬 Vídeo enviado ✓');
+}
 async function carregarAnunciosVendedor(){
   if(!currentUser)return;
   var el=document.getElementById('lista-anuncios-v');
@@ -2049,8 +2130,10 @@ async function carregarAnunciosVendedor(){
 function _editIdx(i){if(window._anunciosCache&&window._anunciosCache[i])abrirEditAnuncio(window._anunciosCache[i]);}
 function abrirEditAnuncio(p){
   __editProduto=p;
-  var imgEl=document.getElementById('sv-edit-img');
-  if(imgEl){imgEl.innerHTML=p.foto_url?'<img src="'+p.foto_url+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r);" onerror="this.parentElement.innerHTML=\'👓\'">':'👓';}
+  __editFotos=(p.fotos&&p.fotos.length>0)?p.fotos.slice():(p.foto_url?[p.foto_url]:[]);
+  __editVideoUrl=p.video_url||null;
+  renderEditFotos();
+  renderEditVideo();
   var s=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};
   s('sv-edit-titulo',p.titulo);s('sv-edit-desc',p.descricao);s('sv-edit-preco',p.preco);
   document.querySelectorAll('#sv-edit-status .tb').forEach(function(b){
@@ -2067,7 +2150,7 @@ async function salvarEdicaoAnuncio(){
   var precoStr=document.getElementById('sv-edit-preco').value.replace(',','.');
   var statusBtn=document.querySelector('#sv-edit-status .tb.on');
   var status=statusBtn?(statusBtn.textContent==='Ativo'?'ativo':'pausado'):'ativo';
-  var r=await sb.from('produtos').update({titulo:titulo,descricao:desc,preco:precoStr?parseFloat(precoStr):null,status:status}).eq('id',__editProduto.id).eq('vendedor_id',currentUser.id);
+  var r=await sb.from('produtos').update({titulo:titulo,descricao:desc,preco:precoStr?parseFloat(precoStr):null,status:status,fotos:__editFotos,foto_url:__editFotos[0]||null,video_url:__editVideoUrl||null}).eq('id',__editProduto.id).eq('vendedor_id',currentUser.id);
   if(r.error){showToast('Erro: '+r.error.message);return;}
   showToast('✅ Anúncio atualizado!');
   go('sv0');
