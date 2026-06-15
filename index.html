@@ -1500,7 +1500,7 @@ sb.auth.onAuthStateChange(function(event,session){
     if(_public.indexOf(_cid)>-1)go('s-onboard');
     // OAuth recarrega com s-onboard já ativa — não navega de novo (já está lá)
   }
-  if(event==='SIGNED_OUT'){currentUser=null;go('s0');}
+  if(event==='SIGNED_OUT'){currentUser=null;go('s-onboard');}
 });
 function iniciarJornada(){go('s2');}
 
@@ -1566,7 +1566,7 @@ async function loginEmail(){
     var r=await sb.auth.signInWithPassword({email:email,password:pw});
     if(r.error)throw r.error;
     currentUser=r.data.user;
-    go('s2');
+    go('s-onboard');
   }catch(e){
     showToast(e.message==='Invalid login credentials'?'E-mail ou senha incorretos':e.message);
   }
@@ -1631,7 +1631,7 @@ async function signupEmail(){
     if(r.error)throw r.error;
     currentUser=r.data.user;
     showToast('Conta criada! ✓');
-    go('s2');
+    go('s-onboard');
   }catch(e){showToast(e.message);}
   if(btn){btn.textContent='Criar conta';btn.disabled=false;}
 }
