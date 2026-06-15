@@ -1500,7 +1500,7 @@ sb.auth.onAuthStateChange(function(event,session){
   }
   if(event==='SIGNED_OUT'){currentUser=null;go('s0');}
 });
-function iniciarJornada(){if(currentUser)go('s2');else go('s0');}
+function iniciarJornada(){go('s2');}
 
 // ── SEGURANÇA: Auto-logout por inatividade (30 min) ──────────────────────────
 var _inactTimer=null;
