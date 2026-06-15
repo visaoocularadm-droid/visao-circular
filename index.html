@@ -1495,10 +1495,10 @@ sb.auth.onAuthStateChange(function(event,session){
     atualizarNomes();carregarProdutos();_resetInact();
     var _curr=document.querySelector('.scr.on');
     var _cid=_curr?_curr.id:'';
-    // vai para hub se vier de tela pública ou de onboarding (OAuth recarrega em s-onboard)
-    // não interrompe fluxo de upload ativo
-    var _public=['s0','s1','s-cad','s-onboard',''];
-    if(_public.indexOf(_cid)>-1)go('s2');
+    // após login mostra onboarding antes do hub; não interrompe upload ativo
+    var _public=['s0','s1','s-cad',''];
+    if(_public.indexOf(_cid)>-1)go('s-onboard');
+    // OAuth recarrega com s-onboard já ativa — não navega de novo (já está lá)
   }
   if(event==='SIGNED_OUT'){currentUser=null;go('s0');}
 });
