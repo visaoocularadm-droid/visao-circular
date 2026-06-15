@@ -1495,8 +1495,10 @@ sb.auth.onAuthStateChange(function(event,session){
     atualizarNomes();carregarProdutos();_resetInact();
     var _curr=document.querySelector('.scr.on');
     var _cid=_curr?_curr.id:'';
-    // após login vai direto para o hub; não interrompe fluxo de upload ativo
-    if(!_cid||_cid==='s0'||_cid==='s1'||_cid==='s-cad')go('s2');
+    // vai para hub se vier de tela pública ou de onboarding (OAuth recarrega em s-onboard)
+    // não interrompe fluxo de upload ativo
+    var _public=['s0','s1','s-cad','s-onboard',''];
+    if(_public.indexOf(_cid)>-1)go('s2');
   }
   if(event==='SIGNED_OUT'){currentUser=null;go('s0');}
 });
