@@ -278,8 +278,143 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="app">
 <div id="inst"><h4>📲 Instalar Visão Circular</h4><p>Adicione à tela inicial para usar como app!</p><div class="inst-r"><button class="iy" onclick="installApp()">Instalar</button><button class="in" onclick="closeInst()">Agora não</button></div></div>
 
+<!-- ============ ONBOARDING ============ -->
+<div id="s-onboard" class="scr on" style="background:#fff;">
+  <div style="padding:40px 24px 6px;text-align:center;flex-shrink:0;">
+    <div style="display:inline-flex;align-items:center;gap:8px;">
+      <span style="font-size:22px;">👓</span>
+      <span style="font-size:15px;font-weight:800;letter-spacing:2px;color:#2E7D32;text-transform:uppercase;">Visão Circular</span>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:0 8px;overflow:hidden;">
+    <svg viewBox="0 0 340 248" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;max-height:280px;">
+      <!-- fundo suave -->
+      <ellipse cx="170" cy="128" rx="158" ry="116" fill="#E8F5E9"/>
+      <!-- bolinhas decorativas -->
+      <circle cx="18" cy="22" r="11" fill="#C8E6C9" opacity=".65"/>
+      <circle cx="316" cy="12" r="15" fill="#A5D6A7" opacity=".5"/>
+      <circle cx="328" cy="205" r="10" fill="#C8E6C9" opacity=".6"/>
+      <circle cx="12" cy="192" r="13" fill="#A5D6A7" opacity=".45"/>
+
+      <!-- ===== MULHER (esquerda) ===== -->
+      <!-- corpo/roupa -->
+      <ellipse cx="84" cy="248" rx="54" ry="28" fill="#4CAF50"/>
+      <!-- pescoço -->
+      <rect x="78" y="177" width="12" height="22" rx="5" fill="#FFCC80"/>
+      <!-- cabeça -->
+      <ellipse cx="84" cy="152" rx="33" ry="37" fill="#FFCC80"/>
+      <!-- cabelo longo fundo -->
+      <ellipse cx="84" cy="130" rx="36" ry="27" fill="#6D4C41"/>
+      <rect x="48" y="138" width="14" height="70" rx="7" fill="#6D4C41"/>
+      <rect x="108" y="138" width="14" height="70" rx="7" fill="#6D4C41"/>
+      <!-- orelhas -->
+      <ellipse cx="52" cy="152" rx="5" ry="7" fill="#FFCC80"/>
+      <ellipse cx="116" cy="152" rx="5" ry="7" fill="#FFCC80"/>
+      <!-- brancos dos olhos -->
+      <ellipse cx="72" cy="150" rx="10" ry="10" fill="white"/>
+      <ellipse cx="96" cy="150" rx="10" ry="10" fill="white"/>
+      <!-- óculos redondos verdes -->
+      <circle cx="72" cy="151" r="13.5" fill="none" stroke="#00897B" stroke-width="3.5"/>
+      <circle cx="96" cy="151" r="13.5" fill="none" stroke="#00897B" stroke-width="3.5"/>
+      <line x1="85" y1="150" x2="83" y2="150" stroke="#00897B" stroke-width="2.5"/>
+      <line x1="50" y1="150" x2="58" y2="150" stroke="#00897B" stroke-width="2.5"/>
+      <line x1="109" y1="150" x2="117" y2="150" stroke="#00897B" stroke-width="2.5"/>
+      <!-- pupilas -->
+      <circle cx="72" cy="151" r="5.5" fill="#37474F"/>
+      <circle cx="72" cy="151" r="2" fill="white"/>
+      <circle cx="96" cy="151" r="5.5" fill="#37474F"/>
+      <circle cx="96" cy="151" r="2" fill="white"/>
+      <!-- nariz -->
+      <ellipse cx="84" cy="163" rx="3" ry="2.5" fill="#EDA070" opacity=".55"/>
+      <!-- sorriso -->
+      <path d="M72 173 Q84 185 96 173" fill="none" stroke="#8D6E63" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- ===== CRIANÇA (centro, ligeiramente à frente) ===== -->
+      <!-- corpo -->
+      <ellipse cx="170" cy="248" rx="44" ry="26" fill="#FF9800"/>
+      <!-- pescoço -->
+      <rect x="165" y="222" width="10" height="14" rx="4" fill="#FFCC80"/>
+      <!-- cabeça -->
+      <circle cx="170" cy="204" r="29" fill="#FFCC80"/>
+      <!-- cabelo cacheado -->
+      <circle cx="170" cy="182" r="22" fill="#FFA000"/>
+      <circle cx="150" cy="190" r="13" fill="#FFA000"/>
+      <circle cx="190" cy="190" r="13" fill="#FFA000"/>
+      <circle cx="156" cy="179" r="11" fill="#FFA000"/>
+      <circle cx="184" cy="179" r="11" fill="#FFA000"/>
+      <!-- orelhas -->
+      <ellipse cx="142" cy="205" rx="5" ry="7" fill="#FFCC80"/>
+      <ellipse cx="198" cy="205" rx="5" ry="7" fill="#FFCC80"/>
+      <!-- brancos dos olhos -->
+      <ellipse cx="160" cy="204" rx="9" ry="9" fill="white"/>
+      <ellipse cx="180" cy="204" rx="9" ry="9" fill="white"/>
+      <!-- óculos divertidos rosa (oval) -->
+      <ellipse cx="160" cy="205" rx="12.5" ry="10.5" fill="none" stroke="#E91E63" stroke-width="3"/>
+      <ellipse cx="180" cy="205" rx="12.5" ry="10.5" fill="none" stroke="#E91E63" stroke-width="3"/>
+      <line x1="167" y1="204" x2="173" y2="204" stroke="#E91E63" stroke-width="2.5"/>
+      <line x1="136" y1="204" x2="147" y2="204" stroke="#E91E63" stroke-width="2.5"/>
+      <line x1="193" y1="204" x2="203" y2="204" stroke="#E91E63" stroke-width="2.5"/>
+      <!-- pupilas -->
+      <circle cx="160" cy="205" r="5" fill="#37474F"/>
+      <circle cx="160" cy="205" r="2" fill="white"/>
+      <circle cx="180" cy="205" r="5" fill="#37474F"/>
+      <circle cx="180" cy="205" r="2" fill="white"/>
+      <!-- nariz -->
+      <ellipse cx="170" cy="215" rx="2.8" ry="2.2" fill="#EDA070" opacity=".55"/>
+      <!-- sorriso grande -->
+      <path d="M157 224 Q170 238 183 224" fill="none" stroke="#8D6E63" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- ===== HOMEM (direita) ===== -->
+      <!-- corpo/camisa -->
+      <ellipse cx="256" cy="248" rx="54" ry="28" fill="#1565C0"/>
+      <!-- pescoço -->
+      <rect x="250" y="177" width="12" height="22" rx="5" fill="#FFAB76"/>
+      <!-- cabeça -->
+      <ellipse cx="256" cy="152" rx="33" ry="37" fill="#FFAB76"/>
+      <!-- cabelo curto -->
+      <ellipse cx="256" cy="130" rx="34" ry="21" fill="#4E342E"/>
+      <path d="M223 145 Q222 162 225 168" fill="#4E342E"/>
+      <path d="M289 145 Q290 162 287 168" fill="#4E342E"/>
+      <!-- orelhas -->
+      <ellipse cx="224" cy="152" rx="5" ry="7" fill="#FFAB76"/>
+      <ellipse cx="288" cy="152" rx="5" ry="7" fill="#FFAB76"/>
+      <!-- barba leve -->
+      <ellipse cx="256" cy="178" rx="22" ry="8" fill="#8D6E63" opacity=".18"/>
+      <!-- brancos dos olhos -->
+      <ellipse cx="244" cy="150" rx="10" ry="10" fill="white"/>
+      <ellipse cx="268" cy="150" rx="10" ry="10" fill="white"/>
+      <!-- óculos retangulares azul escuro -->
+      <rect x="231" y="140" width="26" height="20" rx="4" fill="none" stroke="#1A237E" stroke-width="3.5"/>
+      <rect x="257" y="140" width="26" height="20" rx="4" fill="none" stroke="#1A237E" stroke-width="3.5"/>
+      <line x1="257" y1="150" x2="257" y2="150" stroke="#1A237E" stroke-width="2.5"/>
+      <line x1="255" y1="150" x2="259" y2="150" stroke="#1A237E" stroke-width="2.5"/>
+      <line x1="207" y1="149" x2="231" y2="149" stroke="#1A237E" stroke-width="2.5"/>
+      <line x1="283" y1="149" x2="305" y2="149" stroke="#1A237E" stroke-width="2.5"/>
+      <!-- pupilas -->
+      <circle cx="244" cy="150" r="5.5" fill="#37474F"/>
+      <circle cx="244" cy="150" r="2" fill="white"/>
+      <circle cx="268" cy="150" r="5.5" fill="#37474F"/>
+      <circle cx="268" cy="150" r="2" fill="white"/>
+      <!-- nariz -->
+      <ellipse cx="256" cy="163" rx="3.2" ry="2.8" fill="#E8906E" opacity=".6"/>
+      <!-- sorriso -->
+      <path d="M244 173 Q256 185 268 173" fill="none" stroke="#8D6E63" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div style="padding:4px 28px 12px;text-align:center;flex-shrink:0;">
+    <h2 style="font-size:20px;font-weight:800;color:#1A2B1A;margin-bottom:10px;line-height:1.35;">Moda acessível e com estilo para todos.</h2>
+    <p style="font-size:13px;color:#666;line-height:1.65;">Nosso propósito vai além do visual: o aplicativo destina óculos para doação, ajudando a transformar a visão e a vida de quem mais precisa.</p>
+  </div>
+
+  <div style="padding:14px 24px 44px;flex-shrink:0;">
+    <button class="btn bg" style="font-size:16px;padding:18px;border-radius:14px;" onclick="go('s0')">Iniciar Jornada</button>
+  </div>
+</div>
+
 <!-- ============ SPLASH ============ -->
-<div id="s0" class="scr splash on">
+<div id="s0" class="scr splash">
   <div style="font-size:78px;margin-bottom:18px;">👓</div>
   <div style="font-size:34px;font-weight:800;color:#fff;text-align:center;line-height:1.2;">Visão<br><span style="color:#A5D6A7">Circular</span></div>
   <div style="color:#A5D6A7;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin:8px 0 50px;">— enxergue um mundo melhor —</div>
