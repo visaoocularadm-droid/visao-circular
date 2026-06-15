@@ -409,7 +409,7 @@ input:checked+.sl:before{transform:translateX(22px);}
   </div>
 
   <div style="padding:14px 24px 44px;flex-shrink:0;">
-    <button class="btn bg" style="font-size:16px;padding:18px;border-radius:14px;" onclick="go('s0')">Iniciar Jornada</button>
+    <button class="btn bg" style="font-size:16px;padding:18px;border-radius:14px;" onclick="iniciarJornada()">Iniciar Jornada</button>
   </div>
 </div>
 
@@ -1483,7 +1483,11 @@ let currentUser=null;
 
 // Auth init: restores session on reload and handles Google OAuth redirect
 sb.auth.getSession().then(function(r){
-  if(r.data&&r.data.session){currentUser=r.data.session.user;setTimeout(function(){go('s2');},100);}
+  if(r.data&&r.data.session){
+    currentUser=r.data.session.user;
+    atualizarNomes();carregarProdutos();
+    // fica no s-onboard — usuário toca "Iniciar Jornada" para ir ao hub
+  }
 });
 sb.auth.onAuthStateChange(function(event,session){
   currentUser=session?session.user:null;
@@ -1491,11 +1495,12 @@ sb.auth.onAuthStateChange(function(event,session){
     atualizarNomes();carregarProdutos();_resetInact();
     var _curr=document.querySelector('.scr.on');
     var _cid=_curr?_curr.id:'';
-    // só redireciona para s2 se estiver em tela pública (não interrompe upload/fluxo ativo)
-    if(!_cid||_cid==='s0'||_cid==='s1'||_cid==='s-cad')go('s2');
+    // após login vai para onboarding; não interrompe fluxo de upload ativo
+    if(!_cid||_cid==='s0'||_cid==='s1'||_cid==='s-cad')go('s-onboard');
   }
   if(event==='SIGNED_OUT'){currentUser=null;go('s0');}
 });
+function iniciarJornada(){if(currentUser)go('s2');else go('s0');}
 
 // ── SEGURANÇA: Auto-logout por inatividade (30 min) ──────────────────────────
 var _inactTimer=null;
