@@ -601,6 +601,14 @@ input:checked+.sl:before{transform:translateX(22px);}
     </div>
     <div class="fg"><label class="fl">Estado</label><div class="tog"><button class="tb" onclick="tg(this)">Novo</button><button class="tb on" onclick="tg(this)">Usado</button></div></div>
     <div class="fg"><label class="fl">Descrição</label><textarea class="fi" id="desc-d" placeholder="Ex: Óculos de grau, armação preta, lentes antirrreflexo..." oninput="updateChar('desc-d','cc-d',500)"></textarea><span class="char-c" id="cc-d">0/500</span></div>
+    <div class="fg"><label class="fl">Quantidade disponível para doação *</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+        <button type="button" onclick="var i=document.getElementById('sd-estoque');i.value=Math.max(1,parseInt(i.value||1)-1);" style="width:38px;height:38px;border:1px solid var(--d4);border-radius:8px;background:#fff;font-size:22px;font-weight:700;cursor:pointer;line-height:1;">−</button>
+        <input class="fi" id="sd-estoque" type="number" min="1" max="99" value="1" style="width:70px;text-align:center;font-size:20px;font-weight:700;padding:6px;">
+        <button type="button" onclick="var i=document.getElementById('sd-estoque');i.value=Math.min(99,parseInt(i.value||1)+1);" style="width:38px;height:38px;border:1px solid var(--d4);border-radius:8px;background:#fff;font-size:22px;font-weight:700;cursor:pointer;line-height:1;">+</button>
+        <span style="font-size:13px;color:var(--d3);">par(es)</span>
+      </div>
+    </div>
     <button class="btn bg" onclick="go('sd2')">Continuar</button>
   </div>
 </div>
@@ -741,11 +749,12 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="cardf">
       <p style="font-size:12px;color:var(--d3);margin-bottom:8px;">INFORMAÇÕES</p>
       <div class="ir"><span class="il">Estado</span><span class="iv" id="sb3-estado">—</span></div>
-      <div class="ir" style="border:none;"><span class="il">Localização</span><span class="iv" id="sb3-local">Brasil</span></div>
+      <div class="ir"><span class="il">Localização</span><span class="iv" id="sb3-local">Brasil</span></div>
+      <div class="ir" style="border:none;"><span class="il">Disponíveis</span><span class="iv" id="sb3-estoque" style="font-weight:700;">—</span></div>
     </div>
   </div>
   <div style="position:absolute;bottom:0;left:0;right:0;padding:14px 20px 28px;background:#fff;border-top:1px solid var(--d4);">
-    <button class="btn bg" onclick="checkDoacao()">Solicitar doação</button>
+    <button class="btn bg" id="btn-solicitar" onclick="checkDoacao()">Solicitar doação</button>
     <p style="font-size:12px;text-align:center;color:var(--d3);margin-top:6px;">Ao solicitar, nossa equipe entrará em contato para confirmar a retirada.</p>
   </div>
 </div>
@@ -765,7 +774,8 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="cardf">
       <div class="ir"><span class="il">Estado</span><span class="iv" id="sb4-estado">—</span></div>
       <div class="ir"><span class="il">Envio</span><span class="iv">📦 Correios · Cálculo automático</span></div>
-      <div class="ir" style="border:none;"><span class="il">Localização</span><span class="iv" id="sb4-local">Brasil</span></div>
+      <div class="ir"><span class="il">Localização</span><span class="iv" id="sb4-local">Brasil</span></div>
+      <div class="ir" style="border:none;"><span class="il">Em estoque</span><span class="iv" id="sb4-estoque" style="font-weight:700;">—</span></div>
     </div>
     <p style="font-size:12px;color:var(--g2);font-weight:600;margin-bottom:4px;">⚡ Pagamento 100% seguro via Mercado Pago</p>
   </div>
@@ -1100,6 +1110,14 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="fg"><label class="fl">Marca (opcional)</label><input class="fi" id="sv-marca" placeholder="Ex: Ray-Ban, Oakley, Vogue..."></div>
     <div class="fg"><label class="fl">Estado de conservação</label><div class="tog"><button class="tb" onclick="tg(this)">Novo</button><button class="tb on" onclick="tg(this)">Usado</button></div></div>
     <div class="fg"><label class="fl">Descrição</label><textarea class="fi" id="sv-desc" placeholder="Ex: Óculos em ótimo estado..."></textarea></div>
+    <div class="fg"><label class="fl">Quantidade em estoque *</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+        <button type="button" onclick="var i=document.getElementById('sv-estoque');i.value=Math.max(1,parseInt(i.value||1)-1);" style="width:38px;height:38px;border:1px solid var(--d4);border-radius:8px;background:#fff;font-size:22px;font-weight:700;cursor:pointer;line-height:1;">−</button>
+        <input class="fi" id="sv-estoque" type="number" min="1" max="99" value="1" style="width:70px;text-align:center;font-size:20px;font-weight:700;padding:6px;">
+        <button type="button" onclick="var i=document.getElementById('sv-estoque');i.value=Math.min(99,parseInt(i.value||1)+1);" style="width:38px;height:38px;border:1px solid var(--d4);border-radius:8px;background:#fff;font-size:22px;font-weight:700;cursor:pointer;line-height:1;">+</button>
+        <span style="font-size:13px;color:var(--d3);">par(es)</span>
+      </div>
+    </div>
     <button class="btn ba" onclick="go('sv2')">Continuar</button>
   </div>
 </div>
@@ -1668,14 +1686,16 @@ async function salvarProduto(){
   var marca=document.getElementById('sv-marca');
   var desc=document.getElementById('sv-desc');
   var preco=document.getElementById('sv-preco');
+  var estoqueEl=document.getElementById('sv-estoque');
   var titulo=(marca&&marca.value.trim())?marca.value.trim()+' — óculos':'Óculos à venda';
   var descTxt=(desc&&desc.value.trim())?desc.value.trim():'';
   var precoNum=0;
   if(preco&&preco.value){precoNum=parseFloat(preco.value.replace(/[R$\s]/g,'').replace(',','.'));}
+  var estoqueNum=estoqueEl?Math.max(1,parseInt(estoqueEl.value)||1):1;
   var btn=document.querySelector('#sv5 .btn.ba');
   if(btn){btn.textContent='Publicando...';btn.disabled=true;}
   try{
-    var r=await sb.from('produtos').insert({vendedor_id:currentUser.id,titulo:titulo,descricao:descTxt,preco:precoNum||null,tipo:'venda',tipo_oculos:'grau',estado:'usado',status:'ativo',plano:'basico',foto_url:__fotoUrls[0]||null,fotos:__fotoUrls,video_url:__videoUrl||null});
+    var r=await sb.from('produtos').insert({vendedor_id:currentUser.id,titulo:titulo,descricao:descTxt,preco:precoNum||null,tipo:'venda',tipo_oculos:'grau',estado:'usado',status:'ativo',plano:'basico',foto_url:__fotoUrls[0]||null,fotos:__fotoUrls,video_url:__videoUrl||null,estoque:estoqueNum});
     if(r.error)throw r.error;
     __fotoUrls=[];__videoUrl=null;
     showToast('Anúncio publicado! ✓');
@@ -1687,18 +1707,19 @@ async function salvarProduto(){
 var __produtosCache=[];
 async function carregarProdutos(){
   try{
-    var r=await sb.from('produtos').select('*').eq('status','ativo').order('criado_em',{ascending:false}).limit(8);
+    var r=await sb.from('produtos').select('*').eq('status','ativo').gt('estoque',0).order('criado_em',{ascending:false}).limit(8);
     if(r.error||!r.data||!r.data.length)return;
     __produtosCache=r.data;
     var grid=document.getElementById('prod-grid');
     if(!grid)return;
     grid.innerHTML=r.data.map(function(p,i){
       var badge=p.tipo==='doacao'?'<span class="bdg bd" style="position:absolute;top:7px;left:7px;font-size:10px;">♥ DOAÇÃO</span>':'<span class="bdg bv" style="position:absolute;top:7px;left:7px;font-size:10px;">🛒 VENDA</span>';
-      var preco=p.tipo==='doacao'?'<div style="font-size:13px;font-weight:700;color:var(--g2);margin-top:3px;">Doação</div>':'<div class="pcd-pr">R$ '+(p.preco?Number(p.preco).toFixed(2).replace('.',','):'--')+'</div>';
+      var est=p.estoque||0;
+      var stockBadge=est<=3&&est>0?'<span style="position:absolute;bottom:6px;right:6px;background:#E65100;color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;">⚡ ÚLTIMAS '+est+'</span>':'';
+      var preco=p.tipo==='doacao'?'<div style="font-size:13px;font-weight:700;color:var(--g2);margin-top:3px;">Doação · '+est+' disp.</div>':'<div class="pcd-pr">R$ '+(p.preco?Number(p.preco).toFixed(2).replace('.',','):'--')+'<span style="font-size:10px;font-weight:400;color:var(--d3);margin-left:4px;">'+est+' em estoque</span></div>';
       var desc=p.descricao?p.descricao.substring(0,36):'';
       var imgHtml=p.foto_url?'<img src="'+p.foto_url+'" style="width:100%;height:100%;object-fit:cover;border-radius:0;" onerror="this.parentElement.innerHTML=\'👓\'">':'👓';
-      var dest=p.tipo==='doacao'?'sb3':'sb4';
-      return '<div class="pcd" onclick="selProduto('+i+')"><div class="pcd-img">'+imgHtml+'<div class="pcd-fv">♡</div>'+badge+'</div><div class="pcd-body"><div class="pcd-nm">'+p.titulo+'</div><div class="pcd-inf">'+desc+'</div>'+preco+'</div></div>';
+      return '<div class="pcd" onclick="selProduto('+i+')"><div class="pcd-img" style="position:relative;">'+imgHtml+'<div class="pcd-fv">♡</div>'+badge+stockBadge+'</div><div class="pcd-body"><div class="pcd-nm">'+p.titulo+'</div><div class="pcd-inf">'+desc+'</div>'+preco+'</div></div>';
     }).join('');
   }catch(e){console.warn('carregarProdutos:',e);}
 }
@@ -1713,8 +1734,18 @@ async function submitSolicitacao(){
   var btn=document.getElementById('btn-sol');
   if(btn){btn.textContent='Enviando...';btn.disabled=true;}
   try{
+    // Decrementa estoque atomicamente antes de confirmar a doação
+    if(__currentProduct&&__currentProduct.id){
+      var dr=await sb.rpc('decrementar_estoque',{p_produto_id:__currentProduct.id,p_quantidade:1});
+      if(!dr.data||!dr.data.ok){
+        showToast(dr.data&&dr.data.msg?dr.data.msg:'Produto esgotado — tente outro!');
+        if(btn){btn.textContent='Enviar solicitação';btn.disabled=false;}
+        return;
+      }
+    }
     var r=await sb.from('doacoes').insert({
       beneficiario_id:currentUser.id,
+      produto_id:__currentProduct?__currentProduct.id:null,
       receita_url:__receitaUrl||null,
       status:'pendente'
     });
@@ -1761,8 +1792,8 @@ function go(id){
   var n=document.getElementById(id);if(n){n.classList.add('on');var b=n.querySelector('.body');if(b)b.scrollTop=0;}
   if(id==='sv0'){carregarAnunciosVendedor();carregarPostagensVendedor();}
   if(id==='sd0')carregarDoacoes();
-  if(id==='sd1'){__fotoUrls=[];__videoUrl=null;var _g1=document.getElementById('sd2-foto-grid');if(_g1)_g1.innerHTML='';var _ab=document.getElementById('vid-add-btn-d');if(_ab)_ab.style.display='flex';var _pv=document.getElementById('vid-prev-d');if(_pv)_pv.style.display='none';}
-  if(id==='sv1'){__fotoUrls=[];__videoUrl=null;var _g2=document.getElementById('sv2-foto-grid');if(_g2)_g2.innerHTML='';var _ab2=document.getElementById('vid-add-btn');if(_ab2)_ab2.style.display='flex';var _pv2=document.getElementById('vid-prev');if(_pv2)_pv2.style.display='none';}
+  if(id==='sd1'){__fotoUrls=[];__videoUrl=null;var _g1=document.getElementById('sd2-foto-grid');if(_g1)_g1.innerHTML='';var _ab=document.getElementById('vid-add-btn-d');if(_ab)_ab.style.display='flex';var _pv=document.getElementById('vid-prev-d');if(_pv)_pv.style.display='none';var _se=document.getElementById('sd-estoque');if(_se)_se.value=1;}
+  if(id==='sv1'){__fotoUrls=[];__videoUrl=null;var _g2=document.getElementById('sv2-foto-grid');if(_g2)_g2.innerHTML='';var _ab2=document.getElementById('vid-add-btn');if(_ab2)_ab2.style.display='flex';var _pv2=document.getElementById('vid-prev');if(_pv2)_pv2.style.display='none';var _sve=document.getElementById('sv-estoque');if(_sve)_sve.value=1;}
   if(id==='sb7')carregarPedidos();
   if(id==='s2'){atualizarNomes();atualizarCardS2();}
   if(id==='s-perfil-edit')carregarPerfil();
@@ -1847,11 +1878,13 @@ async function salvarDoacao(){
   var descEl=document.getElementById('desc-d');var desc=descEl?descEl.value.trim():'';
   var tipoBtn=document.querySelector('#sd1 .tog .tb.on');
   var tipoTxt=tipoBtn?tipoBtn.textContent.toLowerCase():'grau';
+  var estoqueD=document.getElementById('sd-estoque');
+  var estoqueNumD=estoqueD?Math.max(1,parseInt(estoqueD.value)||1):1;
   var r=await sb.from('produtos').insert({
     vendedor_id:currentUser.id,
     titulo:'Óculos '+(tipoTxt==='grau'?'de grau':'de sol')+' para doação',
     descricao:desc||null,tipo:'doacao',tipo_oculos:tipoTxt,estado:'usado',
-    status:'ativo',plano:'basico',
+    status:'ativo',plano:'basico',estoque:estoqueNumD,
     foto_url:__fotoUrls[0]||null,fotos:__fotoUrls,video_url:__videoUrl||null
   });
   if(r.error){showToast('Erro: '+r.error.message);if(btn){btn.textContent='Confirmar';btn.disabled=false;}return;}
@@ -1934,6 +1967,15 @@ async function pagarComMP(){
   if(btn){btn.textContent='⏳ Aguarde...';btn.disabled=true;}
   try{
     var p=__currentProduct||{titulo:'Óculos',descricao:'Óculos via Visão Circular',preco:198.90,id:'demo'};
+    // Decrementa estoque atomicamente — trata concorrência no banco
+    if(p.id&&p.id!=='demo'){
+      var sr=await sb.rpc('decrementar_estoque',{p_produto_id:p.id,p_quantidade:1});
+      if(!sr.data||!sr.data.ok){
+        showToast(sr.data&&sr.data.msg?sr.data.msg:'Produto esgotado — outra pessoa acabou de comprá-lo!');
+        if(btn){btn.textContent='💳 Pagar com Mercado Pago';btn.disabled=false;}
+        return;
+      }
+    }
     var r=await fetch(SUPABASE_URL+'/functions/v1/mp-payment',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_KEY},
@@ -2295,8 +2337,16 @@ function atualizarDetalheProduto(p){
   Object.keys(campos).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=campos[id];});
   buildCarrossel('sb3-img','sb3-dots',p.fotos,p.foto_url,p.video_url);
   buildCarrossel('sb4-img','sb4-dots',p.fotos,p.foto_url,p.video_url);
+  var est=typeof p.estoque==='number'?p.estoque:(parseInt(p.estoque)||0);
+  var esgotado=est<=0||p.status==='esgotado';
+  var elE3=document.getElementById('sb3-estoque');
+  var elE4=document.getElementById('sb4-estoque');
+  if(elE3){elE3.textContent=esgotado?'Esgotado':(est+' disponível'+(est!==1?'is':''));elE3.style.color=est<=3&&!esgotado?'#E65100':'var(--g2)';}
+  if(elE4){elE4.textContent=esgotado?'Esgotado':(est+' em estoque');elE4.style.color=est<=3&&!esgotado?'#E65100':'var(--g2)';}
+  var btnS=document.getElementById('btn-solicitar');
   var btnC=document.getElementById('btn-comprar');
-  if(btnC)btnC.textContent=p.tipo==='doacao'?'♥ Solicitar doação':'🛒 Comprar agora';
+  if(btnS){btnS.disabled=esgotado;btnS.style.opacity=esgotado?'0.5':'1';btnS.textContent=esgotado?'Esgotado':'Solicitar doação';}
+  if(btnC){btnC.disabled=esgotado;btnC.style.opacity=esgotado?'0.5':'1';btnC.textContent=esgotado?'Esgotado':(p.tipo==='doacao'?'♥ Solicitar doação':'🛒 Comprar agora');}
 }
 
 var __editProduto=null;
