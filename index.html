@@ -1482,11 +1482,15 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null;
 
 // Auth init: restores session on reload and handles Google OAuth redirect
+// _loginViaEmail=true quando loginEmail/signupEmail já navegou para s-onboard
+// _sessionOnLoad=true quando já havia sessão ativa ao abrir o app
+var _loginViaEmail=false;
+var _sessionOnLoad=false;
 sb.auth.getSession().then(function(r){
   if(r.data&&r.data.session){
     currentUser=r.data.session.user;
+    _sessionOnLoad=true;  // sessão existente: onboarding fica visível para o usuário tocar
     atualizarNomes();carregarProdutos();
-    // fica no s-onboard — usuário toca "Iniciar Jornada" para ir ao hub
   }
 });
 sb.auth.onAuthStateChange(function(event,session){
@@ -1495,12 +1499,19 @@ sb.auth.onAuthStateChange(function(event,session){
     atualizarNomes();carregarProdutos();_resetInact();
     var _curr=document.querySelector('.scr.on');
     var _cid=_curr?_curr.id:'';
-    // após login mostra onboarding antes do hub; não interrompe upload ativo
-    var _public=['s0','s1','s-cad',''];
-    if(_public.indexOf(_cid)>-1)go('s-onboard');
-    // OAuth recarrega com s-onboard já ativa — não navega de novo (já está lá)
+    if(_cid==='s-onboard'){
+      // Google OAuth recarregou a página e caiu em s-onboard:
+      // se NÃO é login via email E NÃO havia sessão prévia → é OAuth → vai pro hub
+      if(!_loginViaEmail&&!_sessionOnLoad){go('s2');}
+      _loginViaEmail=false; // reset flag
+    } else if(['s0','s1','s-cad',''].indexOf(_cid)>-1){
+      // login sem redirecionamento (raro, fallback)
+      if(!_loginViaEmail) go('s-onboard');
+      _loginViaEmail=false;
+    }
+    // qualquer outra tela (upload, etc.): não interrompe
   }
-  if(event==='SIGNED_OUT'){currentUser=null;go('s-onboard');}
+  if(event==='SIGNED_OUT'){currentUser=null;_sessionOnLoad=false;go('s-onboard');}
 });
 function iniciarJornada(){go('s2');}
 
@@ -1566,6 +1577,7 @@ async function loginEmail(){
     var r=await sb.auth.signInWithPassword({email:email,password:pw});
     if(r.error)throw r.error;
     currentUser=r.data.user;
+    _loginViaEmail=true;
     go('s-onboard');
   }catch(e){
     showToast(e.message==='Invalid login credentials'?'E-mail ou senha incorretos':e.message);
@@ -1630,6 +1642,7 @@ async function signupEmail(){
     var r=await sb.auth.signUp({email:email,password:pw,options:{data:{nome:nome}}});
     if(r.error)throw r.error;
     currentUser=r.data.user;
+    _loginViaEmail=true;
     showToast('Conta criada! ✓');
     go('s-onboard');
   }catch(e){showToast(e.message);}
