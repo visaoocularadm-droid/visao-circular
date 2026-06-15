@@ -1183,15 +1183,7 @@ input:checked+.sl:before{transform:translateX(22px);}
         <p style="font-size:13px;">✅ Suporte exclusivo</p>
       </div>
     </div>
-    <div style="margin-top:14px;">
-      <label class="fl">Código de cupom <span style="font-weight:400;color:var(--d3);">(opcional)</span></label>
-      <div style="display:flex;gap:8px;margin-top:6px;">
-        <input class="fi" id="so-cupom-input" placeholder="Ex: SENAC" style="flex:1;text-transform:uppercase;">
-        <button class="btn" style="width:auto;padding:10px 18px;background:var(--d5);color:var(--d2);" onclick="aplicarCupomOtica()">Aplicar</button>
-      </div>
-      <div id="so-cupom-msg" style="display:none;font-size:13px;margin-top:6px;padding:8px 10px;border-radius:8px;"></div>
-    </div>
-    <button class="btn bg" id="so5-btn" onclick="go('so6')" style="margin-top:16px;">Assinar plano — R$ 49,90/mês</button>
+    <button class="btn bg" onclick="go('so6')" style="margin-top:16px;">Assinar plano — R$ 49,90/mês</button>
   </div>
 </div>
 
@@ -1360,7 +1352,13 @@ sb.auth.getSession().then(function(r){
 });
 sb.auth.onAuthStateChange(function(event,session){
   currentUser=session?session.user:null;
-  if(event==='SIGNED_IN'){atualizarNomes();carregarProdutos();go('s2');_resetInact();}
+  if(event==='SIGNED_IN'){
+    atualizarNomes();carregarProdutos();_resetInact();
+    var _curr=document.querySelector('.scr.on');
+    var _cid=_curr?_curr.id:'';
+    // só redireciona para s2 se estiver em tela pública (não interrompe upload/fluxo ativo)
+    if(!_cid||_cid==='s0'||_cid==='s1'||_cid==='s-cad')go('s2');
+  }
   if(event==='SIGNED_OUT'){currentUser=null;go('s0');}
 });
 
@@ -1609,9 +1607,7 @@ function go(id){
   if(id==='sd-dash')carregarDashboardDoador(30);
   if(id==='sv-dash')carregarDashboardVendedor(30);
   if(id==='so-dash')carregarDashboardOtica(30);
-  if(id==='so5')_resetCupomOtica();
-  if(id==='so8'){var _pp=document.getElementById('so8-plano-preco');if(_pp)_pp.textContent=(__oticaCupom==='SENAC')?'Plano SENAC — Gratuito':'R$ 49,90 / mês';}
-  if(id==='sb7-chat'&&__currentPedido)carregarMensagens(__currentPedido.id);
+if(id==='sb7-chat'&&__currentPedido)carregarMensagens(__currentPedido.id);
 }
 function bk(){if(!hist.length)return;var c=document.querySelector('.scr.on');if(c)c.classList.remove('on');var p=document.getElementById(hist.pop());if(p)p.classList.add('on');}
 function tg(el){var g=el.parentElement;g.querySelectorAll('.tb').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
@@ -1624,44 +1620,6 @@ function selPg(t){document.getElementById('pgpix').classList.toggle('on',t==='pg
 function selPgO(t){document.getElementById('opix').classList.toggle('on',t==='opix');document.getElementById('opix2').classList.toggle('on',t==='opix2');}
 function updateChar(fid,cid,max){var v=document.getElementById(fid);var c=document.getElementById(cid);if(v&&c)c.textContent=(v.value||'').length+'/'+max;}
 
-var __oticaCupom=null;
-function aplicarCupomOtica(){
-  var v=(document.getElementById('so-cupom-input').value||'').trim().toUpperCase();
-  var msg=document.getElementById('so-cupom-msg');
-  var preco=document.getElementById('so5-preco');
-  var btn=document.getElementById('so5-btn');
-  if(v==='SENAC'){
-    __oticaCupom='SENAC';
-    msg.style.display='block';
-    msg.style.background='#E8F5E9';
-    msg.style.color='var(--g2)';
-    msg.textContent='✅ Cupom SENAC aplicado — Acesso gratuito!';
-    if(preco)preco.innerHTML='Gratuito<span style="font-size:16px;font-weight:400;color:var(--d3);"> — Plano SENAC</span>';
-    if(btn){btn.textContent='✅ Ativar com cupom SENAC';btn.onclick=function(){go('so7');gerarProtocolo();};}
-  }else if(v===''){
-    __oticaCupom=null;
-    msg.style.display='none';
-    if(preco)preco.innerHTML='R$ 49,90<span style="font-size:16px;font-weight:400;color:var(--d3);"> / mês</span>';
-    if(btn){btn.textContent='Assinar plano — R$ 49,90/mês';btn.onclick=function(){go('so6');};}
-  }else{
-    __oticaCupom=null;
-    msg.style.display='block';
-    msg.style.background='#FFEBEE';
-    msg.style.color='#C62828';
-    msg.textContent='❌ Cupom inválido. Verifique o código e tente novamente.';
-    if(preco)preco.innerHTML='R$ 49,90<span style="font-size:16px;font-weight:400;color:var(--d3);"> / mês</span>';
-    if(btn){btn.textContent='Assinar plano — R$ 49,90/mês';btn.onclick=function(){go('so6');};}
-  }
-}
-function _resetCupomOtica(){
-  __oticaCupom=null;
-  var inp=document.getElementById('so-cupom-input');if(inp)inp.value='';
-  var msg=document.getElementById('so-cupom-msg');if(msg)msg.style.display='none';
-  var preco=document.getElementById('so5-preco');
-  if(preco)preco.innerHTML='R$ 49,90<span style="font-size:16px;font-weight:400;color:var(--d3);"> / mês</span>';
-  var btn=document.getElementById('so5-btn');
-  if(btn){btn.textContent='Assinar plano — R$ 49,90/mês';btn.onclick=function(){go('so6');};}
-}
 var __fotoUrls=[];
 var __videoUrl=null;
 async function addPhoto(input){
@@ -2134,9 +2092,9 @@ function buildCarrossel(imgId,dotsId,fotos,fallbackUrl,videoUrl){
     if(dotsEl)dotsEl.innerHTML='';
     return;
   }
-  el.style.cssText='background:var(--d5);height:210px;border-radius:var(--r);margin-bottom:13px;overflow-x:scroll;display:flex;flex-direction:row;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;';
+  el.style.cssText='background:var(--d5);width:100%;height:210px;border-radius:var(--r);margin-bottom:13px;overflow-x:scroll;display:flex;flex-direction:row;justify-content:flex-start;align-items:stretch;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;';
   var slides=urls.map(function(url){
-    return '<div style="flex-shrink:0;width:100%;height:100%;scroll-snap-align:start;overflow:hidden;">'
+    return '<div style="flex:0 0 100%;min-width:100%;height:100%;scroll-snap-align:start;overflow:hidden;">'
       +'<img src="'+url+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\'">'
       +'</div>';
   });
