@@ -277,6 +277,11 @@ input:checked+.sl:before{transform:translateX(22px);}
 
 <div id="app">
 <div id="inst"><h4>📲 Instalar Visão Circular</h4><p>Adicione à tela inicial para usar como app!</p><div class="inst-r"><button class="iy" onclick="installApp()">Instalar</button><button class="in" onclick="closeInst()">Agora não</button></div></div>
+<div id="inst-ios" style="display:none;position:absolute;bottom:82px;left:12px;right:12px;background:var(--g1);color:#fff;border-radius:var(--r);padding:14px;z-index:200;box-shadow:var(--sh2);">
+  <h4>📲 Instalar no iPhone</h4>
+  <p style="font-size:13px;margin:5px 0 0;line-height:1.5;">Toque em <strong>Compartilhar</strong> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M12 15V3M12 3 8 7M12 3l4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg> na barra do Safari e depois em <strong>"Adicionar à Tela de Início"</strong>.</p>
+  <div class="inst-r" style="margin-top:10px;"><button class="in" onclick="closeInstIos()" style="flex:1;">Entendi</button></div>
+</div>
 
 <!-- ============ ONBOARDING ============ -->
 <div id="s-onboard" class="scr on" style="background:#fff;">
@@ -2861,5 +2866,13 @@ if('serviceWorker' in navigator){try{var sw='const C="vc2";self.addEventListener
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dPr=e;setTimeout(function(){document.getElementById('inst').style.display='block';},4000);});
 function installApp(){if(dPr){dPr.prompt();dPr.userChoice.then(function(){dPr=null;closeInst();});}else closeInst();}
 function closeInst(){document.getElementById('inst').style.display='none';}
+// iOS/Safari não tem instalação automática — mostra instrução manual de "Adicionar à Tela de Início"
+function _isIos(){return /iphone|ipad|ipod/i.test(navigator.userAgent||navigator.vendor||'')|| (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);}
+function _isStandalone(){return (('standalone' in navigator)&&navigator.standalone)||(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches);}
+function closeInstIos(){var el=document.getElementById('inst-ios');if(el)el.style.display='none';try{localStorage.setItem('vc_ios_inst_dismissed','1');}catch(e){}}
+if(_isIos()&&!_isStandalone()){
+  var _iosDismissed=false;try{_iosDismissed=localStorage.getItem('vc_ios_inst_dismissed')==='1';}catch(e){}
+  if(!_iosDismissed)setTimeout(function(){var el=document.getElementById('inst-ios');if(el)el.style.display='block';},4000);
+}
 </script>
 </div></body></html>
