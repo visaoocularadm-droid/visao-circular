@@ -656,7 +656,13 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="oc2 on" id="oc-col" onclick="selOc('col')"><span style="font-size:22px;">📍</span><div><h4>Ponto de coleta</h4><p style="font-size:13px;">Leve até um ponto parceiro próximo.</p></div></div>
     <div class="oc2" id="oc-ret" onclick="selOc('ret')"><span style="font-size:22px;">🚚</span><div><h4>Solicitar retirada</h4><p style="font-size:13px;">Buscamos no seu endereço.</p></div></div>
     <div class="mapc">🗺️</div>
-    <p style="text-align:center;font-size:13px;color:var(--g2);font-weight:500;margin-bottom:20px;" id="ponto-coleta-txt">📍 Buscando ponto de coleta próximo...</p>
+    <p style="text-align:center;font-size:13px;color:var(--g2);font-weight:500;margin-bottom:16px;" id="ponto-coleta-txt">📍 Buscando ponto de coleta próximo...</p>
+    <div class="dv"></div>
+    <div class="oc2" id="sd-retirada-toggle" onclick="toggleRetirada('sd')" style="cursor:pointer;margin-bottom:16px;">
+      <span style="font-size:22px;">🏠</span>
+      <div style="flex:1;"><h4>Permitir retirada pelo beneficiário</h4><p style="font-size:13px;">O beneficiário pode retirar direto no seu endereço (do Perfil).</p></div>
+      <div id="sd-retirada-check" style="width:24px;height:24px;border:2px solid var(--d4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;"></div>
+    </div>
     <button class="btn bg" id="btn-confirmar-doacao" onclick="salvarDoacao()">Confirmar</button>
   </div>
 </div>
@@ -750,7 +756,8 @@ input:checked+.sl:before{transform:translateX(22px);}
       <p style="font-size:12px;color:var(--d3);margin-bottom:8px;">INFORMAÇÕES</p>
       <div class="ir"><span class="il">Estado</span><span class="iv" id="sb3-estado">—</span></div>
       <div class="ir"><span class="il">Localização</span><span class="iv" id="sb3-local">Brasil</span></div>
-      <div class="ir" style="border:none;"><span class="il">Disponíveis</span><span class="iv" id="sb3-estoque" style="font-weight:700;">—</span></div>
+      <div class="ir"><span class="il">Disponíveis</span><span class="iv" id="sb3-estoque" style="font-weight:700;">—</span></div>
+      <div class="ir" id="sb3-retirada-row" style="border:none;display:none;"><span class="il">🏠 Retirada</span><span class="iv" id="sb3-retirada" style="font-size:12px;text-align:right;max-width:62%;">—</span></div>
     </div>
   </div>
   <div style="position:absolute;bottom:0;left:0;right:0;padding:14px 20px 28px;background:#fff;border-top:1px solid var(--d4);">
@@ -773,9 +780,10 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="cardf"><p style="font-size:12px;color:var(--d3);margin-bottom:5px;">DESCRIÇÃO</p><p style="font-size:14px;color:var(--tx);" id="sb4-desc">—</p></div>
     <div class="cardf">
       <div class="ir"><span class="il">Estado</span><span class="iv" id="sb4-estado">—</span></div>
-      <div class="ir"><span class="il">Envio</span><span class="iv">📦 Correios · Cálculo automático</span></div>
+      <div class="ir"><span class="il">Envio</span><span class="iv" id="sb4-envio">📦 Correios · todo o Brasil</span></div>
       <div class="ir"><span class="il">Localização</span><span class="iv" id="sb4-local">Brasil</span></div>
-      <div class="ir" style="border:none;"><span class="il">Em estoque</span><span class="iv" id="sb4-estoque" style="font-weight:700;">—</span></div>
+      <div class="ir"><span class="il">Em estoque</span><span class="iv" id="sb4-estoque" style="font-weight:700;">—</span></div>
+      <div class="ir" id="sb4-retirada-row" style="border:none;display:none;"><span class="il">🏠 Retirada</span><span class="iv" id="sb4-retirada" style="font-size:12px;text-align:right;max-width:62%;">—</span></div>
     </div>
     <p style="font-size:12px;color:var(--g2);font-weight:600;margin-bottom:4px;">⚡ Pagamento 100% seguro via Mercado Pago</p>
   </div>
@@ -959,6 +967,9 @@ input:checked+.sl:before{transform:translateX(22px);}
     </div>
     <div class="oc2" id="frete-opt-sedex" onclick="selecionarFrete('sedex')" style="cursor:pointer;margin-top:8px;">
       <span style="font-size:20px;">🚀</span><div style="flex:1;"><h4 style="font-size:14px;">Correios SEDEX</h4><p class="frete-pr" style="font-size:13px;">Digite o CEP para calcular</p></div>
+    </div>
+    <div class="oc2" id="frete-opt-retirada" onclick="selecionarFrete('retirada',0)" style="cursor:pointer;margin-top:8px;display:none;">
+      <span style="font-size:20px;">🏠</span><div style="flex:1;"><h4 style="font-size:14px;">Retirar no local · Grátis</h4><p class="frete-pr" id="retirada-endereco-txt" style="font-size:13px;">—</p></div>
     </div>
     <div class="dv"></div>
     <div class="ir"><span class="il">Produto</span><span class="iv" id="ck-preco-prod">R$ —</span></div>
@@ -1163,11 +1174,21 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="hdr ha"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><p class="sub" style="font-size:11px;">PASSO 3 DE 5</p><h3>Preço e envio</h3></div></div>
   <div class="body">
     <div class="fg"><label class="fl">Preço</label><input class="fi" id="sv-preco" type="text" placeholder="R$ 150,00"></div>
-    <h4 style="margin-bottom:12px;">Forma de envio</h4>
-    <div class="oc2 on" id="env1" onclick="selEnv('env1')"><span style="font-size:20px;">📦</span><div><h4>Enviar pelos Correios</h4><p style="font-size:13px;">Frete por conta do comprador</p></div></div>
-    <div class="oc2" id="env2" onclick="selEnv('env2')"><span style="font-size:20px;">🤝</span><div><h4>Entregar em mãos</h4><p style="font-size:13px;">Combinar com o comprador</p></div></div>
-    <div class="fg" style="margin-top:14px;"><label class="fl">Localização</label><select class="fi"><option>São Paulo - SP</option><option>Rio de Janeiro - RJ</option><option>Belo Horizonte - MG</option></select></div>
-    <button class="btn ba" onclick="go('sv4')">Continuar</button>
+    <div class="fg"><label class="fl">Sua localização</label>
+      <div style="display:flex;gap:10px;">
+        <input class="fi" id="sv-local-cidade" placeholder="Cidade" style="flex:2;">
+        <select class="fi uf-select" id="sv-local-uf" style="flex:1;"></select>
+      </div>
+    </div>
+    <h4 style="margin-bottom:8px;">Formas de entrega</h4>
+    <p style="font-size:12px;color:var(--d3);margin-bottom:10px;">📦 Envio pelos Correios para todo o Brasil já está incluído. Você pode também oferecer retirada no seu endereço.</p>
+    <div class="oc2 on" style="cursor:default;"><span style="font-size:20px;">📦</span><div><h4>Correios — todo o Brasil</h4><p style="font-size:13px;">Sempre disponível · frete por conta do comprador</p></div></div>
+    <div class="oc2" id="sv-retirada-toggle" onclick="toggleRetirada('sv')" style="cursor:pointer;margin-top:8px;">
+      <span style="font-size:20px;">🏠</span>
+      <div style="flex:1;"><h4>Permitir retirada no local</h4><p style="font-size:13px;">Comprador retira no seu endereço (do Perfil)</p></div>
+      <div id="sv-retirada-check" style="width:24px;height:24px;border:2px solid var(--d4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;"></div>
+    </div>
+    <button class="btn ba" style="margin-top:16px;" onclick="go('sv4')">Continuar</button>
   </div>
 </div>
 
@@ -1316,7 +1337,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="fg"><label class="fl">Rua / Avenida</label><input class="fi" placeholder="Av. Paulista"></div>
     <div style="display:flex;gap:10px;"><div class="fg" style="flex:1;"><label class="fl">Número</label><input class="fi" placeholder="1578"></div><div class="fg" style="flex:1;"><label class="fl">Compl.</label><input class="fi" placeholder="Sala 10"></div></div>
     <div class="fg"><label class="fl">Bairro</label><input class="fi" placeholder="Bela Vista"></div>
-    <div style="display:flex;gap:10px;"><div class="fg" style="flex:2;"><label class="fl">Cidade</label><input class="fi" placeholder="São Paulo"></div><div class="fg" style="flex:1;"><label class="fl">UF</label><select class="fi"><option>SP</option><option>RJ</option><option>MG</option></select></div></div>
+    <div style="display:flex;gap:10px;"><div class="fg" style="flex:2;"><label class="fl">Cidade</label><input class="fi" id="otica-cidade" placeholder="São Paulo"></div><div class="fg" style="flex:1;"><label class="fl">UF</label><select class="fi uf-select" id="otica-uf"></select></div></div>
     <div class="fg"><label class="fl">CEP</label><input class="fi" placeholder="01310-200"></div>
     <button class="btn bdk" onclick="go('so4')">Salvar endereço</button>
   </div>
@@ -1399,8 +1420,8 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="cardf" style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;align-items:center;"><div><p style="font-size:12px;color:var(--d3);">PLANO ATIVO</p><h4>Ótica Parceira</h4><p id="so8-plano-preco" style="font-size:13px;color:var(--g2);font-weight:600;">R$ 49,90 / mês</p></div><button class="btn" style="width:auto;padding:8px 14px;background:var(--d5);color:var(--d2);font-size:13px;">Ver detalhes</button></div></div>
     <h4 style="margin-bottom:12px;">O que você deseja fazer?</h4>
     <div class="dm-grid">
+      <div class="dm-i" onclick="go('sd1')"><span style="font-size:26px;">♥️</span><span class="dm-lb">Doar óculos</span></div>
       <div class="dm-i"><span style="font-size:26px;">📦</span><span class="dm-lb">Receber doações</span></div>
-      <div class="dm-i"><span style="font-size:26px;">✅</span><span class="dm-lb">Validar produtos</span></div>
       <div class="dm-i" onclick="go('sv1')"><span style="font-size:26px;">🛒</span><span class="dm-lb">Publicar vendas</span></div>
       <div class="dm-i"><span style="font-size:26px;">🏷️</span><span class="dm-lb">Gerenciar cupons</span></div>
       <div class="dm-i" onclick="go('sv0')"><span style="font-size:26px;">📋</span><span class="dm-lb">Meus anúncios</span></div>
@@ -1692,10 +1713,19 @@ async function salvarProduto(){
   var precoNum=0;
   if(preco&&preco.value){precoNum=parseFloat(preco.value.replace(/[R$\s]/g,'').replace(',','.'));}
   var estoqueNum=estoqueEl?Math.max(1,parseInt(estoqueEl.value)||1):1;
+  var cidadeEl=document.getElementById('sv-local-cidade');
+  var ufEl=document.getElementById('sv-local-uf');
+  var cidadeTxt=cidadeEl?cidadeEl.value.trim():'';
+  var localTxt=cidadeTxt?(cidadeTxt+(ufEl&&ufEl.value?' - '+ufEl.value:'')):null;
+  var retiradaEndereco=null;
+  if(__retiradaSv){
+    retiradaEndereco=await getEnderecoPerfilTxt();
+    if(!retiradaEndereco){showToast('⚠️ Preencha seu endereço no Perfil para oferecer retirada no local');return;}
+  }
   var btn=document.querySelector('#sv5 .btn.ba');
   if(btn){btn.textContent='Publicando...';btn.disabled=true;}
   try{
-    var r=await sb.from('produtos').insert({vendedor_id:currentUser.id,titulo:titulo,descricao:descTxt,preco:precoNum||null,tipo:'venda',tipo_oculos:'grau',estado:'usado',status:'ativo',plano:'basico',foto_url:__fotoUrls[0]||null,fotos:__fotoUrls,video_url:__videoUrl||null,estoque:estoqueNum});
+    var r=await sb.from('produtos').insert({vendedor_id:currentUser.id,titulo:titulo,descricao:descTxt,preco:precoNum||null,tipo:'venda',tipo_oculos:'grau',estado:'usado',status:'ativo',plano:'basico',foto_url:__fotoUrls[0]||null,fotos:__fotoUrls,video_url:__videoUrl||null,estoque:estoqueNum,local:localTxt,retirada_local:__retiradaSv,retirada_endereco:retiradaEndereco});
     if(r.error)throw r.error;
     __fotoUrls=[];__videoUrl=null;
     showToast('Anúncio publicado! ✓');
@@ -1792,8 +1822,8 @@ function go(id){
   var n=document.getElementById(id);if(n){n.classList.add('on');var b=n.querySelector('.body');if(b)b.scrollTop=0;}
   if(id==='sv0'){carregarAnunciosVendedor();carregarPostagensVendedor();}
   if(id==='sd0')carregarDoacoes();
-  if(id==='sd1'){__fotoUrls=[];__videoUrl=null;var _g1=document.getElementById('sd2-foto-grid');if(_g1)_g1.innerHTML='';var _ab=document.getElementById('vid-add-btn-d');if(_ab)_ab.style.display='flex';var _pv=document.getElementById('vid-prev-d');if(_pv)_pv.style.display='none';var _se=document.getElementById('sd-estoque');if(_se)_se.value=1;}
-  if(id==='sv1'){__fotoUrls=[];__videoUrl=null;var _g2=document.getElementById('sv2-foto-grid');if(_g2)_g2.innerHTML='';var _ab2=document.getElementById('vid-add-btn');if(_ab2)_ab2.style.display='flex';var _pv2=document.getElementById('vid-prev');if(_pv2)_pv2.style.display='none';var _sve=document.getElementById('sv-estoque');if(_sve)_sve.value=1;}
+  if(id==='sd1'){__fotoUrls=[];__videoUrl=null;var _g1=document.getElementById('sd2-foto-grid');if(_g1)_g1.innerHTML='';var _ab=document.getElementById('vid-add-btn-d');if(_ab)_ab.style.display='flex';var _pv=document.getElementById('vid-prev-d');if(_pv)_pv.style.display='none';var _se=document.getElementById('sd-estoque');if(_se)_se.value=1;__retiradaSd=false;_setCheck('sd-retirada-check','sd-retirada-toggle',false);}
+  if(id==='sv1'){__fotoUrls=[];__videoUrl=null;var _g2=document.getElementById('sv2-foto-grid');if(_g2)_g2.innerHTML='';var _ab2=document.getElementById('vid-add-btn');if(_ab2)_ab2.style.display='flex';var _pv2=document.getElementById('vid-prev');if(_pv2)_pv2.style.display='none';var _sve=document.getElementById('sv-estoque');if(_sve)_sve.value=1;__retiradaSv=false;_setCheck('sv-retirada-check','sv-retirada-toggle',false);var _slc=document.getElementById('sv-local-cidade');if(_slc)_slc.value='';}
   if(id==='sb7')carregarPedidos();
   if(id==='s2'){atualizarNomes();atualizarCardS2();}
   if(id==='s-perfil-edit')carregarPerfil();
@@ -1807,7 +1837,36 @@ function tg(el){var g=el.parentElement;g.querySelectorAll('.tb').forEach(functio
 function tgChip(el){el.classList.toggle('on');}
 function togglePw(){var i=document.getElementById('pwi');i.type=i.type==='password'?'text':'password';}
 function selOc(t){document.getElementById('oc-col').classList.toggle('on',t==='col');document.getElementById('oc-ret').classList.toggle('on',t==='ret');}
-function selEnv(t){document.getElementById('env1').classList.toggle('on',t==='env1');document.getElementById('env2').classList.toggle('on',t==='env2');}
+function selEnv(t){var a=document.getElementById('env1'),b=document.getElementById('env2');if(a)a.classList.toggle('on',t==='env1');if(b)b.classList.toggle('on',t==='env2');}
+var __retiradaSv=false,__retiradaSd=false;
+function _setCheck(checkId,toggleId,on){
+  var c=document.getElementById(checkId);
+  if(c){c.textContent=on?'✓':'';c.style.background=on?'var(--g2)':'transparent';c.style.borderColor=on?'var(--g2)':'var(--d4)';c.style.color=on?'#fff':'';}
+  var t=document.getElementById(toggleId);if(t)t.classList.toggle('on',on);
+}
+function toggleRetirada(p){
+  if(p==='sv'){__retiradaSv=!__retiradaSv;_setCheck('sv-retirada-check','sv-retirada-toggle',__retiradaSv);}
+  else{__retiradaSd=!__retiradaSd;_setCheck('sd-retirada-check','sd-retirada-toggle',__retiradaSd);}
+}
+async function getEnderecoPerfilTxt(){
+  if(!currentUser)return null;
+  try{
+    var r=await sb.from('perfis').select('endereco,numero,bairro,cidade,estado,cep').eq('usuario_id',currentUser.id).maybeSingle();
+    var d=r.data;
+    if(!d||!d.endereco||!d.cidade)return null;
+    var rua=d.endereco+(d.numero?', '+d.numero:'');
+    var parts=[rua];
+    if(d.bairro)parts.push(d.bairro);
+    parts.push(d.cidade+(d.estado?' - '+d.estado:''));
+    if(d.cep)parts.push('CEP '+d.cep);
+    return parts.join(' · ');
+  }catch(e){return null;}
+}
+(function(){
+  var ufs=['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
+  var html=ufs.map(function(u){return '<option value="'+u+'">'+u+'</option>';}).join('');
+  document.querySelectorAll('.uf-select').forEach(function(s){s.innerHTML=html;s.value='SP';});
+})();
 function selPr(t){document.getElementById('pr1').classList.toggle('on',t==='pr1');document.getElementById('pr2').classList.toggle('on',t==='pr2');}
 function selPg(t){document.getElementById('pgpix').classList.toggle('on',t==='pgpix');document.getElementById('pgcart').classList.toggle('on',t==='pgcart');}
 function selPgO(t){document.getElementById('opix').classList.toggle('on',t==='opix');document.getElementById('opix2').classList.toggle('on',t==='opix2');}
@@ -1880,11 +1939,17 @@ async function salvarDoacao(){
   var tipoTxt=tipoBtn?tipoBtn.textContent.toLowerCase():'grau';
   var estoqueD=document.getElementById('sd-estoque');
   var estoqueNumD=estoqueD?Math.max(1,parseInt(estoqueD.value)||1):1;
+  var retiradaEnderecoD=null;
+  if(__retiradaSd){
+    retiradaEnderecoD=await getEnderecoPerfilTxt();
+    if(!retiradaEnderecoD){showToast('⚠️ Preencha seu endereço no Perfil para oferecer retirada');if(btn){btn.textContent='Confirmar';btn.disabled=false;}return;}
+  }
   var r=await sb.from('produtos').insert({
     vendedor_id:currentUser.id,
     titulo:'Óculos '+(tipoTxt==='grau'?'de grau':'de sol')+' para doação',
     descricao:desc||null,tipo:'doacao',tipo_oculos:tipoTxt,estado:'usado',
     status:'ativo',plano:'basico',estoque:estoqueNumD,
+    retirada_local:__retiradaSd,retirada_endereco:retiradaEnderecoD,
     foto_url:__fotoUrls[0]||null,fotos:__fotoUrls,video_url:__videoUrl||null
   });
   if(r.error){showToast('Erro: '+r.error.message);if(btn){btn.textContent='Confirmar';btn.disabled=false;}return;}
@@ -1959,6 +2024,19 @@ var __currentProduct=null;
 
 function irCheckout(produto){
   if(produto)__currentProduct=produto;
+  var p=__currentProduct;
+  var opt=document.getElementById('frete-opt-retirada');
+  if(opt){
+    if(p&&p.retirada_local){
+      opt.style.display='flex';
+      var txt=document.getElementById('retirada-endereco-txt');
+      if(txt)txt.textContent=p.retirada_endereco||'Combinar com o vendedor';
+    }else{opt.style.display='none';}
+  }
+  // reseta para Correios PAC ao abrir
+  var pac=document.getElementById('frete-opt-pac');
+  if(pac){pac.classList.add('on');}
+  if(opt)opt.classList.remove('on');
   go('sb6');
 }
 
@@ -2341,12 +2419,20 @@ function atualizarDetalheProduto(p){
   var esgotado=est<=0||p.status==='esgotado';
   var elE3=document.getElementById('sb3-estoque');
   var elE4=document.getElementById('sb4-estoque');
-  if(elE3){elE3.textContent=esgotado?'Esgotado':(est+' disponível'+(est!==1?'is':''));elE3.style.color=est<=3&&!esgotado?'#E65100':'var(--g2)';}
+  if(elE3){elE3.textContent=esgotado?'Esgotado':(est+' disponíve'+(est!==1?'is':'l'));elE3.style.color=est<=3&&!esgotado?'#E65100':'var(--g2)';}
   if(elE4){elE4.textContent=esgotado?'Esgotado':(est+' em estoque');elE4.style.color=est<=3&&!esgotado?'#E65100':'var(--g2)';}
   var btnS=document.getElementById('btn-solicitar');
   var btnC=document.getElementById('btn-comprar');
   if(btnS){btnS.disabled=esgotado;btnS.style.opacity=esgotado?'0.5':'1';btnS.textContent=esgotado?'Esgotado':'Solicitar doação';}
   if(btnC){btnC.disabled=esgotado;btnC.style.opacity=esgotado?'0.5':'1';btnC.textContent=esgotado?'Esgotado':(p.tipo==='doacao'?'♥ Solicitar doação':'🛒 Comprar agora');}
+  // Retirada no local
+  var rowR3=document.getElementById('sb3-retirada-row'),txtR3=document.getElementById('sb3-retirada');
+  var rowR4=document.getElementById('sb4-retirada-row'),txtR4=document.getElementById('sb4-retirada');
+  var temRetirada=!!p.retirada_local;
+  if(rowR3){rowR3.style.display=temRetirada?'flex':'none';if(txtR3)txtR3.textContent=p.retirada_endereco||'Disponível';}
+  if(rowR4){rowR4.style.display=temRetirada?'flex':'none';if(txtR4)txtR4.textContent=p.retirada_endereco||'Disponível';}
+  var envio4=document.getElementById('sb4-envio');
+  if(envio4)envio4.textContent=temRetirada?'📦 Correios ou 🏠 retirada':'📦 Correios · todo o Brasil';
 }
 
 var __editProduto=null;
@@ -2666,11 +2752,14 @@ function selecionarFrete(tipo,val){
   _freteTipo=tipo;
   var pac=document.getElementById('frete-opt-pac');
   var sed=document.getElementById('frete-opt-sedex');
+  var ret=document.getElementById('frete-opt-retirada');
   if(pac)pac.classList.toggle('on',tipo==='pac');
   if(sed)sed.classList.toggle('on',tipo==='sedex');
-  _freteVal=val!==undefined?val:(tipo==='pac'?(pac&&pac.__val||0):(sed&&sed.__val||0));
+  if(ret)ret.classList.toggle('on',tipo==='retirada');
+  if(tipo==='retirada'){_freteVal=0;}
+  else{_freteVal=val!==undefined?val:(tipo==='pac'?(pac&&pac.__val||0):(sed&&sed.__val||0));}
   var freteEl=document.getElementById('frete-valor');
-  if(freteEl)freteEl.textContent=_freteVal>0?'R$ '+_freteVal.toFixed(2).replace('.',','):'Calcular CEP';
+  if(freteEl)freteEl.textContent=tipo==='retirada'?'Grátis · retirada no local':(_freteVal>0?'R$ '+_freteVal.toFixed(2).replace('.',','):'Calcular CEP');
   atualizarTotalCheckout();
 }
 function atualizarTotalCheckout(){
