@@ -460,6 +460,10 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="fg"><label class="fl">Nome completo</label><input class="fi" type="text" id="cad-nome" placeholder="Seu nome"></div>
     <div class="fg"><label class="fl">E-mail</label><input class="fi" type="email" id="cad-email" placeholder="seu@email.com"></div>
     <div class="fg"><label class="fl">Senha</label><input class="fi" type="password" id="cad-pw" placeholder="Mínimo 6 caracteres"></div>
+    <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:14px;cursor:pointer;font-size:12px;color:var(--d2);line-height:1.5;">
+      <input type="checkbox" id="cad-aceite" style="width:18px;height:18px;flex-shrink:0;margin-top:1px;">
+      <span>Li e aceito a <a onclick="event.preventDefault();event.stopPropagation();go('s-privacidade')" style="color:var(--g2);font-weight:600;cursor:pointer;text-decoration:underline;">Política de Privacidade</a> e os <a onclick="event.preventDefault();event.stopPropagation();go('s-termos')" style="color:var(--g2);font-weight:600;cursor:pointer;text-decoration:underline;">Termos de Uso</a>, incluindo o tratamento dos meus dados pessoais.</span>
+    </label>
     <button class="btn bg" style="margin-bottom:12px;" onclick="signupEmail()">Criar conta</button>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div class="dv" style="flex:1;margin:0;"></div><span style="font-size:13px;color:var(--d3);">ou</span><div class="dv" style="flex:1;margin:0;"></div></div>
     <button class="btn bgb" style="gap:10px;" onclick="loginGoogle()"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>Cadastrar com Google</button>
@@ -539,6 +543,87 @@ input:checked+.sl:before{transform:translateX(22px);}
       </div>
       <p style="font-size:9px;color:var(--d3);text-align:center;margin-top:10px;line-height:1.4;">Visão Circular · Segurança implementada com Supabase Auth + Web Crypto API</p>
     </div>
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--d5);">
+      <p style="font-size:10px;font-weight:700;color:var(--d3);text-align:center;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;">Legal &amp; Conta</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn bgb" onclick="go('s-sobre')">ℹ️ Sobre / Dados da empresa</button>
+        <button class="btn bgb" onclick="go('s-privacidade')">🔒 Política de Privacidade</button>
+        <button class="btn bgb" onclick="go('s-termos')">📄 Termos de Uso</button>
+      </div>
+      <button id="btn-excluir-conta" onclick="excluirMinhaConta(this)" style="width:100%;margin-top:16px;padding:12px;border:1px solid #FFCDD2;background:#FFEBEE;color:#B71C1C;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;">🗑️ Excluir minha conta e dados</button>
+      <p style="font-size:11px;color:var(--d3);text-align:center;margin-top:8px;line-height:1.4;">Ao excluir, removemos permanentemente seus dados pessoais, anúncios e histórico (LGPD, art. 18).</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SOBRE / IDENTIFICAÇÃO (CDC) ============ -->
+<div id="s-sobre" class="scr">
+  <div class="hdr"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><h3 style="flex:1;">Sobre a plataforma</h3></div>
+  <div class="body">
+    <div style="text-align:center;margin-bottom:18px;"><div style="font-size:40px;">👓</div><h3 style="margin-top:4px;">Visão Circular</h3><p style="font-size:13px;color:var(--d3);">Marketplace de óculos — doação, compra e venda.</p></div>
+    <div class="cardf">
+      <p style="font-size:12px;color:var(--d3);margin-bottom:8px;">DADOS DA EMPRESA</p>
+      <div class="ir"><span class="il">Razão social</span><span class="iv">[PREENCHER]</span></div>
+      <div class="ir"><span class="il">Nome fantasia</span><span class="iv">Visão Circular</span></div>
+      <div class="ir"><span class="il">CNPJ</span><span class="iv">[PREENCHER]</span></div>
+      <div class="ir"><span class="il">Endereço</span><span class="iv" style="font-size:12px;text-align:right;max-width:60%;">[PREENCHER]</span></div>
+      <div class="ir"><span class="il">E-mail</span><span class="iv" style="font-size:12px;">[PREENCHER]</span></div>
+      <div class="ir" style="border:none;"><span class="il">Telefone / WhatsApp</span><span class="iv">[PREENCHER]</span></div>
+    </div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+      <button class="btn bgb" onclick="go('s-privacidade')">🔒 Política de Privacidade</button>
+      <button class="btn bgb" onclick="go('s-termos')">📄 Termos de Uso</button>
+    </div>
+    <p style="font-size:11px;color:var(--d3);text-align:center;margin-top:16px;line-height:1.5;">Visão Circular · Atendimento ao consumidor pelo e-mail acima. Versão Beta.</p>
+  </div>
+</div>
+
+<!-- ============ POLÍTICA DE PRIVACIDADE (LGPD) ============ -->
+<div id="s-privacidade" class="scr">
+  <div class="hdr"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><h3 style="flex:1;">Política de Privacidade</h3></div>
+  <div class="body">
+    <p style="font-size:12px;color:var(--d3);margin-bottom:14px;">Última atualização: [PREENCHER data]. Em conformidade com a LGPD (Lei nº 13.709/2018).</p>
+    <div class="clause-t">1. Quem somos</div>
+    <div class="clause-b">A Visão Circular ([PREENCHER razão social/CNPJ]) é a controladora dos dados tratados neste aplicativo. Contato do encarregado de dados (DPO): [PREENCHER e-mail].</div>
+    <div class="clause-t">2. Dados que coletamos</div>
+    <div class="clause-b">Cadastro: nome, e-mail, senha (criptografada). Perfil: CPF, RG, endereço e telefone — usados para identificação, entrega e emissão de pedidos. Os campos CPF e RG são armazenados <strong>criptografados (AES-256)</strong>. Conteúdo: fotos e vídeos dos produtos. Doações: receita médica, exigida <strong>apenas para verificar elegibilidade</strong> (dado de saúde — dado pessoal sensível).</div>
+    <div class="clause-t">3. Para que usamos</div>
+    <div class="clause-b">Criar e gerenciar sua conta; intermediar doações, compras e vendas; processar pagamentos; cumprir obrigações legais; e prevenir fraudes. Não vendemos seus dados.</div>
+    <div class="clause-t">4. Base legal e consentimento</div>
+    <div class="clause-b">Tratamos dados para execução do serviço solicitado e cumprimento de obrigações legais. Para dados sensíveis (receita médica), o tratamento ocorre mediante <strong>seu consentimento específico e destacado</strong>, dado no momento da solicitação de doação.</div>
+    <div class="clause-t">5. Compartilhamento</div>
+    <div class="clause-b">Compartilhamos dados apenas com operadores necessários ao serviço: Supabase (hospedagem e banco de dados), Mercado Pago (processamento de pagamentos) e Google (login). Cada um trata os dados conforme suas próprias políticas.</div>
+    <div class="clause-t">6. Seus direitos (art. 18 da LGPD)</div>
+    <div class="clause-b">Você pode acessar, corrigir, portar e <strong>excluir</strong> seus dados, além de revogar consentimentos. A edição é feita na tela de Perfil; a exclusão da conta e dados pelo botão <strong>"Excluir minha conta"</strong> no Perfil, ou solicitando pelo e-mail de contato.</div>
+    <div class="clause-t">7. Retenção e segurança</div>
+    <div class="clause-b">Mantemos os dados pelo tempo necessário às finalidades acima e a obrigações legais. Usamos HTTPS, criptografia de campos sensíveis, isolamento por usuário (RLS) e encerramento automático de sessão por inatividade.</div>
+    <div class="clause-t">8. Cookies e armazenamento local</div>
+    <div class="clause-b">Usamos armazenamento local apenas para manter sua sessão e preferências essenciais de funcionamento — não usamos cookies de publicidade.</div>
+    <div class="clause-b" style="margin-top:14px;color:var(--d3);font-size:12px;">Dúvidas sobre privacidade: [PREENCHER e-mail de contato].</div>
+  </div>
+</div>
+
+<!-- ============ TERMOS DE USO (CDC) ============ -->
+<div id="s-termos" class="scr">
+  <div class="hdr"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><h3 style="flex:1;">Termos de Uso</h3></div>
+  <div class="body">
+    <p style="font-size:12px;color:var(--d3);margin-bottom:14px;">Última atualização: [PREENCHER data].</p>
+    <div class="clause-t">1. Objeto</div>
+    <div class="clause-b">O Visão Circular é uma plataforma que intermedia a <strong>doação, compra e venda de óculos</strong> entre usuários. Atuamos como intermediadores; a responsabilidade pelo produto é do doador/vendedor anunciante.</div>
+    <div class="clause-t">2. Cadastro e elegibilidade</div>
+    <div class="clause-b">Para usar o app é necessário ser <strong>maior de 18 anos</strong> e fornecer dados verdadeiros. Você é responsável por manter a confidencialidade da sua senha.</div>
+    <div class="clause-t">3. Compras, pagamentos e envio</div>
+    <div class="clause-b">As compras são processadas pelo Mercado Pago. O frete é de responsabilidade do comprador, salvo opção de retirada no local oferecida pelo vendedor. O prazo de postagem e o código de rastreio são informados pelo vendedor.</div>
+    <div class="clause-t">4. Direito de arrependimento (art. 49 do CDC)</div>
+    <div class="clause-b">Em compras à distância, você pode <strong>desistir em até 7 dias corridos</strong> a partir do recebimento, com devolução do valor pago. Para exercer, use "Solicitar cancelamento" no pedido ou o e-mail de contato.</div>
+    <div class="clause-t">5. Doações e saúde ocular</div>
+    <div class="clause-b">Óculos usados podem necessitar de avaliação por profissional óptico. A plataforma não se responsabiliza por incompatibilidade de grau. A receita médica é exigida apenas para verificar elegibilidade do beneficiário.</div>
+    <div class="clause-t">6. Conduta do usuário</div>
+    <div class="clause-b">É proibido anunciar produtos ilícitos, falsificados ou enganosos, bem como usar a plataforma para fins fraudulentos. Anúncios irregulares podem ser removidos.</div>
+    <div class="clause-t">7. Limitação de responsabilidade</div>
+    <div class="clause-b">A plataforma se empenha em manter o serviço disponível e seguro, mas não garante ausência de falhas. A negociação e a qualidade do produto são de responsabilidade entre comprador e vendedor/doador.</div>
+    <div class="clause-t">8. Foro e contato</div>
+    <div class="clause-b">Estes Termos seguem a legislação brasileira. Dúvidas e reclamações: [PREENCHER e-mail de contato].</div>
   </div>
 </div>
 
@@ -1653,6 +1738,11 @@ async function loginEmail(){
 }
 
 async function loginGoogle(){
+  // se estiver na tela de cadastro, exige aceite dos termos antes do OAuth
+  var noCad=document.getElementById('s-cad');var aceite=document.getElementById('cad-aceite');
+  if(noCad&&noCad.classList.contains('on')&&aceite&&!aceite.checked){
+    showToast('Você precisa aceitar a Política de Privacidade e os Termos de Uso');return;
+  }
   await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href}});
 }
 
@@ -1697,12 +1787,45 @@ function logoutComConfirmacao(btn){
   }
 }
 
+// Exclusão de conta e dados (LGPD art. 18) — confirmação dupla + Edge Function com service role
+async function excluirMinhaConta(btn){
+  if(!currentUser){showToast('Faça login primeiro');return;}
+  if(btn.dataset.step!=='1'){
+    btn.dataset.orig=btn.innerHTML;
+    btn.innerHTML='⚠️ Toque novamente para EXCLUIR permanentemente';
+    btn.style.background='#B71C1C';btn.style.color='#fff';btn.style.borderColor='#B71C1C';
+    btn.dataset.step='1';
+    setTimeout(function(){
+      if(btn.dataset.step==='1'){btn.innerHTML=btn.dataset.orig;btn.style.background='#FFEBEE';btn.style.color='#B71C1C';btn.style.borderColor='#FFCDD2';delete btn.dataset.step;}
+    },4000);
+    return;
+  }
+  btn.innerHTML='Excluindo...';btn.disabled=true;
+  try{
+    var s=await sb.auth.getSession();
+    var token=s.data&&s.data.session?s.data.session.access_token:null;
+    if(!token)throw new Error('Sessão expirada, entre novamente');
+    var r=await fetch(SUPABASE_URL+'/functions/v1/delete-account',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token}});
+    var data=await r.json().catch(function(){return{};});
+    if(!r.ok||!data.ok)throw new Error(data.error||'Falha ao excluir');
+    showToast('Conta e dados excluídos. Até logo 👋');
+    try{localStorage.clear();sessionStorage.clear();}catch(e){}
+    currentUser=null;
+    setTimeout(function(){window.location.replace(location.origin+location.pathname);},900);
+  }catch(e){
+    showToast('Erro ao excluir: '+e.message);
+    btn.innerHTML=btn.dataset.orig||'🗑️ Excluir minha conta e dados';btn.disabled=false;delete btn.dataset.step;
+  }
+}
+
 async function signupEmail(){
   var nome=document.getElementById('cad-nome').value.trim();
   var email=document.getElementById('cad-email').value.trim();
   var pw=document.getElementById('cad-pw').value;
   if(!nome||!email||!pw){showToast('Preencha todos os campos');return;}
   if(pw.length<6){showToast('Senha deve ter pelo menos 6 caracteres');return;}
+  var aceite=document.getElementById('cad-aceite');
+  if(!aceite||!aceite.checked){showToast('Você precisa aceitar a Política de Privacidade e os Termos de Uso');return;}
   var btn=document.querySelector('#s-cad .btn.bg');
   if(btn){btn.textContent='Criando conta...';btn.disabled=true;}
   try{
