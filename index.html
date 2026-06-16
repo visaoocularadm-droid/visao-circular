@@ -537,6 +537,12 @@ input:checked+.sl:before{transform:translateX(22px);}
   </div>
 </div>
 
+<!-- ============ INTRO (overlay — fora do sistema de telas, não interfere no login) ============ -->
+<div id="intro-overlay" style="display:none;position:fixed;inset:0;z-index:99999;background:#1A1714;align-items:center;justify-content:center;">
+  <img id="intro-img" src="intro.jpg" alt="" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;">
+  <button onclick="fecharIntro()" style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);background:#2E7D32;color:#fff;border:none;padding:14px 42px;border-radius:30px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);">Continuar</button>
+</div>
+
 <!-- ============ ESCOLHA PERFIL ============ -->
 <div id="s2" class="scr">
   <div class="hdr hw"><div><h2>Como você deseja<br>usar o app?</h2><p style="margin-top:4px;">Selecione uma opção abaixo.</p></div><button id="btn-sair-s2" onclick="logoutComConfirmacao(this)" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;transition:all .2s;">🚪 Sair</button></div>
@@ -1833,7 +1839,7 @@ function go(id){
   if(id==='sd1'){__fotoUrls=[];__videoUrl=null;var _g1=document.getElementById('sd2-foto-grid');if(_g1)_g1.innerHTML='';var _ab=document.getElementById('vid-add-btn-d');if(_ab)_ab.style.display='flex';var _pv=document.getElementById('vid-prev-d');if(_pv)_pv.style.display='none';var _se=document.getElementById('sd-estoque');if(_se)_se.value=1;__retiradaSd=false;_setCheck('sd-retirada-check','sd-retirada-toggle',false);}
   if(id==='sv1'){__fotoUrls=[];__videoUrl=null;var _g2=document.getElementById('sv2-foto-grid');if(_g2)_g2.innerHTML='';var _ab2=document.getElementById('vid-add-btn');if(_ab2)_ab2.style.display='flex';var _pv2=document.getElementById('vid-prev');if(_pv2)_pv2.style.display='none';var _sve=document.getElementById('sv-estoque');if(_sve)_sve.value=1;__retiradaSv=false;_setCheck('sv-retirada-check','sv-retirada-toggle',false);var _slc=document.getElementById('sv-local-cidade');if(_slc)_slc.value='';}
   if(id==='sb7')carregarPedidos();
-  if(id==='s2'){atualizarNomes();atualizarCardS2();}
+  if(id==='s2'){atualizarNomes();atualizarCardS2();if(!_introShown){_introShown=true;mostrarIntro();}}
   if(id==='s-perfil-edit')carregarPerfil();
   if(id==='sd-dash')carregarDashboardDoador(30);
   if(id==='sv-dash')carregarDashboardVendedor(30);
@@ -1841,6 +1847,18 @@ function go(id){
 if(id==='sb7-chat'&&__currentPedido)carregarMensagens(__currentPedido.id);
 }
 function bk(){if(!hist.length)return;var c=document.querySelector('.scr.on');if(c)c.classList.remove('on');var p=document.getElementById(hist.pop());if(p)p.classList.add('on');}
+// ===== INTRO (overlay) — só aparece se a imagem 'intro.jpg' existir; nunca quebra a navegação =====
+var _introShown=false,_introTimer=null;
+function mostrarIntro(){
+  var ov=document.getElementById('intro-overlay');var img=document.getElementById('intro-img');
+  if(!ov||!img)return;
+  var src=img.getAttribute('src');if(!src)return;
+  var teste=new Image();
+  teste.onload=function(){ov.style.display='flex';clearTimeout(_introTimer);_introTimer=setTimeout(fecharIntro,4000);};
+  teste.onerror=function(){/* sem imagem: não mostra nada, app segue normal */};
+  teste.src=src;
+}
+function fecharIntro(){var ov=document.getElementById('intro-overlay');if(ov)ov.style.display='none';clearTimeout(_introTimer);}
 function tg(el){var g=el.parentElement;g.querySelectorAll('.tb').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
 function tgChip(el){el.classList.toggle('on');}
 function togglePw(){var i=document.getElementById('pwi');i.type=i.type==='password'?'text':'password';}
