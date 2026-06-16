@@ -1862,7 +1862,7 @@ function mostrarIntro(){
       if(vid)vid.style.display='none';
       if(img){img.src='intro.jpg';img.style.display='block';}
       ov.style.display='flex';
-      clearTimeout(_introTimer);_introTimer=setTimeout(fecharIntro,8000);
+      clearTimeout(_introTimer);_introTimer=setTimeout(fecharIntro,15000);
     };
     t.onerror=function(){/* sem mídia: não mostra, app segue normal */};
     t.src='intro.jpg';
