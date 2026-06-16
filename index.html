@@ -1289,6 +1289,14 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="fg"><label class="fl">Título</label><input class="fi" id="sv-edit-titulo" placeholder="Ex: Óculos de grau Ray-Ban"></div>
     <div class="fg"><label class="fl">Descrição</label><textarea class="fi" id="sv-edit-desc" style="min-height:100px;" placeholder="Descreva o estado, armação, marca..."></textarea></div>
     <div class="fg"><label class="fl">Preço (R$)</label><input class="fi" id="sv-edit-preco" type="number" step="0.01" min="0" placeholder="0,00"></div>
+    <div class="fg"><label class="fl">Quantidade em estoque</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+        <button type="button" onclick="var i=document.getElementById('sv-edit-estoque');i.value=Math.max(0,parseInt(i.value||0)-1);" style="width:38px;height:38px;border:1px solid var(--d4);border-radius:8px;background:#fff;font-size:22px;font-weight:700;cursor:pointer;line-height:1;">−</button>
+        <input class="fi" id="sv-edit-estoque" type="number" min="0" max="99" value="1" style="width:70px;text-align:center;font-size:20px;font-weight:700;padding:6px;">
+        <button type="button" onclick="var i=document.getElementById('sv-edit-estoque');i.value=Math.min(99,parseInt(i.value||0)+1);" style="width:38px;height:38px;border:1px solid var(--d4);border-radius:8px;background:#fff;font-size:22px;font-weight:700;cursor:pointer;line-height:1;">+</button>
+        <span style="font-size:12px;color:var(--d3);">0 = esgotado (oculta o anúncio)</span>
+      </div>
+    </div>
     <div class="fg"><label class="fl">Status do anúncio</label><div class="tog" id="sv-edit-status"><button class="tb on" onclick="tg(this);_toggleRastreio()">Ativo</button><button class="tb" onclick="tg(this);_toggleRastreio()">Pausado</button><button class="tb" onclick="tg(this);_toggleRastreio()">Vendido</button></div></div>
     <div class="fg" id="sv-edit-rastreio-box" style="display:none;">
       <label class="fl">Código de rastreio</label>
@@ -1965,30 +1973,34 @@ async function carregarPostagensVendedor(){
   if(!currentUser)return;
   var sec=document.getElementById('secao-postagem');var lista=document.getElementById('lista-postagem');
   if(!sec||!lista)return;
-  var r=await sb.from('produtos').select('id,titulo,preco,foto_url,codigo_rastreio').eq('vendedor_id',currentUser.id).eq('status','vendido');
-  var data=(r.data||[]).filter(function(p){return!p.codigo_rastreio;});
+  // vendas PAGAS (confirmadas pelo webhook do Mercado Pago) ainda sem código de rastreio
+  var r=await sb.from('pedidos').select('id,valor_total,produto_id,produtos(titulo,foto_url)').eq('vendedor_id',currentUser.id).eq('status_pagamento','pago').is('codigo_rastreio',null).order('criado_em',{ascending:false});
+  var data=r.data||[];
   if(!data.length){sec.style.display='none';return;}
   sec.style.display='block';
-  lista.innerHTML=data.map(function(p){
-    var img=p.foto_url?'<img src="'+p.foto_url+'" style="width:44px;height:44px;object-fit:cover;border-radius:var(--r);flex-shrink:0;">'
+  lista.innerHTML=data.map(function(ped){
+    var prod=ped.produtos||{};
+    var titulo=prod.titulo||'Produto vendido';
+    var foto=prod.foto_url;
+    var img=foto?'<img src="'+foto+'" style="width:44px;height:44px;object-fit:cover;border-radius:var(--r);flex-shrink:0;">'
       :'<div style="width:44px;height:44px;background:#fff3;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👓</div>';
     return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">'
       +img+'<div style="flex:1;min-width:0;">'
-      +'<div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;">'+p.titulo+'</div>'
-      +'<input id="rastreio-'+p.id+'" placeholder="Código de rastreio" style="width:100%;border:1px solid rgba(0,0,0,.2);border-radius:6px;padding:5px 8px;font-size:12px;background:#fff;" oninput="this.value=this.value.toUpperCase()">'
+      +'<div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;">'+titulo+'</div>'
+      +'<input id="rastreio-'+ped.id+'" placeholder="Código de rastreio" style="width:100%;border:1px solid rgba(0,0,0,.2);border-radius:6px;padding:5px 8px;font-size:12px;background:#fff;" oninput="this.value=this.value.toUpperCase()">'
       +'</div>'
-      +'<button onclick="salvarRastreio(\''+p.id+'\')" class="btn ba" style="padding:6px 10px;font-size:12px;width:auto;flex-shrink:0;">OK</button>'
+      +'<button onclick="salvarRastreio(\''+ped.id+'\')" class="btn ba" style="padding:6px 10px;font-size:12px;width:auto;flex-shrink:0;">OK</button>'
       +'</div>';
   }).join('');
 }
-async function salvarRastreio(prodId){
-  var inp=document.getElementById('rastreio-'+prodId);
+async function salvarRastreio(pedidoId){
+  var inp=document.getElementById('rastreio-'+pedidoId);
   var codigo=inp?inp.value.trim():'';
   if(!codigo){showToast('Digite o código de rastreio');return;}
-  var r=await sb.from('produtos').update({codigo_rastreio:codigo}).eq('id',prodId).eq('vendedor_id',currentUser.id);
+  var r=await sb.from('pedidos').update({codigo_rastreio:codigo}).eq('id',pedidoId).eq('vendedor_id',currentUser.id);
   if(r.error){showToast('Erro: '+r.error.message);return;}
   showToast('📦 Código salvo! Comprador notificado.');
-  carregarPostagensVendedor();carregarAnunciosVendedor();
+  carregarPostagensVendedor();
 }
 function _toggleRastreio(){
   var btn=document.querySelector('#sv-edit-status .tb.on');
@@ -2043,26 +2055,31 @@ function irCheckout(produto){
 async function pagarComMP(){
   var btn=document.getElementById('btn-pagar');
   if(btn){btn.textContent='⏳ Aguarde...';btn.disabled=true;}
+  var __pedidoReservado=null;
   try{
     var p=__currentProduct||{titulo:'Óculos',descricao:'Óculos via Visão Circular',preco:198.90,id:'demo'};
-    // Decrementa estoque atomicamente — trata concorrência no banco
+    // RESERVA: decrementa estoque + cria pedido atomicamente (anti-concorrência).
+    // O estoque será confirmado pelo webhook na aprovação, ou devolvido se o pagamento falhar/expirar.
     if(p.id&&p.id!=='demo'){
-      var sr=await sb.rpc('decrementar_estoque',{p_produto_id:p.id,p_quantidade:1});
+      var sr=await sb.rpc('criar_pedido_reserva',{p_produto_id:p.id,p_comprador_id:currentUser?currentUser.id:null,p_valor:parseFloat(p.preco)||0});
       if(!sr.data||!sr.data.ok){
         showToast(sr.data&&sr.data.msg?sr.data.msg:'Produto esgotado — outra pessoa acabou de comprá-lo!');
         if(btn){btn.textContent='💳 Pagar com Mercado Pago';btn.disabled=false;}
         return;
       }
+      __pedidoReservado=sr.data.pedido_id;
     }
     var r=await fetch(SUPABASE_URL+'/functions/v1/mp-payment',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_KEY},
-      body:JSON.stringify({titulo:p.titulo||'Óculos',descricao:p.descricao||p.titulo||'Óculos via Visão Circular',valor:parseFloat(p.preco)||198.90,produto_id:p.id||'demo',tipo:'venda'})
+      body:JSON.stringify({titulo:p.titulo||'Óculos',descricao:p.descricao||p.titulo||'Óculos via Visão Circular',valor:parseFloat(p.preco)||198.90,produto_id:p.id||'demo',pedido_id:__pedidoReservado,tipo:'venda'})
     });
     var data=await r.json();
     if(data.init_point){location.href=data.init_point;}
     else{throw new Error(data.error||'Erro ao criar pagamento');}
   }catch(e){
+    // se a reserva foi criada mas o checkout falhou, devolve o estoque imediatamente
+    if(__pedidoReservado){try{await sb.rpc('restaurar_pedido',{p_pedido_id:__pedidoReservado,p_novo_status:'cancelado'});}catch(_e){}}
     showToast('Erro no pagamento: '+e.message);
     if(btn){btn.textContent='💳 Pagar com Mercado Pago';btn.disabled=false;}
   }
@@ -2551,6 +2568,7 @@ function abrirEditAnuncio(p){
   var s=function(id,v){var e=document.getElementById(id);if(e)e.value=v||'';};
   s('sv-edit-titulo',p.titulo);s('sv-edit-desc',p.descricao);s('sv-edit-preco',p.preco);
   s('sv-edit-rastreio',p.codigo_rastreio);
+  var _est=document.getElementById('sv-edit-estoque');if(_est)_est.value=(typeof p.estoque==='number'?p.estoque:(parseInt(p.estoque)||0));
   document.querySelectorAll('#sv-edit-status .tb').forEach(function(b){
     b.classList.remove('on');
     var match=(b.textContent==='Ativo'&&p.status==='ativo')||(b.textContent==='Pausado'&&p.status==='pausado')||(b.textContent==='Vendido'&&p.status==='vendido');
@@ -2569,7 +2587,13 @@ async function salvarEdicaoAnuncio(){
   var statusBtn=document.querySelector('#sv-edit-status .tb.on');
   var status=statusBtn?({'Ativo':'ativo','Pausado':'pausado','Vendido':'vendido'}[statusBtn.textContent]||'ativo'):'ativo';
   var rastreio=(document.getElementById('sv-edit-rastreio')||{}).value||null;
-  var r=await sb.from('produtos').update({titulo:titulo,descricao:desc,preco:precoStr?parseFloat(precoStr):null,status:status,fotos:__editFotos,foto_url:__editFotos[0]||null,video_url:__editVideoUrl||null,codigo_rastreio:rastreio||null}).eq('id',__editProduto.id).eq('vendedor_id',currentUser.id);
+  var estEl=document.getElementById('sv-edit-estoque');
+  var estoque=estEl?Math.max(0,parseInt(estEl.value)||0):0;
+  // consistência: "Vendido" zera estoque; estoque 0 com status ativo vira esgotado
+  if(status==='vendido')estoque=0;
+  if(status==='ativo'&&estoque<=0)status='esgotado';
+  if(status==='esgotado'&&estoque>0)status='ativo';
+  var r=await sb.from('produtos').update({titulo:titulo,descricao:desc,preco:precoStr?parseFloat(precoStr):null,status:status,estoque:estoque,fotos:__editFotos,foto_url:__editFotos[0]||null,video_url:__editVideoUrl||null,codigo_rastreio:rastreio||null}).eq('id',__editProduto.id).eq('vendedor_id',currentUser.id);
   if(r.error){showToast('Erro: '+r.error.message);return;}
   showToast('✅ Anúncio atualizado!');
   go('sv0');
@@ -2615,12 +2639,19 @@ async function carregarPedidos(){
     if(rD.data&&rD.data.length)rD.data.forEach(function(d){
       __pedidosCache.push({id:d.id,titulo:'Solicitação de doação',tipo:'doacao',status:d.status||'pendente',preco:null,criado_em:d.criado_em});
     });
+    // compras do usuário (vendas pagas/reservadas)
+    var rC=await sb.from('pedidos').select('id,valor_total,status_pagamento,criado_em,codigo_rastreio,produtos(titulo)').eq('comprador_id',currentUser.id).in('status_pagamento',['pago','reservado']).order('criado_em',{ascending:false}).limit(20);
+    if(rC.data&&rC.data.length)rC.data.forEach(function(c){
+      var st=c.status_pagamento==='pago'?(c.codigo_rastreio?'enviado':'pago'):'pendente';
+      __pedidosCache.push({id:c.id,titulo:(c.produtos&&c.produtos.titulo)||'Compra',tipo:'compra',status:st,preco:c.valor_total,criado_em:c.criado_em});
+    });
+    __pedidosCache.sort(function(a,b){return new Date(b.criado_em)-new Date(a.criado_em);});
     if(!__pedidosCache.length){
       el.innerHTML='<div style="text-align:center;padding:32px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">📦</div><p style="font-size:14px;">Você ainda não tem pedidos.</p><button class="btn bg" style="margin-top:14px;" onclick="go(\'sb0\')">Explorar óculos</button></div>';
       return;
     }
     el.innerHTML=__pedidosCache.map(function(p,i){
-      var sl={'pendente':'⏳ Pendente','aprovado':'✅ Aprovado','entregue':'📦 Entregue','recusado':'❌ Recusado','pago':'✅ Pago'};
+      var sl={'pendente':'⏳ Pendente','aprovado':'✅ Aprovado','entregue':'📦 Entregue','recusado':'❌ Recusado','pago':'✅ Pago','enviado':'📦 Enviado'};
       var stl=sl[p.status]||p.status||'—';
       var bc=p.status==='aprovado'||p.status==='pago'?'var(--g6);color:var(--g2)':p.status==='recusado'?'var(--b3);color:var(--b1)':'var(--a4);color:var(--a0)';
       return '<div class="di" style="cursor:pointer;" onclick="abrirPedido('+i+')"><div class="di-ic" style="background:var(--d5);">'+(p.tipo==='doacao'?'♥':'🛒')+'</div><div style="flex:1;"><h4 style="font-size:14px;">'+p.titulo+'</h4><p style="font-size:12px;color:var(--d3);">'+new Date(p.criado_em).toLocaleDateString('pt-BR')+'</p></div><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;white-space:nowrap;background:'+bc+';">'+stl+'</span></div>';
