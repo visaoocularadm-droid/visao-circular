@@ -1075,6 +1075,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div style="height:12px;"></div>
     <button class="btn ba" id="btn-pagar" onclick="pagarComMP()">💳 Pagar com Mercado Pago</button>
     <p style="text-align:center;font-size:12px;color:var(--d3);margin-top:8px;">🔒 Pagamento 100% seguro via Mercado Pago</p>
+    <div style="background:#E8F5E9;border-left:3px solid var(--g2);border-radius:0 var(--r) var(--r) 0;padding:9px 11px;margin-top:10px;"><p style="font-size:12px;color:var(--g1);line-height:1.5;">↩️ <strong>Direito de arrependimento:</strong> você pode desistir da compra em até <strong>7 dias</strong> após o recebimento e receber o valor de volta (art. 49 do CDC).</p></div>
   </div>
 </div>
 
@@ -1106,6 +1107,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div style="margin-top:28px;border-top:1px solid var(--d5);padding-top:20px;">
       <p style="font-size:12px;color:var(--d3);text-align:center;margin-bottom:12px;">Precisa de ajuda com este pedido?</p>
       <button class="btn" style="background:var(--d5);color:var(--d2);font-size:13px;margin-bottom:8px;" onclick="go('sb7-chat')">💬 Falar com o vendedor / doador</button>
+      <button id="btn-desistir" class="btn" style="background:#E8F5E9;color:var(--g1);font-size:13px;margin-bottom:8px;border:1px solid #A5D6A7;display:none;" onclick="irCancelamento()">↩️ Desistir da compra (7 dias)</button>
       <button class="btn" style="background:transparent;color:var(--d3);font-size:12px;border:1px solid var(--d4);" onclick="go('sb7-rep')">⚠️ Reportar problema à plataforma</button>
     </div>
   </div>
@@ -1131,6 +1133,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="fg">
       <label class="fl">Assunto</label>
       <select class="fi" id="rep-assunto">
+        <option>Desistência da compra — até 7 dias (art. 49 CDC)</option>
         <option>Produto não chegou</option>
         <option>Produto diferente do anunciado</option>
         <option>Problema com o vendedor / doador</option>
@@ -2874,7 +2877,16 @@ function abrirPedido(i){
   set('chat-titulo',p.tipo==='doacao'?'Falar com o doador':'Falar com o vendedor');
   set('chat-sub',p.titulo||'—');
   set('rep-protocolo',proto);
+  var bd=document.getElementById('btn-desistir');
+  if(bd)bd.style.display=(p.tipo==='compra'&&p.status!=='cancelado')?'block':'none';
   go('sb7-det');
+}
+function irCancelamento(){
+  go('sb7-rep');
+  var sel=document.getElementById('rep-assunto');
+  if(sel)for(var i=0;i<sel.options.length;i++){if(/Desist/i.test(sel.options[i].text)){sel.selectedIndex=i;break;}}
+  var msg=document.getElementById('rep-msg');
+  if(msg&&!msg.value.trim())msg.value='Solicito o cancelamento da compra e a devolução do valor pago, conforme o direito de arrependimento de 7 dias (art. 49 do CDC).';
 }
 
 async function carregarMensagens(pedidoId){
