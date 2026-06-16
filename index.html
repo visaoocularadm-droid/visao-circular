@@ -24,6 +24,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .scr{position:absolute;inset:0;background:var(--wh);display:none;flex-direction:column;overflow:hidden;animation:si .22s ease;}
 .scr.on{display:flex;}
 @keyframes si{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@keyframes shimmer{0%{background-position:-420px 0}100%{background-position:420px 0}}
+.skel-card{background:var(--wh);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.skel-img{height:105px;}
+.skel-line{height:11px;margin:9px 10px;border-radius:6px;}
+.skel-img,.skel-line{background:linear-gradient(90deg,#ececec 25%,#f6f6f6 50%,#ececec 75%);background-size:840px 100%;animation:shimmer 1.25s infinite linear;}
+.pcd-img img{opacity:0;transition:opacity .35s ease;}
+.pcd-img img.loaded{opacity:1;}
 .body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 20px 90px;}
 @media(min-width:900px){
   html,body{overflow:auto;}
@@ -1881,23 +1888,35 @@ async function salvarProduto(){
 }
 
 var __produtosCache=[];
+function _skeletonProdutos(n){
+  var c='<div class="skel-card"><div class="skel-img"></div><div class="skel-line" style="width:80%"></div><div class="skel-line" style="width:55%"></div><div class="skel-line" style="width:40%"></div></div>';
+  return new Array(n||6).fill(c).join('');
+}
 async function carregarProdutos(){
+  var grid=document.getElementById('prod-grid');
+  if(grid)grid.innerHTML=_skeletonProdutos(6);
   try{
     var r=await sb.from('produtos').select('*').eq('status','ativo').gt('estoque',0).order('criado_em',{ascending:false}).limit(8);
-    if(r.error||!r.data||!r.data.length)return;
-    __produtosCache=r.data;
-    var grid=document.getElementById('prod-grid');
     if(!grid)return;
+    if(r.error)throw r.error;
+    if(!r.data||!r.data.length){
+      grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:32px 0;color:var(--d3);"><div style="font-size:38px;margin-bottom:8px;">👓</div><p style="font-size:14px;">Nenhum óculos disponível no momento.</p><p style="font-size:12px;margin-top:4px;">Volte em breve — novos anúncios aparecem aqui.</p></div>';
+      return;
+    }
+    __produtosCache=r.data;
     grid.innerHTML=r.data.map(function(p,i){
       var badge=p.tipo==='doacao'?'<span class="bdg bd" style="position:absolute;top:7px;left:7px;font-size:10px;">♥ DOAÇÃO</span>':'<span class="bdg bv" style="position:absolute;top:7px;left:7px;font-size:10px;">🛒 VENDA</span>';
       var est=p.estoque||0;
       var stockBadge=est<=3&&est>0?'<span style="position:absolute;bottom:6px;right:6px;background:#E65100;color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;">⚡ ÚLTIMAS '+est+'</span>':'';
       var preco=p.tipo==='doacao'?'<div style="font-size:13px;font-weight:700;color:var(--g2);margin-top:3px;">Doação · '+est+' disp.</div>':'<div class="pcd-pr">R$ '+(p.preco?Number(p.preco).toFixed(2).replace('.',','):'--')+'<span style="font-size:10px;font-weight:400;color:var(--d3);margin-left:4px;">'+est+' em estoque</span></div>';
       var desc=p.descricao?p.descricao.substring(0,36):'';
-      var imgHtml=p.foto_url?'<img src="'+p.foto_url+'" style="width:100%;height:100%;object-fit:cover;border-radius:0;" onerror="this.parentElement.innerHTML=\'👓\'">':'👓';
+      var imgHtml=p.foto_url?'<img src="'+p.foto_url+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:0;" onload="this.classList.add(\'loaded\')" onerror="this.parentElement.innerHTML=\'👓\'">':'👓';
       return '<div class="pcd" onclick="selProduto('+i+')"><div class="pcd-img" style="position:relative;">'+imgHtml+'<div class="pcd-fv">♡</div>'+badge+stockBadge+'</div><div class="pcd-body"><div class="pcd-nm">'+p.titulo+'</div><div class="pcd-inf">'+desc+'</div>'+preco+'</div></div>';
     }).join('');
-  }catch(e){console.warn('carregarProdutos:',e);}
+  }catch(e){
+    console.warn('carregarProdutos:',e);
+    if(grid)grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:28px 0;color:var(--d3);font-size:13px;">Não foi possível carregar agora. Toque para tentar novamente.<br><button class="btn bg" style="margin-top:12px;max-width:200px;" onclick="carregarProdutos()">Tentar de novo</button></div>';
+  }
 }
 function selProduto(i){
   __currentProduct=__produtosCache[i]||null;
