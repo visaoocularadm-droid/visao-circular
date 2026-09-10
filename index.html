@@ -7,7 +7,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Visão Circular">
 <title>Visão Circular</title>
-<link rel="manifest" id="ml">
+<!-- Manifest agora é ARQUIVO. Antes era um blob: gerado em runtime, e caminho
+     relativo de ícone não resolve dentro de um blob — por isso os ícones eram
+     emoji embutido em data URI. -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="marca/icone-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="marca/icone-512.png">
+<link rel="apple-touch-icon" href="marca/icone-192.png">
 <style>
 :root{--g1:#1B5E20;--g2:#2E7D32;--g3:#388E3C;--g4:#4CAF50;--g5:#81C784;--g6:#E8F5E9;
 --a0:#E65100;--a1:#F57C00;--a2:#FF9800;--a4:#FFF3E0;
@@ -95,6 +101,44 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .pfc2:active{border-color:var(--g2);}
 .pfc2.sel{border-color:var(--g2);background:var(--g6);}
 .pic{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;}
+
+/* ===== Seleção de perfil (tela s2) ===== */
+.s2-hdr{display:flex;align-items:flex-start;gap:12px;padding:50px 20px 14px;flex-shrink:0;background:var(--wh);}
+@media(min-width:900px){.s2-hdr{padding-top:24px;}}
+.s2-hdr h2{color:var(--tx);font-size:23px;line-height:1.22;}
+.s2-hdr p{color:var(--tx2);font-size:13.5px;margin-top:5px;}
+.btn-sair{display:inline-flex;align-items:center;gap:6px;background:none;border:1.5px solid var(--d4);color:var(--rd);
+  padding:7px 13px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;transition:.16s;
+  font-family:inherit;flex-shrink:0;white-space:nowrap;}
+.btn-sair:hover{background:#FFEBEE;border-color:#FFCDD2;}
+.btn-sair:focus-visible{outline:3px solid var(--rd);outline-offset:2px;}
+.btn-sair svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+.rl-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+.rl{display:flex;align-items:center;gap:13px;width:100%;text-align:left;font-family:inherit;
+  background:var(--wh);border:2px solid var(--d4);border-radius:16px;padding:13px;cursor:pointer;
+  transition:border-color .16s,box-shadow .16s,background .16s;}
+.rl:hover{border-color:var(--rl-c);}
+.rl:focus-visible{outline:3px solid var(--rl-c);outline-offset:2px;}
+.rl[aria-checked="true"]{border-color:var(--rl-c);background:var(--rl-bg);box-shadow:0 4px 14px var(--rl-sh);}
+.rl-ic{width:50px;height:50px;border-radius:15px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;background:linear-gradient(145deg,var(--rl-c2),var(--rl-c));box-shadow:0 3px 9px var(--rl-sh);}
+.rl-ic svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.rl-tx{flex:1;min-width:0;}
+.rl-tt{display:block;font-size:15px;font-weight:700;color:var(--rl-c);margin-bottom:2px;}
+.rl-ds{display:block;font-size:12.5px;color:var(--tx2);line-height:1.4;}
+.rl-mk{width:23px;height:23px;border-radius:50%;border:2px solid var(--d4);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;transition:.16s;}
+.rl[aria-checked="true"] .rl-mk{background:var(--rl-c);border-color:var(--rl-c);}
+.rl-mk svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+  opacity:0;transform:scale(.5);transition:.16s;}
+.rl[aria-checked="true"] .rl-mk svg{opacity:1;transform:scale(1);}
+.btn:disabled{background:var(--d4)!important;color:var(--d3)!important;cursor:not-allowed;box-shadow:none;}
+
+.beta-rodape{margin-top:20px;padding-top:13px;border-top:1px solid var(--d4);
+  display:flex;align-items:flex-start;gap:7px;color:var(--d3);font-size:11.5px;line-height:1.45;}
+.beta-rodape b{color:var(--tx2);font-weight:600;}
+@media(prefers-reduced-motion:reduce){.rl,.rl-mk,.rl-mk svg,.btn-sair{transition:none;}}
 .card{background:var(--wh);border-radius:var(--r);padding:15px;box-shadow:var(--sh);margin-bottom:11px;}
 .cardf{background:var(--d5);border-radius:var(--r);padding:13px;margin-bottom:11px;}
 .tl-i{display:flex;align-items:flex-start;gap:11px;margin-bottom:15px;}
@@ -174,6 +218,8 @@ input:checked+.sl:before{transform:translateX(22px);}
 .pgbar-i{flex:1;height:4px;background:var(--d4);border-radius:2px;}
 .pgbar-i.on{background:var(--g2);}
 .splash{background:var(--g2);display:flex!important;flex-direction:column;align-items:center;justify-content:center;}
+/* visível só para leitor de tela: o nome da marca está dentro da imagem do logo */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 .rx-expand{max-height:0;overflow:hidden;transition:max-height .32s ease,opacity .25s ease;opacity:0;}
 .rx-expand.show{max-height:120px;opacity:1;}
 .od-badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;background:#E8F5E9;color:#1B5E20;display:inline-block;margin-bottom:6px;}
@@ -196,8 +242,8 @@ input:checked+.sl:before{transform:translateX(22px);}
 .iy{flex:1;padding:9px;border-radius:var(--r2);font-size:13px;font-weight:600;cursor:pointer;border:none;background:var(--g4);color:#fff;}
 .in{flex:1;padding:9px;border-radius:var(--r2);font-size:13px;font-weight:600;cursor:pointer;border:none;background:rgba(255,255,255,.15);color:#fff;}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://xcyimhcgoryzyxrkhlra.supabase.co" crossorigin>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous">
 </head>
 <body>
 
@@ -205,7 +251,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="dt-sidebar" style="display:none;">
   <div style="padding:0 20px 24px;border-bottom:1px solid var(--d4);margin-bottom:8px;">
     <div style="display:flex;align-items:center;gap:10px;">
-      <div style="width:36px;height:36px;background:var(--g2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;">👓</div>
+      <img src="marca/icone-192.png" alt="" width="36" height="36" style="width:36px;height:36px;border-radius:10px;display:block;flex-shrink:0;">
       <div><div style="font-size:15px;font-weight:700;color:var(--tx);">Visão Circular</div><div style="font-size:11px;color:var(--d3);">economia circular</div></div>
     </div>
   </div>
@@ -427,9 +473,11 @@ input:checked+.sl:before{transform:translateX(22px);}
 
 <!-- ============ SPLASH ============ -->
 <div id="s0" class="scr splash">
-  <div style="font-size:78px;margin-bottom:18px;">👓</div>
-  <div style="font-size:34px;font-weight:800;color:#fff;text-align:center;line-height:1.2;">Visão<br><span style="color:#A5D6A7">Circular</span></div>
-  <div style="color:#A5D6A7;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin:8px 0 50px;">— enxergue um mundo melhor —</div>
+  <!-- Logo real da marca. O texto "Visão Circular" e a assinatura já vêm
+       dentro dele, então saíram daqui para não aparecer duplicado. -->
+  <img src="marca/logo-badge-512.png" alt="Visão Circular — enxergue um mundo melhor"
+       width="230" height="230" style="width:min(62vw,230px);height:auto;margin-bottom:44px;">
+  <h1 class="sr-only">Visão Circular — enxergue um mundo melhor</h1>
   <div style="padding:0 30px;width:100%;display:flex;flex-direction:column;gap:10px;">
     <button class="btn" style="background:#fff;color:var(--g2);font-size:16px;padding:17px;" onclick="go('s1')">Entrar</button>
     <button class="btn" style="background:transparent;color:#fff;border:2px solid rgba(255,255,255,.6);font-size:16px;padding:17px;" onclick="go('s1')">Criar conta</button>
@@ -439,8 +487,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 <!-- ============ LOGIN ============ -->
 <div id="s1" class="scr">
   <div style="background:var(--g2);padding:56px 20px 34px;text-align:center;flex-shrink:0;">
-    <div style="font-size:46px;margin-bottom:7px;">👓</div>
-    <div style="font-size:22px;font-weight:800;color:#fff;">Visão <span style="color:#A5D6A7">Circular</span></div>
+    <img src="marca/logo-badge-512.png" alt="Visão Circular" width="150" height="150" style="width:150px;height:150px;display:block;margin:0 auto 10px;">
     <p style="color:#A5D6A7;font-size:13px;margin-top:3px;">Bem-vindo(a)! Faça login para continuar.</p>
   </div>
   <div class="body" style="padding-top:24px;">
@@ -449,7 +496,13 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div style="text-align:right;margin-bottom:20px;"><span style="color:var(--g2);font-size:13px;font-weight:500;cursor:pointer;">Esqueceu sua senha?</span></div>
     <button class="btn bg" style="margin-bottom:12px;" onclick="loginEmail()">Entrar</button>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div class="dv" style="flex:1;margin:0;"></div><span style="font-size:13px;color:var(--d3);">ou</span><div class="dv" style="flex:1;margin:0;"></div></div>
-    <button class="btn bgb" style="gap:10px;" onclick="loginGoogle()"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>Entrar com Google</button>
+    <!-- O login com Google CRIA conta nova no primeiro acesso. Por isso o aceite
+         também é exigido aqui, e não só na tela de cadastro. -->
+    <label style="display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--d3);margin-bottom:12px;cursor:pointer;line-height:1.45;">
+      <input type="checkbox" id="login-aceite" style="width:18px;height:18px;flex-shrink:0;margin-top:1px;">
+      <span>Li e aceito a <a onclick="event.preventDefault();event.stopPropagation();go('s-privacidade')" style="color:var(--g2);font-weight:600;cursor:pointer;text-decoration:underline;">Política de Privacidade</a> e os <a onclick="event.preventDefault();event.stopPropagation();go('s-termos')" style="color:var(--g2);font-weight:600;cursor:pointer;text-decoration:underline;">Termos de Uso</a>. Necessário apenas se esta for sua primeira entrada com o Google.</span>
+    </label>
+    <button class="btn bgb" style="gap:10px;" onclick="loginGoogle()"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>Entrar com Google</button>
     <p style="text-align:center;margin-top:20px;">Não tem conta? <span style="color:var(--g2);font-weight:600;cursor:pointer;" onclick="go('s-cad')">Cadastre-se</span></p>
     <div class="dv"></div>
     <button class="btn" style="background:var(--d5);color:var(--d2);gap:8px;" onclick="go('so1')">🏪 Sou Ótica / Parceiro</button>
@@ -496,6 +549,9 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="fg"><label class="fl">E-mail</label><input class="fi" id="perf-email" type="email" placeholder="seu@email.com" readonly style="opacity:.65;cursor:not-allowed;"></div>
     <div class="fg"><label class="fl">CPF</label><input class="fi" id="perf-cpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)" inputmode="numeric"></div>
     <div class="fg"><label class="fl">RG</label><input class="fi" id="perf-rg" placeholder="Número do RG" maxlength="15"></div>
+    <!-- Os Termos exigem maioridade e que a data de nascimento coincida com a
+         da receita médica — mas o app nunca pedia essa data em lugar nenhum. -->
+    <div class="fg"><label class="fl">Data de nascimento</label><input class="fi" id="perf-nascimento" type="date"><p style="font-size:12px;color:var(--d3);margin-top:4px;">Precisa ser a mesma data que consta na sua receita médica.</p></div>
     <div class="dv" style="margin:18px 0 14px;"></div>
     <h4 style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--tx);">Endereço</h4>
     <div class="fg"><label class="fl">CEP</label><input class="fi" id="perf-cep" placeholder="00000-000" maxlength="9" oninput="maskCEP(this)" onblur="buscarEnderecoCEP()" inputmode="numeric"></div>
@@ -508,9 +564,9 @@ input:checked+.sl:before{transform:translateX(22px);}
       <div class="fg"><label class="fl">Cidade</label><input class="fi" id="perf-cidade" placeholder="Cidade"></div>
       <div class="fg"><label class="fl">UF</label><input class="fi" id="perf-uf" placeholder="SP" maxlength="2" style="text-transform:uppercase;"></div>
     </div>
-    <button class="btn bg" style="margin-top:6px;" onclick="salvarPerfil()">Salvar perfil</button>
+    <button class="btn bg" id="btn-salvar-perfil" style="margin-top:6px;" onclick="salvarPerfil()">Salvar perfil</button>
     <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--d5);text-align:center;">
-      <button class="btn" style="background:#FFEBEE;color:#B71C1C;border:1.5px solid #FFCDD2;font-weight:700;font-size:15px;gap:8px;transition:all .2s;" onclick="logoutComConfirmacao(this)">🚪 Sair da conta</button>
+      <button class="btn" style="background:#FFEBEE;color:#B71C1C;border:1.5px solid #FFCDD2;font-weight:700;font-size:15px;gap:8px;transition:all .2s;" onclick="logoutComConfirmacao(this)"><svg aria-hidden="true" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><use href="#i-sair"/></svg> Sair da conta</button>
       <p style="font-size:11px;color:var(--d3);margin-top:10px;line-height:1.5;">A sessão será encerrada e todos os dados de login removidos deste dispositivo.</p>
     </div>
     <!-- SELOS DE SEGURANÇA -->
@@ -567,15 +623,15 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="s-sobre" class="scr">
   <div class="hdr"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><h3 style="flex:1;">Sobre a plataforma</h3></div>
   <div class="body">
-    <div style="text-align:center;margin-bottom:18px;"><div style="font-size:40px;">👓</div><h3 style="margin-top:4px;">Visão Circular</h3><p style="font-size:13px;color:var(--d3);">Marketplace de óculos — doação, compra e venda.</p></div>
+    <div style="text-align:center;margin-bottom:18px;"><img src="marca/logo-badge-512.png" alt="Visão Circular" width="110" height="110" style="width:110px;height:110px;display:block;margin:0 auto 6px;"><p style="font-size:13px;color:var(--d3);">Marketplace de óculos — doação, compra e venda.</p></div>
     <div class="cardf">
       <p style="font-size:12px;color:var(--d3);margin-bottom:8px;">DADOS DA EMPRESA</p>
-      <div class="ir"><span class="il">Razão social</span><span class="iv">[PREENCHER]</span></div>
+      <div class="ir"><span class="il">Razão social</span><span class="iv">Visão Circular Ltda</span></div>
       <div class="ir"><span class="il">Nome fantasia</span><span class="iv">Visão Circular</span></div>
-      <div class="ir"><span class="il">CNPJ</span><span class="iv">[PREENCHER]</span></div>
-      <div class="ir"><span class="il">Endereço</span><span class="iv" style="font-size:12px;text-align:right;max-width:60%;">[PREENCHER]</span></div>
-      <div class="ir"><span class="il">E-mail</span><span class="iv" style="font-size:12px;">[PREENCHER]</span></div>
-      <div class="ir" style="border:none;"><span class="il">Telefone / WhatsApp</span><span class="iv">[PREENCHER]</span></div>
+      <div class="ir"><span class="il">CNPJ</span><span class="iv">63.309.844/0001-39</span></div>
+      <div class="ir"><span class="il">Endereço</span><span class="iv" style="font-size:12px;text-align:right;max-width:60%;">Rua Professor José Eduardo Nunes, 78 — Sorocaba/SP</span></div>
+      <div class="ir"><span class="il">E-mail</span><span class="iv" style="font-size:12px;">visao.ocularadm@gmail.com</span></div>
+      <div class="ir" style="border:none;"><span class="il">Telefone / WhatsApp</span><span class="iv">(15) 99858-9260</span></div>
     </div>
     <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
       <button class="btn bgb" onclick="go('s-privacidade')">🔒 Política de Privacidade</button>
@@ -589,9 +645,9 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="s-privacidade" class="scr">
   <div class="hdr"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><h3 style="flex:1;">Política de Privacidade</h3></div>
   <div class="body">
-    <p style="font-size:12px;color:var(--d3);margin-bottom:14px;">Última atualização: [PREENCHER data]. Em conformidade com a LGPD (Lei nº 13.709/2018).</p>
+    <p style="font-size:12px;color:var(--d3);margin-bottom:14px;">Última atualização: 10 de setembro de 2026. Em conformidade com a LGPD (Lei nº 13.709/2018).</p>
     <div class="clause-t">1. Quem somos</div>
-    <div class="clause-b">A Visão Circular ([PREENCHER razão social/CNPJ]) é a controladora dos dados tratados neste aplicativo. Contato do encarregado de dados (DPO): [PREENCHER e-mail].</div>
+    <div class="clause-b">A Visão Circular Ltda (CNPJ 63.309.844/0001-39), com sede na Rua Professor José Eduardo Nunes, 78, Sorocaba/SP, é a controladora dos dados tratados neste aplicativo. Contato do encarregado de dados (DPO): visao.ocularadm@gmail.com.</div>
     <div class="clause-t">2. Dados que coletamos</div>
     <div class="clause-b">Cadastro: nome, e-mail, senha (criptografada). Perfil: CPF, RG, endereço e telefone — usados para identificação, entrega e emissão de pedidos. Os campos CPF e RG são armazenados <strong>criptografados (AES-256)</strong>. Conteúdo: fotos e vídeos dos produtos. Doações: receita médica, exigida <strong>apenas para verificar elegibilidade</strong> (dado de saúde — dado pessoal sensível).</div>
     <div class="clause-t">3. Para que usamos</div>
@@ -606,7 +662,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="clause-b">Mantemos os dados pelo tempo necessário às finalidades acima e a obrigações legais. Usamos HTTPS, criptografia de campos sensíveis, isolamento por usuário (RLS) e encerramento automático de sessão por inatividade.</div>
     <div class="clause-t">8. Cookies e armazenamento local</div>
     <div class="clause-b">Usamos armazenamento local apenas para manter sua sessão e preferências essenciais de funcionamento — não usamos cookies de publicidade.</div>
-    <div class="clause-b" style="margin-top:14px;color:var(--d3);font-size:12px;">Dúvidas sobre privacidade: [PREENCHER e-mail de contato].</div>
+    <div class="clause-b" style="margin-top:14px;color:var(--d3);font-size:12px;">Dúvidas sobre privacidade: visao.ocularadm@gmail.com.</div>
   </div>
 </div>
 
@@ -614,7 +670,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="s-termos" class="scr">
   <div class="hdr"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><h3 style="flex:1;">Termos de Uso</h3></div>
   <div class="body">
-    <p style="font-size:12px;color:var(--d3);margin-bottom:14px;">Última atualização: [PREENCHER data].</p>
+    <p style="font-size:12px;color:var(--d3);margin-bottom:14px;">Última atualização: 10 de setembro de 2026.</p>
     <div class="clause-t">1. Objeto</div>
     <div class="clause-b">O Visão Circular é uma plataforma que intermedia a <strong>doação, compra e venda de óculos</strong> entre usuários. Atuamos como intermediadores; a responsabilidade pelo produto é do doador/vendedor anunciante.</div>
     <div class="clause-t">2. Cadastro e elegibilidade</div>
@@ -630,7 +686,7 @@ input:checked+.sl:before{transform:translateX(22px);}
     <div class="clause-t">7. Limitação de responsabilidade</div>
     <div class="clause-b">A plataforma se empenha em manter o serviço disponível e seguro, mas não garante ausência de falhas. A negociação e a qualidade do produto são de responsabilidade entre comprador e vendedor/doador.</div>
     <div class="clause-t">8. Foro e contato</div>
-    <div class="clause-b">Estes Termos seguem a legislação brasileira. Dúvidas e reclamações: [PREENCHER e-mail de contato].</div>
+    <div class="clause-b">Estes Termos seguem a legislação brasileira. Dúvidas e reclamações: visao.ocularadm@gmail.com.</div>
   </div>
 </div>
 
@@ -642,18 +698,88 @@ input:checked+.sl:before{transform:translateX(22px);}
 </div>
 
 <!-- ============ ESCOLHA PERFIL ============ -->
+<!-- Ícones da seleção de perfil. Sprite SVG: risca em vez de emoji (que muda de
+     desenho conforme o aparelho), é nítido em qualquer tamanho e não pesa nada. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- Doar: coração cheio sobre duas mãos em concha, com FOLGA no meio.
+       Tentativas anteriores falharam em 26px: um arco único virava um sorriso,
+       e óculos+coração viravam um amontoado de círculos. Massa cheia + duas
+       formas separadas resolvem — a leitura sobrevive ao tamanho pequeno. -->
+  <symbol id="i-doar" viewBox="0 0 24 24">
+    <path d="M12 13.6 7.1 8.9a3.1 3.1 0 0 1 4.9-3.8 3.1 3.1 0 0 1 4.9 3.8L12 13.6Z" fill="#fff" stroke-width="1.4"/>
+    <path d="M3.4 14.8c0 3.6 3.1 6 6.4 6.3"/>
+    <path d="M20.6 14.8c0 3.6-3.1 6-6.4 6.3"/>
+  </symbol>
+  <symbol id="i-buscar" viewBox="0 0 24 24">
+    <circle cx="10.6" cy="10.6" r="6.6"/>
+    <path d="M15.4 15.4 20.5 20.5"/>
+  </symbol>
+  <symbol id="i-vender" viewBox="0 0 24 24">
+    <path d="M20.7 13.3 13.3 20.7a1.9 1.9 0 0 1-2.7 0l-7.3-7.3a1.9 1.9 0 0 1-.6-1.4V4.7c0-1 .8-1.9 1.9-1.9H12c.5 0 1 .2 1.4.6l7.3 7.3a1.9 1.9 0 0 1 0 2.6Z"/>
+    <circle cx="7.6" cy="7.6" r="1.4"/>
+  </symbol>
+  <!-- Ótica: fachada com toldo. A versão anterior tinha traços de vitrine que,
+       em 26px, faziam o ícone parecer um cofre. -->
+  <symbol id="i-otica" viewBox="0 0 24 24">
+    <path d="M2.6 9.1 4.9 4.3a1 1 0 0 1 .9-.6h12.4a1 1 0 0 1 .9.6l2.3 4.8"/>
+    <path d="M2.6 9.1h18.8"/>
+    <path d="M4.5 9.1v10.6a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V9.1"/>
+    <path d="M9.4 20.7v-6.1h5.2v6.1"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-sair" viewBox="0 0 24 24">
+    <path d="M14.5 20.2H6a2 2 0 0 1-2-2V5.8a2 2 0 0 1 2-2h8.5"/>
+    <path d="m16.8 8.2 3.8 3.8-3.8 3.8"/>
+    <path d="M20.6 12H10"/>
+  </symbol>
+</svg>
+
 <div id="s2" class="scr">
-  <div class="hdr hw"><div><h2>Como você deseja<br>usar o app?</h2><p style="margin-top:4px;">Selecione uma opção abaixo.</p></div><button id="btn-sair-s2" onclick="logoutComConfirmacao(this)" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;transition:all .2s;">🚪 Sair</button></div>
-  <div class="body">
-    <div style="background:#FFF8E1;border:1px solid #FFE082;border-radius:var(--r);padding:10px 14px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;">
-      <span style="font-size:18px;flex-shrink:0;">🧪</span>
-      <div><p style="font-size:13px;font-weight:600;color:#E65100;margin-bottom:2px;">Versão Beta</p><p style="font-size:12px;color:#BF360C;line-height:1.4;">Este app está em fase de testes. Pode conter erros. Reporte problemas pelo menu Pedidos → Reportar.</p></div>
+  <div class="s2-hdr">
+    <div style="flex:1;min-width:0;">
+      <h2>Como você deseja<br>usar o app?</h2>
+      <p>Escolha uma opção — dá para mudar depois.</p>
     </div>
-    <div class="pfc2" onclick="go('sd0')"><div class="pic" style="background:var(--g6);">♻️</div><div style="flex:1;"><h4 style="color:var(--g2);">Doador</h4><p style="font-size:13px;">Quero doar meus óculos e ajudar outras pessoas.</p></div><span style="font-size:20px;color:var(--d3);">›</span></div>
-    <div class="pfc2" onclick="go('sb0')"><div class="pic" style="background:var(--b3);">🔍</div><div style="flex:1;"><h4 style="color:var(--b1);">Beneficiário / Comprador</h4><p style="font-size:13px;">Quero encontrar óculos para doação ou comprar.</p></div><span style="font-size:20px;color:var(--d3);">›</span></div>
-    <div class="pfc2" onclick="go('sv0')"><div class="pic" style="background:var(--a4);">🛒</div><div style="flex:1;"><h4 style="color:var(--a0);">Vendedor</h4><p style="font-size:13px;">Quero vender meus óculos e alcançar mais pessoas.</p></div><span style="font-size:20px;color:var(--d3);">›</span></div>
-    <div class="pfc2" onclick="go('so1')"><div class="pic" style="background:var(--d5);">🏪</div><div style="flex:1;"><h4>Ótica / Parceiro</h4><p style="font-size:13px;">Sou ótica e quero gerenciar doações e vendas.</p></div><span style="font-size:20px;color:var(--d3);">›</span></div>
-    <button class="btn bg" style="margin-top:8px;" onclick="go('sb0')">Continuar</button>
+    <!-- Antes era "🚪 Sair" com color:#fff dentro de um header BRANCO (.hw):
+         texto branco sobre fundo branco, ou seja, invisível. -->
+    <button class="btn-sair" id="btn-sair-s2" onclick="logoutComConfirmacao(this)">
+      <span>Sair</span><svg aria-hidden="true"><use href="#i-sair"/></svg>
+    </button>
+  </div>
+  <div class="body">
+    <div class="rl-list" role="radiogroup" aria-label="Como você deseja usar o app">
+      <button type="button" class="rl" role="radio" aria-checked="false" onclick="selPerfil(this,'doador')"
+        style="--rl-c:#2E7D32;--rl-c2:#66BB6A;--rl-bg:#E8F5E9;--rl-sh:rgba(46,125,50,.28)">
+        <span class="rl-ic"><svg aria-hidden="true"><use href="#i-doar"/></svg></span>
+        <span class="rl-tx"><span class="rl-tt">Doador</span><span class="rl-ds">Quero doar meus óculos e ajudar outras pessoas.</span></span>
+        <span class="rl-mk"><svg aria-hidden="true"><use href="#i-check"/></svg></span>
+      </button>
+      <button type="button" class="rl" role="radio" aria-checked="false" onclick="selPerfil(this,'beneficiario')"
+        style="--rl-c:#1565C0;--rl-c2:#42A5F5;--rl-bg:#E3F2FD;--rl-sh:rgba(21,101,192,.28)">
+        <span class="rl-ic"><svg aria-hidden="true"><use href="#i-buscar"/></svg></span>
+        <span class="rl-tx"><span class="rl-tt">Beneficiário / Comprador</span><span class="rl-ds">Quero encontrar óculos para doação ou comprar.</span></span>
+        <span class="rl-mk"><svg aria-hidden="true"><use href="#i-check"/></svg></span>
+      </button>
+      <button type="button" class="rl" role="radio" aria-checked="false" onclick="selPerfil(this,'vendedor')"
+        style="--rl-c:#E65100;--rl-c2:#FFA726;--rl-bg:#FFF3E0;--rl-sh:rgba(230,81,0,.28)">
+        <span class="rl-ic"><svg aria-hidden="true"><use href="#i-vender"/></svg></span>
+        <span class="rl-tx"><span class="rl-tt">Vendedor</span><span class="rl-ds">Quero vender meus óculos e alcançar mais pessoas.</span></span>
+        <span class="rl-mk"><svg aria-hidden="true"><use href="#i-check"/></svg></span>
+      </button>
+      <button type="button" class="rl" role="radio" aria-checked="false" onclick="selPerfil(this,'otica')"
+        style="--rl-c:#37474F;--rl-c2:#78909C;--rl-bg:#ECEFF1;--rl-sh:rgba(55,71,79,.28)">
+        <span class="rl-ic"><svg aria-hidden="true"><use href="#i-otica"/></svg></span>
+        <span class="rl-tx"><span class="rl-tt">Ótica / Parceiro</span><span class="rl-ds">Sou ótica e quero gerenciar doações e vendas.</span></span>
+        <span class="rl-mk"><svg aria-hidden="true"><use href="#i-check"/></svg></span>
+      </button>
+    </div>
+    <button class="btn bg" id="btn-continuar-perfil" disabled onclick="continuarPerfil()">Continuar</button>
+    <!-- Aviso de beta discreto, no rodapé (antes era um bloco amarelo no topo,
+         empurrando as opções para baixo). -->
+    <p class="beta-rodape">
+      <span aria-hidden="true">🧪</span>
+      <span><b>Versão beta.</b> Em fase de testes — pode conter erros. Reporte em <b>Pedidos › Reportar</b>.</span>
+    </p>
   </div>
 </div>
 
@@ -785,16 +911,13 @@ input:checked+.sl:before{transform:translateX(22px);}
 
 <!-- ======== DOADOR: STATUS ======== -->
 <div id="sd5" class="scr">
-  <div class="hdr"><button class="btn-ic" onclick="go('sd0')"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><h3>Doação #1023</h3><p class="sub" style="font-size:12px;">20/05/2024</p></div></div>
+  <!-- Esta tela mostrava um protocolo fixo ("Doação #1023"), datas de 2024 e
+       uma linha do tempo inventada, iguais para todo mundo. Agora lista as
+       solicitações REAIS recebidas, com a data real, e permite aceitar ou
+       recusar — fluxo que simplesmente não existia no app. -->
+  <div class="hdr"><button class="btn-ic" onclick="go('sd0')"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><h3>Solicitações recebidas</h3><p class="sub" style="font-size:12px;">Quem pediu os óculos que você doou</p></div></div>
   <div class="body">
-    <div class="tl-i"><div class="tl-d dn">✓</div><div><h4>Recebido</h4><p style="font-size:13px;">20/05 · 10:30</p></div></div><div class="tl-ln"></div>
-    <div class="tl-i"><div class="tl-d dn">✓</div><div><h4>Em triagem</h4><p style="font-size:13px;">22/05 · 14:15</p></div></div><div class="tl-ln"></div>
-    <div class="tl-i"><div class="tl-d ac">⏳</div><div><h4 style="color:var(--a2);">Disponível para doação</h4><p style="font-size:13px;">24/05 · Em breve</p></div></div><div class="tl-ln"></div>
-    <div class="tl-i"><div class="tl-d nd">○</div><div><h4 style="color:var(--d3);">Entregue ao beneficiário</h4><p style="font-size:13px;">Aguardando</p></div></div>
-    <div class="dv"></div>
-    <div class="ir"><span class="il">Tipo</span><span class="iv">Óculos de grau</span></div>
-    <div class="ir"><span class="il">Estado</span><span class="iv">Usado</span></div>
-    <div class="ir" style="border:none;"><span class="il">Entrega</span><span class="iv">Ponto de coleta</span></div>
+    <div id="lista-solicitacoes-d"><div style="text-align:center;padding:24px;color:var(--d3);">Carregando...</div></div>
     <div class="dv"></div>
     <button class="btn bol" onclick="go('sd0')">Voltar ao início</button>
   </div>
@@ -931,6 +1054,13 @@ input:checked+.sl:before{transform:translateX(22px);}
     </div>
     <h4 style="margin-bottom:10px;">1. Envie o arquivo da receita</h4>
     <p style="font-size:13px;color:var(--d3);margin-bottom:10px;">Foto ou PDF legível, com dados do paciente visíveis. Validade: até 1 ano.</p>
+    <!-- Consentimento ESPECÍFICO e DESTACADO para dado pessoal sensível de saúde
+         (LGPD art. 11, I). Antes a receita subia para o servidor sem nenhum
+         aceite, e nenhum dos 4 checkboxes seguintes tratava disso. -->
+    <label style="display:flex;gap:10px;align-items:flex-start;background:#FFF8E1;border-left:4px solid #F9A825;border-radius:0 var(--r) var(--r) 0;padding:12px;margin-bottom:14px;cursor:pointer;">
+      <input type="checkbox" id="rec-consent" style="width:19px;height:19px;flex-shrink:0;margin-top:1px;">
+      <span style="font-size:12.5px;line-height:1.55;color:#6D4C41;"><strong>Consinto, de forma livre e específica</strong>, com o envio e o armazenamento da minha receita médica — um dado pessoal <strong>sensível de saúde</strong> — pelo tempo necessário para verificar minha elegibilidade à doação. Posso revogar este consentimento e pedir a exclusão do arquivo a qualquer momento pelo Perfil.</span>
+    </label>
     <label id="rec-label"><input type="file" accept="image/*,application/pdf" id="receita-input" style="display:none" onchange="uploadReceita()">
       <div class="pup" id="pup-rec"><span style="font-size:32px;">📄</span><span style="font-weight:600;">Toque para enviar a receita</span><span style="font-size:12px;color:var(--d3);">Foto ou PDF · Apenas para verificar elegibilidade</span></div>
     </label>
@@ -1165,11 +1295,13 @@ input:checked+.sl:before{transform:translateX(22px);}
     <h3 style="margin-bottom:6px;">Como foi sua experiência?</h3>
     <p style="margin-bottom:16px;" id="aval-produto">—</p>
     <div class="stars" style="justify-content:center;" id="star-row">
-      <span onclick="setStar(1)" style="cursor:pointer;">⭐</span><span onclick="setStar(2)" style="cursor:pointer;">⭐</span><span onclick="setStar(3)" style="cursor:pointer;">⭐</span><span onclick="setStar(4)" style="cursor:pointer;">⭐</span><span onclick="setStar(5)" style="cursor:pointer;">☆</span>
+      <span onclick="setStar(1)" style="cursor:pointer;">☆</span><span onclick="setStar(2)" style="cursor:pointer;">☆</span><span onclick="setStar(3)" style="cursor:pointer;">☆</span><span onclick="setStar(4)" style="cursor:pointer;">☆</span><span onclick="setStar(5)" style="cursor:pointer;">☆</span>
     </div>
-    <p style="font-size:16px;font-weight:700;color:var(--g2);margin-bottom:20px;">Excelente!</p>
-    <div class="fg" style="text-align:left;"><label class="fl">Deixe um comentário (opcional)</label><textarea class="fi" placeholder="Conte o que achou do produto e do atendimento..."></textarea></div>
-    <button class="btn bg" onclick="go('sb0')">Enviar avaliação</button>
+    <!-- O rótulo era fixo em "Excelente!" mesmo com 1 estrela, e o botão apenas
+         mudava de tela: nota e comentário não eram salvos em lugar nenhum. -->
+    <p style="font-size:16px;font-weight:700;color:var(--g2);margin-bottom:20px;" id="aval-rotulo">Toque nas estrelas para avaliar</p>
+    <div class="fg" style="text-align:left;"><label class="fl">Deixe um comentário (opcional)</label><textarea class="fi" id="aval-comentario" maxlength="600" placeholder="Conte o que achou do produto e do atendimento..."></textarea></div>
+    <button class="btn bg" id="btn-enviar-aval" onclick="enviarAvaliacao()">Enviar avaliação</button>
     <p style="font-size:13px;color:var(--d3);margin-top:10px;">Sua opinião ajuda a melhorar o app Visão Circular! 💚</p>
   </div>
 </div>
@@ -1405,10 +1537,13 @@ input:checked+.sl:before{transform:translateX(22px);}
       </div>
     </div>
     <div class="fg"><label class="fl">Status do anúncio</label><div class="tog" id="sv-edit-status"><button class="tb on" onclick="tg(this);_toggleRastreio()">Ativo</button><button class="tb" onclick="tg(this);_toggleRastreio()">Pausado</button><button class="tb" onclick="tg(this);_toggleRastreio()">Vendido</button></div></div>
+    <!-- O código de rastreio digitado AQUI ia para produtos.codigo_rastreio e
+         nunca chegava ao comprador — quem o comprador lê é pedidos.codigo_rastreio.
+         O campo certo fica em "Vendas aguardando postagem", na tela de anúncios. -->
     <div class="fg" id="sv-edit-rastreio-box" style="display:none;">
-      <label class="fl">Código de rastreio</label>
-      <input class="fi" id="sv-edit-rastreio" placeholder="Ex: BR123456789BR" oninput="this.value=this.value.toUpperCase()">
-      <p style="font-size:12px;color:var(--d3);margin-top:4px;">⏰ Prazo de postagem: 1 dia útil após a venda. O código será enviado ao comprador.</p>
+      <div style="background:#FFF8E1;border-left:4px solid #F9A825;border-radius:0 var(--r) var(--r) 0;padding:12px;">
+        <p style="font-size:13px;color:#6D4C41;line-height:1.5;">📦 O código de rastreio é informado por <strong>venda</strong>, não pelo anúncio. Volte para <strong>Meus anúncios</strong> e use a seção <strong>“Vendas aguardando postagem”</strong> — só assim ele chega ao comprador.</p>
+      </div>
     </div>
     <button class="btn ba" style="margin-bottom:12px;" onclick="salvarEdicaoAnuncio()">💾 Salvar alterações</button>
     <button class="btn" style="border:1px solid #D32F2F;color:#D32F2F;background:none;" onclick="if(__editProduto)excluirAnuncio(__editProduto.id)">🗑️ Excluir anúncio</button>
@@ -1419,9 +1554,11 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="so1" class="scr">
   <div style="background:var(--d2);padding:58px 20px 34px;text-align:center;flex-shrink:0;"><div style="font-size:44px;margin-bottom:8px;">🏪</div><div style="font-size:22px;font-weight:800;color:#fff;">Visão <span style="color:#A5D6A7">Circular</span></div><p style="color:#BDBDBD;font-size:13px;margin-top:3px;">Acesse o painel da sua ótica ou ONG.</p></div>
   <div class="body" style="padding-top:24px;">
-    <div class="fg"><label class="fl">E-mail</label><input class="fi" type="email" placeholder="contato@suaotica.com.br"></div>
-    <div class="fg"><label class="fl">Senha</label><input class="fi" type="password" placeholder="••••••••"></div>
-    <button class="btn bdk" style="margin-bottom:12px;" onclick="go('so8')">Entrar</button>
+    <div class="fg"><label class="fl">E-mail</label><input class="fi" type="email" id="otica-login-email" placeholder="contato@suaotica.com.br"></div>
+    <div class="fg"><label class="fl">Senha</label><input class="fi" type="password" id="otica-login-pw" placeholder="••••••••"></div>
+    <!-- Antes este botão era apenas `go('so8')`: qualquer texto, ou os campos
+         em branco, entravam direto no painel. Agora autentica de verdade. -->
+    <button class="btn bdk" style="margin-bottom:12px;" id="btn-otica-login" onclick="loginOtica()">Entrar</button>
     <div class="dv"></div>
     <p style="text-align:center;margin-bottom:14px;font-size:14px;">Ainda não é parceiro?</p>
     <button class="btn bgb" onclick="go('so2')">Cadastrar minha ótica</button>
@@ -1434,12 +1571,13 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="body">
     <div class="pgbar"><div class="pgbar-i on"></div><div class="pgbar-i"></div><div class="pgbar-i"></div><div class="pgbar-i"></div><div class="pgbar-i"></div></div>
     <p style="margin-bottom:14px;">Informe os dados básicos da sua ótica para criar sua conta.</p>
-    <div class="fg"><label class="fl">Nome da ótica</label><input class="fi" placeholder="Ex: Ótica Visão Clara"></div>
-    <div class="fg"><label class="fl">CNPJ</label><input class="fi" placeholder="00.000.000/0000-00"></div>
-    <div class="fg"><label class="fl">E-mail</label><input class="fi" type="email" placeholder="contato@suaotica.com.br"></div>
-    <div class="fg"><label class="fl">Telefone</label><input class="fi" type="tel" placeholder="(11) 00000-0000"></div>
-    <div class="fg"><label class="fl">Senha</label><input class="fi" type="password" placeholder="Mínimo 8 caracteres"></div>
-    <button class="btn bdk" onclick="go('so3')">Continuar</button>
+    <div class="fg"><label class="fl">Nome da ótica</label><input class="fi" id="otica-nome" placeholder="Ex: Ótica Visão Clara"></div>
+    <div class="fg"><label class="fl">CNPJ</label><input class="fi" id="otica-cnpj" inputmode="numeric" oninput="maskCNPJ(this)" placeholder="00.000.000/0000-00"></div>
+    <div class="fg"><label class="fl">E-mail</label><input class="fi" type="email" id="otica-email" placeholder="contato@suaotica.com.br"></div>
+    <div class="fg"><label class="fl">Telefone</label><input class="fi" type="tel" id="otica-tel" placeholder="(11) 00000-0000"></div>
+    <div class="fg"><label class="fl">Senha</label><input class="fi" type="password" id="otica-pw" placeholder="Mínimo 8 caracteres"></div>
+    <!-- Antes: `go('so3')` sem validar nada. Agora valida antes de avançar. -->
+    <button class="btn bdk" onclick="validarOticaPasso1()">Continuar</button>
   </div>
 </div>
 
@@ -1449,12 +1587,12 @@ input:checked+.sl:before{transform:translateX(22px);}
   <div class="body">
     <div class="pgbar"><div class="pgbar-i on"></div><div class="pgbar-i on"></div><div class="pgbar-i"></div><div class="pgbar-i"></div><div class="pgbar-i"></div></div>
     <p style="margin-bottom:14px;">Informe o endereço completo para localização no mapa e entregas.</p>
-    <div class="fg"><label class="fl">Rua / Avenida</label><input class="fi" placeholder="Av. Paulista"></div>
-    <div style="display:flex;gap:10px;"><div class="fg" style="flex:1;"><label class="fl">Número</label><input class="fi" placeholder="1578"></div><div class="fg" style="flex:1;"><label class="fl">Compl.</label><input class="fi" placeholder="Sala 10"></div></div>
-    <div class="fg"><label class="fl">Bairro</label><input class="fi" placeholder="Bela Vista"></div>
+    <div class="fg"><label class="fl">Rua / Avenida</label><input class="fi" id="otica-rua" placeholder="Av. Paulista"></div>
+    <div style="display:flex;gap:10px;"><div class="fg" style="flex:1;"><label class="fl">Número</label><input class="fi" id="otica-num" placeholder="1578"></div><div class="fg" style="flex:1;"><label class="fl">Compl.</label><input class="fi" id="otica-compl" placeholder="Sala 10"></div></div>
+    <div class="fg"><label class="fl">Bairro</label><input class="fi" id="otica-bairro" placeholder="Bela Vista"></div>
     <div style="display:flex;gap:10px;"><div class="fg" style="flex:2;"><label class="fl">Cidade</label><input class="fi" id="otica-cidade" placeholder="São Paulo"></div><div class="fg" style="flex:1;"><label class="fl">UF</label><select class="fi uf-select" id="otica-uf"></select></div></div>
-    <div class="fg"><label class="fl">CEP</label><input class="fi" placeholder="01310-200"></div>
-    <button class="btn bdk" onclick="go('so4')">Salvar endereço</button>
+    <div class="fg"><label class="fl">CEP</label><input class="fi" id="otica-cep" inputmode="numeric" oninput="maskCEP(this)" placeholder="01310-200"></div>
+    <button class="btn bdk" onclick="validarOticaPasso2()">Salvar endereço</button>
   </div>
 </div>
 
@@ -1481,48 +1619,41 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="so5" class="scr">
   <div class="hdr hdk"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><div style="flex:1;"><h3>Plano Ótica Parceira</h3></div></div>
   <div class="body">
-    <div class="pgbar"><div class="pgbar-i on"></div><div class="pgbar-i on"></div><div class="pgbar-i on"></div><div class="pgbar-i on"></div><div class="pgbar-i"></div></div>
-    <p style="margin-bottom:14px;">Preencha o plano ideal para sua ótica.</p>
+    <div class="pgbar"><div class="pgbar-i on"></div><div class="pgbar-i on"></div><div class="pgbar-i on"></div><div class="pgbar-i on"></div><div class="pgbar-i on"></div></div>
+    <p style="margin-bottom:14px;">Confira o que está incluído e ative sua ótica.</p>
     <div class="plan-c best on">
-      <div class="best-tag" style="background:var(--g2);">Mais Popular</div>
+      <div class="best-tag" style="background:var(--g2);">Piloto</div>
       <div style="text-align:center;padding-top:8px;">
         <h3 style="color:var(--g2);">ÓTICA PARCEIRA</h3>
-        <div id="so5-preco" style="font-size:28px;font-weight:800;color:var(--g2);margin:8px 0;">R$ 49,90<span style="font-size:16px;font-weight:400;color:var(--d3);"> / mês</span></div>
+        <div id="so5-preco" style="font-size:28px;font-weight:800;color:var(--g2);margin:8px 0;">Gratuito<span style="font-size:16px;font-weight:400;color:var(--d3);"> durante o piloto</span></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
         <p style="font-size:13px;">✅ Ponto de retirada oficial</p>
         <p style="font-size:13px;">✅ Recebe clientes do app</p>
         <p style="font-size:13px;">✅ Pode vender produtos</p>
-        <p style="font-size:13px;">✅ Gera cupons de desconto</p>
         <p style="font-size:13px;">✅ Aparece no mapa do app</p>
         <p style="font-size:13px;">✅ Suporte exclusivo</p>
       </div>
+      <p style="font-size:12px;color:var(--d3);margin-top:12px;line-height:1.5;">Sem cobrança e sem cartão nesta fase. Se um plano pago for lançado, avisaremos com antecedência e a adesão será opcional.</p>
     </div>
-    <button class="btn bg" onclick="go('so6')" style="margin-top:16px;">Assinar plano — R$ 49,90/mês</button>
+    <button class="btn bg" id="btn-ativar-otica" onclick="finalizarCadastroOtica()" style="margin-top:16px;">Ativar minha ótica — grátis</button>
   </div>
 </div>
 
-<!-- ======== ÓTICA: PAGAMENTO ======== -->
-<div id="so6" class="scr">
-  <div class="hdr hdk"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><h3 style="flex:1;">Pagamento</h3><span style="font-size:20px;color:#fff;">🔒</span></div>
-  <div class="body">
-    <div class="pgbar"><div class="pgbar-i on"></div><div class="pgbar-i on"></div><div class="pgbar-i on"></div><div class="pgbar-i on"></div><div class="pgbar-i on"></div></div>
-    <div class="cardf"><div class="ir"><span class="il">Plano Ótica Parceira</span><span class="iv">R$ 49,90</span></div><div class="ir" style="border:none;"><span class="il" style="font-weight:700;">Total mensal</span><span class="iv" style="font-weight:800;color:var(--g2);">R$ 49,90</span></div></div>
-    <h4 style="margin-bottom:12px;">Forma de pagamento</h4>
-    <div class="oc2 on" id="opix" onclick="selPgO('opix')"><span style="font-size:22px;">💳</span><div><h4>Cartão de crédito</h4><p style="font-size:13px;">Pague com cartão de crédito</p></div></div>
-    <div class="oc2" id="opix2" onclick="selPgO('opix2')"><span style="font-size:22px;">💚</span><div><h4>Pix</h4><p style="font-size:13px;">Pague via Pix</p></div></div>
-    <div style="height:14px;"></div>
-    <button class="btn bg" onclick="go('so7');gerarProtocolo()">Confirmar pagamento</button>
-    <p style="text-align:center;font-size:12px;color:var(--d3);margin-top:6px;">🔒 Pagamento 100% seguro</p>
-  </div>
-</div>
+<!-- (REMOVIDO) A tela `so6` de "Pagamento" cobrava R$ 49,90 apenas na aparência:
+     escolher cartão/Pix e apertar "Confirmar pagamento" era só `go('so7')`, sem
+     nenhuma integração de cobrança. Enquanto não houver assinatura recorrente
+     de verdade, não pode existir tela de pagamento. ->
 
 <!-- ======== ÓTICA: CONFIRMAÇÃO ======== -->
 <div id="so7" class="scr">
   <div class="body" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:60px;">
     <div class="si-i" style="background:var(--g2);">✓</div>
     <h2 style="margin-bottom:10px;">Ótica parceira ativada!</h2>
-    <p>Sua assinatura foi realizada com sucesso. Sua ótica já é um ponto oficial no Visão Circular.</p>
+    <!-- Antes dizia "Sua assinatura foi realizada com sucesso" sem que nenhuma
+         cobrança existisse, e o número era gerado por Math.random(). Agora o
+         texto corresponde ao que de fato aconteceu e o número é o id real. -->
+    <p>Seu cadastro foi salvo. Sua ótica já é um ponto oficial no Visão Circular, <strong>sem custo durante o piloto</strong>.</p>
     <div class="pb" style="background:var(--g6);width:100%;"><p style="font-size:12px;color:var(--g2);margin-bottom:3px;">NÚMERO DO PARCEIRO</p><div class="pn" style="color:var(--g2);" id="so7-protocolo">—</div></div>
     <button class="btn bg" onclick="go('so8')">Ir para o painel</button>
   </div>
@@ -1532,7 +1663,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="so8" class="scr">
   <div class="hdr hdk"><div style="flex:1;"><p style="color:#BDBDBD;font-size:13px;" id="saud-o">Olá! 👋</p><h2 style="font-size:18px;">Bem-vinda ao painel parceiro.</h2></div><div class="av" style="background:#555;" id="av-o">?</div></div>
   <div class="body">
-    <div class="cardf" style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;align-items:center;"><div><p style="font-size:12px;color:var(--d3);">PLANO ATIVO</p><h4>Ótica Parceira</h4><p id="so8-plano-preco" style="font-size:13px;color:var(--g2);font-weight:600;">R$ 49,90 / mês</p></div><button class="btn" style="width:auto;padding:8px 14px;background:var(--d5);color:var(--d2);font-size:13px;">Ver detalhes</button></div></div>
+    <div class="cardf" style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;align-items:center;"><div><p style="font-size:12px;color:var(--d3);">PLANO ATIVO</p><h4 id="so8-otica-nome">Ótica Parceira</h4><p id="so8-plano-preco" style="font-size:13px;color:var(--g2);font-weight:600;">Gratuito · piloto</p></div><button class="btn" style="width:auto;padding:8px 14px;background:var(--d5);color:var(--d2);font-size:13px;">Ver detalhes</button></div></div>
     <h4 style="margin-bottom:12px;">O que você deseja fazer?</h4>
     <div class="dm-grid">
       <div class="dm-i" onclick="go('sd1')"><span style="font-size:26px;">♥️</span><span class="dm-lb">Doar óculos</span></div>
@@ -1654,6 +1785,9 @@ input:checked+.sl:before{transform:translateX(22px);}
   </div>
 </div>
 
+<!-- SDK carregado aqui (fim do body) e nao mais no <head>: a tela pinta antes.
+     Chart.js saiu do <head> e agora e baixado sob demanda em _ensureChartJs(). -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
 <script>
 // === SUPABASE ===
 const SUPABASE_URL='https://xcyimhcgoryzyxrkhlra.supabase.co';
@@ -1661,22 +1795,131 @@ const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null;
 
-// Auth init: restores session on reload and handles Google OAuth redirect
+// Versao do texto legal aceito. Mude junto com Termos/Privacidade — e o que
+// fica gravado em `consentimentos` como prova de qual texto o usuario aceitou.
+const TERMOS_VERSAO='2026-09-10';
+
+// Tela que o usuário tentou abrir antes de cair no login, para devolver a ela
+// depois de entrar (antes o login sempre jogava na Home).
+var _telaPretendida=null;
+
+// ── Sessão: UMA fonte de verdade ────────────────────────────────────────────
+// Antes havia 2 getSession() e 3 onAuthStateChange espalhados, disparando
+// carregarProdutos() várias vezes e competindo entre si na navegação.
+// _sessionReady resolve quando a sessão inicial terminou de ser restaurada —
+// é o que substitui os setTimeout de 100/600ms que causavam corrida.
+var _resolveSession;
+var _sessionReady=new Promise(function(res){_resolveSession=res;});
+var _sessionResolvida=false;
+// Destino definido pelo retorno do Mercado Pago (lido do querystring lá no fim
+// do script, de forma síncrona — portanto sempre já está definido aqui).
+var _destinoPosSessao=null;
+var _navInicialFeita=false;
+
+function _marcarSessaoPronta(){
+  if(_sessionResolvida)return;
+  _sessionResolvida=true;
+  _resolveSession(currentUser);
+  _navegacaoInicial();
+}
+
+// Uma única decisão de para onde ir na abertura, tomada quando a sessão está
+// realmente resolvida — e não por setTimeout de 100ms/600ms competindo entre si.
+function _navegacaoInicial(){
+  if(_navInicialFeita)return;
+  _navInicialFeita=true;
+  if(_destinoPosSessao){go(_destinoPosSessao);return;}
+  var c=document.querySelector('.scr.on');
+  var cid=c?c.id:'';
+  if(currentUser&&['s0','s1','s-cad','s-onboard',''].indexOf(cid)>-1)go('s2');
+}
+
 sb.auth.getSession().then(function(r){
-  if(r.data&&r.data.session){currentUser=r.data.session.user;atualizarNomes();carregarProdutos();setTimeout(function(){go('s2');},100);}
-});
+  currentUser=(r.data&&r.data.session)?r.data.session.user:null;
+  if(currentUser){atualizarNomes();carregarProdutos();_resetInact();}
+  atualizarSidebarUser(currentUser);
+  _marcarSessaoPronta();
+}).catch(function(){_marcarSessaoPronta();});
+
 sb.auth.onAuthStateChange(function(event,session){
   currentUser=session?session.user:null;
+  atualizarSidebarUser(currentUser);
+
+  // INITIAL_SESSION é o evento de sessão restaurada no reload. Ele também
+  // precisa armar o auto-logout: antes só SIGNED_IN armava, e existia uma
+  // janela em que o timer de 30min simplesmente não estava ativo.
+  if(currentUser&&(event==='SIGNED_IN'||event==='INITIAL_SESSION'||event==='TOKEN_REFRESHED')){
+    _resetInact();
+  }
+
+  if(event==='INITIAL_SESSION')_marcarSessaoPronta();
+
   if(event==='SIGNED_IN'){
-    atualizarNomes();carregarProdutos();_resetInact();
+    atualizarNomes();carregarProdutos();
+    // Registra o aceite do login social. O OAuth do Google cria conta nova no
+    // primeiro login, então o consentimento só pode ser gravado aqui, na volta.
+    _registrarConsentimento('termos_privacidade');
     var _curr=document.querySelector('.scr.on');
     var _cid=_curr?_curr.id:'';
-    // vai para hub de qualquer tela pública (inclui s-onboard para OAuth Google)
-    if(['s0','s1','s-cad','s-onboard',''].indexOf(_cid)>-1)go('s2');
+    if(['s0','s1','s-cad','s-onboard',''].indexOf(_cid)>-1){
+      var destino=_telaPretendida||'s2';_telaPretendida=null;
+      go(destino);
+    }
   }
-  if(event==='SIGNED_OUT'){currentUser=null;go('s0');}
+  if(event==='SIGNED_OUT'){currentUser=null;_telaPretendida=null;go('s0');}
 });
+
+// Grava a prova do consentimento (LGPD art. 8 §1: o ônus da prova é da empresa).
+// Antes não havia registro nenhum — nem data, nem versão do texto aceito.
+async function _registrarConsentimento(tipo){
+  if(!currentUser)return;
+  try{
+    await sb.from('consentimentos').insert({
+      usuario_id:currentUser.id,
+      tipo:tipo||'termos_privacidade',
+      versao:TERMOS_VERSAO,
+      aceito:true,
+      user_agent:(navigator.userAgent||'').substring(0,300)
+    });
+  }catch(e){console.warn('consentimento:',e);}
+}
 function iniciarJornada(){if(currentUser)go('s2');else go('s0');}
+
+// ===== Seleção de perfil (tela s2) =====
+// Antes os cards navegavam no toque E existia um "Continuar" que ia SEMPRE para
+// 'sb0', ignorando o que a pessoa tinha escolhido — o botão contrariava a
+// própria instrução "Selecione uma opção". Agora a escolha é de fato uma
+// escolha: seleciona, o botão habilita e leva para a área certa.
+var _perfilSel=null;
+var _perfilDestino={doador:'sd0',beneficiario:'sb0',vendedor:'sv0',otica:'so1'};
+
+function selPerfil(el,chave){
+  _perfilSel=chave;
+  var opcoes=document.querySelectorAll('#s2 .rl');
+  opcoes.forEach(function(b){b.setAttribute('aria-checked',b===el?'true':'false');});
+  var btn=document.getElementById('btn-continuar-perfil');
+  if(btn)btn.disabled=false;
+}
+
+function continuarPerfil(){
+  if(!_perfilSel||!_perfilDestino[_perfilSel]){
+    showToast('Selecione uma opção para continuar');return;
+  }
+  go(_perfilDestino[_perfilSel]);
+}
+
+// Setas do teclado percorrem as opções, como manda um radiogroup de verdade.
+document.addEventListener('keydown',function(e){
+  var tela=document.querySelector('.scr.on');
+  if(!tela||tela.id!=='s2')return;
+  if(['ArrowDown','ArrowRight','ArrowUp','ArrowLeft'].indexOf(e.key)<0)return;
+  var op=[].slice.call(document.querySelectorAll('#s2 .rl'));
+  if(!op.length)return;
+  var i=op.indexOf(document.activeElement);
+  var passo=(e.key==='ArrowDown'||e.key==='ArrowRight')?1:-1;
+  var prox=op[(i<0?0:(i+passo+op.length))%op.length];
+  if(prox){e.preventDefault();prox.focus();prox.click();}
+});
 
 // ── SEGURANÇA: Auto-logout por inatividade (30 min) ──────────────────────────
 var _inactTimer=null;
@@ -1704,13 +1947,15 @@ async function _deriveKey(uid){
 }
 async function encryptField(txt,uid){
   if(!txt||!uid)return txt;
-  try{
-    var key=await _deriveKey(uid);
-    var iv=crypto.getRandomValues(new Uint8Array(12));
-    var enc=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(txt));
-    var buf=new Uint8Array(12+enc.byteLength);buf.set(iv);buf.set(new Uint8Array(enc),12);
-    return btoa(String.fromCharCode(...buf));
-  }catch(e){return txt;}
+  // ATENÇÃO: antes esta função tinha `catch(e){return txt;}` — se o Web Crypto
+  // falhasse (contexto não-seguro, navegador antigo, política restritiva), o
+  // CPF era gravado em TEXTO PURO sem nenhum aviso a ninguém. Agora falha alto:
+  // é melhor não salvar do que salvar o documento em claro achando que cifrou.
+  var key=await _deriveKey(uid);
+  var iv=crypto.getRandomValues(new Uint8Array(12));
+  var enc=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(txt));
+  var buf=new Uint8Array(12+enc.byteLength);buf.set(iv);buf.set(new Uint8Array(enc),12);
+  return btoa(String.fromCharCode.apply(null,buf));
 }
 async function decryptField(b64,uid){
   if(!b64||!uid)return b64;
@@ -1748,12 +1993,20 @@ async function loginEmail(){
 }
 
 async function loginGoogle(){
-  // se estiver na tela de cadastro, exige aceite dos termos antes do OAuth
-  var noCad=document.getElementById('s-cad');var aceite=document.getElementById('cad-aceite');
-  if(noCad&&noCad.classList.contains('on')&&aceite&&!aceite.checked){
+  // O OAuth do Supabase cria conta nova no primeiro login. Antes, o botão da
+  // tela de LOGIN pulava a checagem de aceite e criava conta sem consentimento
+  // nenhum — o aceite só era exigido quando a tela ativa era `s-cad`.
+  // Agora vale para qualquer tela de origem.
+  var noCad=document.getElementById('s-cad');
+  var origemCadastro=noCad&&noCad.classList.contains('on');
+  var aceite=document.getElementById(origemCadastro?'cad-aceite':'login-aceite');
+  if(aceite&&!aceite.checked){
     showToast('Você precisa aceitar a Política de Privacidade e os Termos de Uso');return;
   }
-  await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href}});
+  // Marca a intenção para gravar o consentimento quando o OAuth voltar.
+  try{sessionStorage.setItem('vc_consent_pendente',TERMOS_VERSAO);}catch(e){}
+  var redir=location.origin+location.pathname;
+  await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:redir}});
 }
 
 async function signOut(){
@@ -1842,18 +2095,19 @@ async function signupEmail(){
     var r=await sb.auth.signUp({email:email,password:pw,options:{data:{nome:nome}}});
     if(r.error)throw r.error;
     currentUser=r.data.user;
+    await _registrarConsentimento('termos_privacidade'); // prova do aceite (LGPD)
     showToast('Conta criada! ✓');
     go('s2');
   }catch(e){showToast(e.message);}
   if(btn){btn.textContent='Criar conta';btn.disabled=false;}
 }
 
-async function salvarPerfil(perfil){
-  if(!currentUser)return;
-  try{
-    await sb.from('usuarios').upsert({id:currentUser.id,email:currentUser.email,nome:currentUser.user_metadata&&currentUser.user_metadata.nome?currentUser.user_metadata.nome:currentUser.email,perfil:perfil});
-  }catch(e){console.warn('salvarPerfil:',e);}
-}
+// (REMOVIDO) Havia aqui um segundo `async function salvarPerfil(perfil)` que
+// gravava na tabela `usuarios`. Por hoisting, a declaração mais abaixo no mesmo
+// <script> sobrescrevia esta — ou seja, este bloco NUNCA rodava. Era a razão de
+// `usuarios` estar vazia e, por consequência, de as foreign keys de `pedidos` e
+// `doacoes` (que apontavam para ela) derrubarem toda compra e toda doação.
+// A identidade do usuário vive em `perfis`, que é a tabela realmente usada.
 
 async function salvarProduto(){
   if(!currentUser){showToast('Faça login para publicar');go('s1');return;}
@@ -1875,6 +2129,13 @@ async function salvarProduto(){
     retiradaEndereco=await getEnderecoPerfilTxt();
     if(!retiradaEndereco){showToast('⚠️ Preencha seu endereço no Perfil para oferecer retirada no local');return;}
   }
+  // O formulário publicava sem validar nada: dava para criar anúncio sem preço
+  // (preco:null), sem foto e sem descrição — e ele ia direto para a vitrine.
+  if(!(precoNum>0)){showToast('Informe um preço válido para o anúncio');return;}
+  if(precoNum>50000){showToast('Preço acima do limite permitido (R$ 50.000)');return;}
+  if(!__fotoUrls.length){showToast('Adicione ao menos uma foto do produto');return;}
+  if(descTxt.length<15){showToast('Descreva o produto com pelo menos 15 caracteres');return;}
+
   var btn=document.querySelector('#sv5 .btn.ba');
   if(btn){btn.textContent='Publicando...';btn.disabled=true;}
   try{
@@ -1910,7 +2171,7 @@ async function carregarProdutos(){
       var stockBadge=est<=3&&est>0?'<span style="position:absolute;bottom:6px;right:6px;background:#E65100;color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;">⚡ ÚLTIMAS '+est+'</span>':'';
       var preco=p.tipo==='doacao'?'<div style="font-size:13px;font-weight:700;color:var(--g2);margin-top:3px;">Doação · '+est+' disp.</div>':'<div class="pcd-pr">R$ '+(p.preco?Number(p.preco).toFixed(2).replace('.',','):'--')+'<span style="font-size:10px;font-weight:400;color:var(--d3);margin-left:4px;">'+est+' em estoque</span></div>';
       var desc=p.descricao?p.descricao.substring(0,36):'';
-      var imgHtml=p.foto_url?'<img src="'+p.foto_url+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:0;" onload="this.classList.add(\'loaded\')" onerror="this.parentElement.innerHTML=\'👓\'">':'👓';
+      var imgHtml=p.foto_url?'<img src="'+p.foto_url+'" alt="Foto de: '+(p.titulo||'oculos').replace(/"/g,'')+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:0;" onload="this.classList.add(\'loaded\')" onerror="this.parentElement.innerHTML=\'👓\'">':'👓';
       return '<div class="pcd" onclick="selProduto('+i+')"><div class="pcd-img" style="position:relative;">'+imgHtml+'<div class="pcd-fv">♡</div>'+badge+stockBadge+'</div><div class="pcd-body"><div class="pcd-nm">'+p.titulo+'</div><div class="pcd-inf">'+desc+'</div>'+preco+'</div></div>';
     }).join('');
   }catch(e){
@@ -1928,39 +2189,37 @@ async function submitSolicitacao(){
   if(!currentUser){showToast('Faça login para solicitar');go('s1');return;}
   var btn=document.getElementById('btn-sol');
   if(btn){btn.textContent='Enviando...';btn.disabled=true;}
+  if(!__currentProduct||!__currentProduct.id){
+    showToast('Selecione uma doação antes de enviar');
+    if(btn){btn.textContent='Enviar solicitação';btn.disabled=false;}
+    return;
+  }
   try{
-    // Decrementa estoque atomicamente antes de confirmar a doação
-    if(__currentProduct&&__currentProduct.id){
-      var dr=await sb.rpc('decrementar_estoque',{p_produto_id:__currentProduct.id,p_quantidade:1});
-      if(!dr.data||!dr.data.ok){
-        showToast(dr.data&&dr.data.msg?dr.data.msg:'Produto esgotado — tente outro!');
-        if(btn){btn.textContent='Enviar solicitação';btn.disabled=false;}
-        return;
-      }
-    }
-    var r=await sb.from('doacoes').insert({
-      beneficiario_id:currentUser.id,
-      produto_id:__currentProduct?__currentProduct.id:null,
-      receita_url:__receitaUrl||null,
-      status:'pendente'
+    // ANTES eram DUAS operações soltas: decrementar_estoque (commitava) e
+    // depois o insert em `doacoes`. Se o insert falhasse — como falhava sempre,
+    // pela FK para a tabela `usuarios` vazia —, o estoque já tinha sido debitado
+    // e a unidade sumia para sempre, sem nenhum cron de compensação.
+    // Agora é uma transação única no banco: ou as duas coisas acontecem, ou
+    // nenhuma. A função também grava o doador_id, que nunca era preenchido.
+    var sr=await sb.rpc('solicitar_doacao',{
+      p_produto_id:__currentProduct.id,
+      p_receita_url:__receitaUrl||null
     });
-    if(r.error)throw r.error;
+    if(sr.error)throw sr.error;
+    if(!sr.data||!sr.data.ok){
+      showToast(sr.data&&sr.data.msg?sr.data.msg:'Doação indisponível no momento');
+      if(btn){btn.textContent='Enviar solicitação';btn.disabled=false;}
+      return;
+    }
     __receitaUrl=null;
     go('sb5-conf');
-  }catch(e){showToast('Erro ao enviar: '+e.message);}
+  }catch(e){showToast('Erro ao enviar: '+(e.message||e));}
   if(btn){btn.textContent='Enviar solicitação';btn.disabled=false;}
 }
 
-sb.auth.onAuthStateChange(function(event,session){
-  if(session){currentUser=session.user;}else{currentUser=null;}
-  if(event==='SIGNED_IN')carregarProdutos();
-});
-
-document.addEventListener('DOMContentLoaded',function(){
-  sb.auth.getSession().then(function(r){
-    if(r.data&&r.data.session){currentUser=r.data.session.user;atualizarNomes();carregarProdutos();}
-  });
-});
+// (removido: 2º onAuthStateChange e o getSession do DOMContentLoaded — eram
+//  duplicatas do bloco único de sessão lá em cima e recarregavam a vitrine
+//  três vezes seguidas a cada login.)
 
 function expandEye(input,id){var el=document.getElementById(id);if(el)el.classList.toggle('show',input.value.trim().length>0);}
 var chkState={chk1:false,chk2:false,chk3:false,chk4:false};
@@ -1975,29 +2234,79 @@ function tgChk(rowId,cbId,btnId){
 }
 function submitTerms(){if(chkState.chk1&&chkState.chk2&&chkState.chk3&&chkState.chk4)go('sb5-sol');}
 var hist=[];var dPr=null;var donacaoAtiva=false;var planSel='bas';
-var _loginGate=['sd0','sb0','sb7','sv0','so0','so1','s-perfil-edit','sd-dash','sv-dash','so-dash','sv-edit'];
-function go(id){
-  if(_loginGate.indexOf(id)>-1&&!currentUser){
-    showToast('Faça login para acessar esta área');
-    var c=document.querySelector('.scr.on');if(c){hist.push(c.id);c.classList.remove('on');}
-    var n=document.getElementById('s1');if(n)n.classList.add('on');
-    return;
-  }
-  var c=document.querySelector('.scr.on');if(c){hist.push(c.id);c.classList.remove('on');}
-  var n=document.getElementById(id);if(n){n.classList.add('on');var b=n.querySelector('.body');if(b)b.scrollTop=0;}
+// `so1` e `so0` saíram do gate: `so1` É a própria tela de login/cadastro da
+// ótica — exigir login de consumidor para chegar nela era um beco sem saída
+// (o dono de ótica sem conta era devolvido para a mesma tela, sem saída).
+// `so0` nem existe. Em troca entraram `so8` (painel da ótica, agora com login
+// real) e os formulários `sd1`/`sv1`, que ficavam fora do gate e faziam o
+// visitante preencher a doação inteira só para perder tudo ao logar.
+var _loginGate=['sd0','sd1','sd5','sb0','sb7','sv0','sv1','so8','s-perfil-edit','sd-dash','sv-dash','so-dash','sv-edit'];
+
+// Hooks de cada tela. Os que apenas CARREGAM dados rodam também na volta;
+// os que RESETAM formulário só rodam na ida, para não apagar o que o usuário
+// digitou quando ele volta para a tela.
+function _hooksTela(id,voltando){
   if(id==='sv0'){carregarAnunciosVendedor();carregarPostagensVendedor();}
   if(id==='sd0')carregarDoacoes();
-  if(id==='sd1'){__fotoUrls=[];__videoUrl=null;var _g1=document.getElementById('sd2-foto-grid');if(_g1)_g1.innerHTML='';var _ab=document.getElementById('vid-add-btn-d');if(_ab)_ab.style.display='flex';var _pv=document.getElementById('vid-prev-d');if(_pv)_pv.style.display='none';var _se=document.getElementById('sd-estoque');if(_se)_se.value=1;__retiradaSd=false;_setCheck('sd-retirada-check','sd-retirada-toggle',false);}
-  if(id==='sv1'){__fotoUrls=[];__videoUrl=null;var _g2=document.getElementById('sv2-foto-grid');if(_g2)_g2.innerHTML='';var _ab2=document.getElementById('vid-add-btn');if(_ab2)_ab2.style.display='flex';var _pv2=document.getElementById('vid-prev');if(_pv2)_pv2.style.display='none';var _sve=document.getElementById('sv-estoque');if(_sve)_sve.value=1;__retiradaSv=false;_setCheck('sv-retirada-check','sv-retirada-toggle',false);var _slc=document.getElementById('sv-local-cidade');if(_slc)_slc.value='';}
+  if(id==='sd5')carregarSolicitacoesDoacao();
   if(id==='sb7')carregarPedidos();
-  if(id==='s2'){atualizarNomes();atualizarCardS2();if(!_introShown){_introShown=true;mostrarIntro();}}
+  if(id==='s2'){atualizarNomes();if(!_introShown){_introShown=true;mostrarIntro();}}
   if(id==='s-perfil-edit')carregarPerfil();
   if(id==='sd-dash')carregarDashboardDoador(30);
   if(id==='sv-dash')carregarDashboardVendedor(30);
   if(id==='so-dash')carregarDashboardOtica(30);
-if(id==='sb7-chat'&&__currentPedido)carregarMensagens(__currentPedido.id);
+  if(id==='so8')carregarPainelOtica();
+  if(id==='sb7-chat'&&__currentPedido)carregarMensagens(__currentPedido.id);
+  if(voltando)return;
+  if(id==='sd1'){__fotoUrls=[];__videoUrl=null;var _g1=document.getElementById('sd2-foto-grid');if(_g1)_g1.innerHTML='';var _ab=document.getElementById('vid-add-btn-d');if(_ab)_ab.style.display='flex';var _pv=document.getElementById('vid-prev-d');if(_pv)_pv.style.display='none';var _se=document.getElementById('sd-estoque');if(_se)_se.value=1;__retiradaSd=false;_setCheck('sd-retirada-check','sd-retirada-toggle',false);}
+  if(id==='sv1'){__fotoUrls=[];__videoUrl=null;var _g2=document.getElementById('sv2-foto-grid');if(_g2)_g2.innerHTML='';var _ab2=document.getElementById('vid-add-btn');if(_ab2)_ab2.style.display='flex';var _pv2=document.getElementById('vid-prev');if(_pv2)_pv2.style.display='none';var _sve=document.getElementById('sv-estoque');if(_sve)_sve.value=1;__retiradaSv=false;_setCheck('sv-retirada-check','sv-retirada-toggle',false);var _slc=document.getElementById('sv-local-cidade');if(_slc)_slc.value='';}
 }
-function bk(){if(!hist.length)return;var c=document.querySelector('.scr.on');if(c)c.classList.remove('on');var p=document.getElementById(hist.pop());if(p)p.classList.add('on');}
+
+function _aplicarTela(id,voltando){
+  var c=document.querySelector('.scr.on');if(c)c.classList.remove('on');
+  var n=document.getElementById(id);
+  if(n){n.classList.add('on');var b=n.querySelector('.body');if(b)b.scrollTop=0;}
+  _hooksTela(id,voltando);
+}
+
+function go(id){
+  if(_loginGate.indexOf(id)>-1&&!currentUser){
+    _telaPretendida=id;                 // volta para cá depois de entrar
+    showToast('Faça login para acessar esta área');
+    id='s1';
+  }
+  var atual=document.querySelector('.scr.on');
+  // ir para a tela em que já se está empilhava lixo no histórico — era o que
+  // fazia o "voltar" devolver um usuário logado para a tela de login.
+  if(atual&&atual.id===id)return;
+  if(atual)hist.push(atual.id);
+  // Espelha a navegação interna no histórico REAL do navegador. Sem isso, o
+  // botão/gesto "voltar" do Android fechava o app inteiro — inclusive no meio
+  // de um checkout — em vez de voltar uma tela.
+  try{history.pushState({vc:id},'');}catch(e){}
+  _aplicarTela(id,false);
+}
+
+function _voltarUmaTela(){
+  if(!hist.length)return false;
+  _aplicarTela(hist.pop(),true);
+  return true;
+}
+
+function bk(){
+  if(!hist.length)return;
+  // delega ao histórico real para que a pilha do navegador não desincronize;
+  // o popstate abaixo é quem efetivamente troca a tela.
+  try{history.back();}catch(e){_voltarUmaTela();}
+}
+
+window.addEventListener('popstate',function(){
+  // Se ainda há tela interna para voltar, consome aqui. Se não há, deixa o
+  // navegador seguir — aí sim é legítimo sair do app (estamos na tela raiz).
+  _voltarUmaTela();
+});
+// estado-âncora: garante que sempre exista uma entrada nossa no histórico
+try{history.replaceState({vc:'__raiz'},'');}catch(e){}
 // ===== INTRO (overlay) — só aparece se a imagem 'intro.jpg' existir; nunca quebra a navegação =====
 var _introShown=false,_introTimer=null;
 // Prioriza vídeo (intro.mp4); se não houver, usa imagem (intro.jpg); se nenhum existir, não mostra nada.
@@ -2017,7 +2326,11 @@ function mostrarIntro(){
     t.onerror=function(){/* sem mídia: não mostra, app segue normal */};
     t.src='intro.jpg';
   }
-  if(vid){
+  // `intro.mp4` NÃO existe no projeto: toda abertura do app disparava um
+  // request perdido que terminava em 404, só para então cair na imagem.
+  // Se um dia houver vídeo de intro, coloque o arquivo e mude para true.
+  var USAR_VIDEO_INTRO=false;
+  if(USAR_VIDEO_INTRO&&vid){
     var vidOk=false;
     vid.onloadeddata=function(){
       vidOk=true;
@@ -2033,7 +2346,8 @@ function mostrarIntro(){
     vid.src='intro.mp4';
     vid.load();
   }else{
-    exibirImagem();
+    if(vid)vid.style.display='none';
+    exibirImagem();   // intro.jpg fica no cache do Service Worker (PRECACHE)
   }
 }
 function fecharIntro(){
@@ -2045,7 +2359,6 @@ function tg(el){var g=el.parentElement;g.querySelectorAll('.tb').forEach(functio
 function tgChip(el){el.classList.toggle('on');}
 function togglePw(){var i=document.getElementById('pwi');i.type=i.type==='password'?'text':'password';}
 function selOc(t){document.getElementById('oc-col').classList.toggle('on',t==='col');document.getElementById('oc-ret').classList.toggle('on',t==='ret');}
-function selEnv(t){var a=document.getElementById('env1'),b=document.getElementById('env2');if(a)a.classList.toggle('on',t==='env1');if(b)b.classList.toggle('on',t==='env2');}
 var __retiradaSv=false,__retiradaSd=false;
 function _setCheck(checkId,toggleId,on){
   var c=document.getElementById(checkId);
@@ -2077,11 +2390,41 @@ async function getEnderecoPerfilTxt(){
 })();
 function selPr(t){document.getElementById('pr1').classList.toggle('on',t==='pr1');document.getElementById('pr2').classList.toggle('on',t==='pr2');}
 function selPg(t){document.getElementById('pgpix').classList.toggle('on',t==='pgpix');document.getElementById('pgcart').classList.toggle('on',t==='pgcart');}
-function selPgO(t){document.getElementById('opix').classList.toggle('on',t==='opix');document.getElementById('opix2').classList.toggle('on',t==='opix2');}
+// (REMOVIDOS) selEnv() referenciava os elementos env1/env2, que nao existem
+// no DOM; selPgO() servia a tela de pagamento da otica, que saiu do ar.
 function updateChar(fid,cid,max){var v=document.getElementById(fid);var c=document.getElementById(cid);if(v&&c)c.textContent=(v.value||'').length+'/'+max;}
 
 var __fotoUrls=[];
 var __videoUrl=null;
+// Redimensiona e comprime antes de subir. As fotos de produto iam para o
+// Storage no tamanho original (vários MB cada) — e as miniaturas de 44-80px do
+// app baixavam esse JPEG inteiro. A foto de perfil já fazia isso; a de produto
+// não fazia. Em caso de falha, devolve o arquivo original.
+function _comprimirImagem(file,maxLado,qualidade){
+  return new Promise(function(resolve){
+    if(!/^image\//.test(file.type)||/gif|svg/.test(file.type))return resolve(file);
+    var reader=new FileReader();
+    reader.onerror=function(){resolve(file);};
+    reader.onload=function(e){
+      var img=new Image();
+      img.onerror=function(){resolve(file);};
+      img.onload=function(){
+        try{
+          var escala=Math.min(1,maxLado/Math.max(img.width,img.height));
+          var w=Math.round(img.width*escala),h=Math.round(img.height*escala);
+          var cv=document.createElement('canvas');cv.width=w;cv.height=h;
+          cv.getContext('2d').drawImage(img,0,0,w,h);
+          cv.toBlob(function(blob){
+            resolve(blob&&blob.size<file.size?blob:file);
+          },'image/jpeg',qualidade||0.82);
+        }catch(err){resolve(file);}
+      };
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 async function addPhoto(input){
   if(!input.files||!input.files.length)return;
   if(!currentUser){showToast('⚠️ Faça login para enviar fotos');return;}
@@ -2089,15 +2432,25 @@ async function addPhoto(input){
   var gridEl=body?body.querySelector('[data-fotogrid]'):null;
   var gridId=gridEl?gridEl.getAttribute('data-fotogrid'):null;
   showToast('⏳ Enviando fotos...');
-  var uploaded=0;
+  var uploaded=0,falhas=0;
+  // try/catch por foto: antes, uma queda de rede no meio derrubava o laço
+  // inteiro e a UI ficava sem resposta.
   for(var i=0;i<input.files.length&&__fotoUrls.length<10;i++){
-    var file=input.files[i];
-    var path=currentUser.id+'/'+Date.now()+'_'+i+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
-    var r=await sb.storage.from('fotos-produtos').upload(path,file,{contentType:file.type});
-    if(!r.error){__fotoUrls.push(sb.storage.from('fotos-produtos').getPublicUrl(path).data.publicUrl);uploaded++;}
+    try{
+      var file=input.files[i];
+      var comprimida=await _comprimirImagem(file,1280,0.82);
+      var path=currentUser.id+'/'+Date.now()+'_'+i+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_').replace(/\.[^.]+$/,'')+'.jpg';
+      var r=await sb.storage.from('fotos-produtos').upload(path,comprimida,{contentType:comprimida.type||'image/jpeg'});
+      if(r.error)throw r.error;
+      __fotoUrls.push(sb.storage.from('fotos-produtos').getPublicUrl(path).data.publicUrl);
+      uploaded++;
+    }catch(e){falhas++;console.warn('addPhoto:',e);}
   }
   if(gridId)_renderFotoGrid(gridId,__fotoUrls);
-  showToast(uploaded>0?'📷 '+uploaded+' foto(s) enviada(s) ✓':'❌ Erro ao enviar fotos');
+  if(input)input.value='';
+  if(uploaded&&!falhas)showToast('📷 '+uploaded+' foto(s) enviada(s) ✓');
+  else if(uploaded&&falhas)showToast('📷 '+uploaded+' enviada(s), '+falhas+' falharam — tente as que faltam');
+  else showToast('❌ Não foi possível enviar. Verifique sua conexão.');
 }
 function _renderFotoGrid(gridId,urls){
   var el=document.getElementById(gridId);
@@ -2106,7 +2459,7 @@ function _renderFotoGrid(gridId,urls){
   el.innerHTML=urls.map(function(url,i){
     var cap=i===0;
     return '<div style="position:relative;flex-shrink:0;" onclick="_setCapaFotoAdd('+i+',\''+gridId+'\')">'
-      +'<img src="'+url+'" style="width:80px;height:80px;object-fit:cover;border-radius:var(--r);border:2px solid '+(cap?'var(--a0)':'transparent')+';display:block;">'
+      +'<img src="'+url+'" alt="Foto '+(i+1)+' do anuncio" style="width:80px;height:80px;object-fit:cover;border-radius:var(--r);border:2px solid '+(cap?'var(--a0)':'transparent')+';display:block;">'
       +(cap?'<div style="position:absolute;bottom:2px;left:2px;background:var(--a0);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;pointer-events:none;">CAPA</div>':'')
       +'<button onclick="event.stopPropagation();_removeFotoAdd('+i+',\''+gridId+'\')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#D32F2F;color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;">×</button>'
       +'</div>';
@@ -2123,16 +2476,25 @@ async function _uploadVideo(file,addBtnId,prevId){
   var ab=document.getElementById(addBtnId);var pv=document.getElementById(prevId);
   if(ab)ab.style.display='none';
   if(pv){pv.style.display='flex';pv.innerHTML='⏳ Enviando vídeo...';}
-  var path=currentUser.id+'/vid_'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
-  var r=await sb.storage.from('fotos-produtos').upload(path,file,{contentType:file.type});
-  if(r.error){
-    showToast('Erro ao enviar vídeo');
-    if(pv)pv.innerHTML='❌ Erro · <span onclick="document.getElementById(\''+addBtnId+'\').style.display=\'flex\';this.parentElement.style.display=\'none\';" style="text-decoration:underline;cursor:pointer;">Tentar novamente</span>';
-    __videoUrl=null;
-  } else {
+  if(file.size>50*1024*1024){
+    showToast('Vídeo muito grande (máx. 50 MB)');
+    if(ab)ab.style.display='flex';if(pv)pv.style.display='none';
+    return;
+  }
+  // try/catch: sem ele, uma queda de rede no meio do upload (o `await` rejeita
+  // em vez de devolver r.error) travava a UI em "Enviando..." permanentemente.
+  try{
+    var path=currentUser.id+'/vid_'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    var r=await sb.storage.from('fotos-produtos').upload(path,file,{contentType:file.type});
+    if(r.error)throw r.error;
     __videoUrl=sb.storage.from('fotos-produtos').getPublicUrl(path).data.publicUrl;
     if(pv)pv.innerHTML='▶️<div class="vid-ov">🎬 Vídeo enviado ✓</div>';
     showToast('🎬 Vídeo enviado ✓');
+  }catch(e){
+    console.warn('_uploadVideo:',e);
+    showToast('Erro ao enviar vídeo — verifique sua conexão');
+    if(pv)pv.innerHTML='❌ Erro · <span onclick="document.getElementById(\''+addBtnId+'\').style.display=\'flex\';this.parentElement.style.display=\'none\';" style="text-decoration:underline;cursor:pointer;">Tentar novamente</span>';
+    __videoUrl=null;
   }
 }
 async function addVideo(input){if(!input.files||!input.files.length)return;await _uploadVideo(input.files[0],'vid-add-btn','vid-prev');}
@@ -2152,21 +2514,29 @@ async function salvarDoacao(){
     retiradaEnderecoD=await getEnderecoPerfilTxt();
     if(!retiradaEnderecoD){showToast('⚠️ Preencha seu endereço no Perfil para oferecer retirada');if(btn){btn.textContent='Confirmar';btn.disabled=false;}return;}
   }
-  var r=await sb.from('produtos').insert({
-    vendedor_id:currentUser.id,
-    titulo:'Óculos '+(tipoTxt==='grau'?'de grau':'de sol')+' para doação',
-    descricao:desc||null,tipo:'doacao',tipo_oculos:tipoTxt,estado:'usado',
-    status:'ativo',plano:'basico',estoque:estoqueNumD,
-    retirada_local:__retiradaSd,retirada_endereco:retiradaEnderecoD,
-    foto_url:__fotoUrls[0]||null,fotos:__fotoUrls,video_url:__videoUrl||null
-  });
-  if(r.error){showToast('Erro: '+r.error.message);if(btn){btn.textContent='Confirmar';btn.disabled=false;}return;}
-  __fotoUrls=[];__videoUrl=null;
-  var g=document.getElementById('sd2-foto-grid');if(g)g.innerHTML='';
-  var ab=document.getElementById('vid-add-btn-d');if(ab)ab.style.display='flex';
-  var pv=document.getElementById('vid-prev-d');if(pv)pv.style.display='none';
-  if(btn){btn.textContent='Confirmar';btn.disabled=false;}
-  showToast('✓ Doação registrada!');go('sd4');
+  if(!__fotoUrls.length){showToast('Adicione ao menos uma foto dos óculos');if(btn){btn.textContent='Confirmar';btn.disabled=false;}return;}
+  // try/catch/finally: sem ele, uma falha de rede deixava o botão preso em
+  // "Registrando..." para sempre, sem mensagem nenhuma.
+  try{
+    var r=await sb.from('produtos').insert({
+      vendedor_id:currentUser.id,
+      titulo:'Óculos '+(tipoTxt==='grau'?'de grau':'de sol')+' para doação',
+      descricao:desc||null,tipo:'doacao',tipo_oculos:tipoTxt,estado:'usado',
+      status:'ativo',plano:'basico',estoque:estoqueNumD,
+      retirada_local:__retiradaSd,retirada_endereco:retiradaEnderecoD,
+      foto_url:__fotoUrls[0]||null,fotos:__fotoUrls,video_url:__videoUrl||null
+    });
+    if(r.error)throw r.error;
+    __fotoUrls=[];__videoUrl=null;
+    var g=document.getElementById('sd2-foto-grid');if(g)g.innerHTML='';
+    var ab=document.getElementById('vid-add-btn-d');if(ab)ab.style.display='flex';
+    var pv=document.getElementById('vid-prev-d');if(pv)pv.style.display='none';
+    showToast('✓ Doação registrada!');go('sd4');
+  }catch(e){
+    showToast('Erro ao registrar: '+(e.message||e));
+  }finally{
+    if(btn){btn.textContent='Confirmar';btn.disabled=false;}
+  }
 }
 
 async function carregarPostagensVendedor(){
@@ -2174,7 +2544,18 @@ async function carregarPostagensVendedor(){
   var sec=document.getElementById('secao-postagem');var lista=document.getElementById('lista-postagem');
   if(!sec||!lista)return;
   // vendas PAGAS (confirmadas pelo webhook do Mercado Pago) ainda sem código de rastreio
-  var r=await sb.from('pedidos').select('id,valor_total,produto_id,produtos(titulo,foto_url)').eq('vendedor_id',currentUser.id).eq('status_pagamento','pago').is('codigo_rastreio',null).order('criado_em',{ascending:false});
+  var r;
+  try{
+    r=await sb.from('pedidos').select('id,valor_total,produto_id,produtos(titulo,foto_url)').eq('vendedor_id',currentUser.id).eq('status_pagamento','pago').is('codigo_rastreio',null).order('criado_em',{ascending:false});
+    if(r.error)throw r.error;
+  }catch(e){
+    // Antes uma falha aqui escondia a seção inteira: o vendedor não ficava
+    // sabendo que tinha venda esperando postagem.
+    console.warn('carregarPostagensVendedor:',e);
+    sec.style.display='block';
+    lista.innerHTML='<div style="font-size:12px;padding:8px 0;">⚠️ Não foi possível verificar vendas aguardando postagem. <span onclick="carregarPostagensVendedor()" style="text-decoration:underline;cursor:pointer;">Tentar de novo</span></div>';
+    return;
+  }
   var data=r.data||[];
   if(!data.length){sec.style.display='none';return;}
   sec.style.display='block';
@@ -2182,7 +2563,7 @@ async function carregarPostagensVendedor(){
     var prod=ped.produtos||{};
     var titulo=prod.titulo||'Produto vendido';
     var foto=prod.foto_url;
-    var img=foto?'<img src="'+foto+'" style="width:44px;height:44px;object-fit:cover;border-radius:var(--r);flex-shrink:0;">'
+    var img=foto?'<img src="'+foto+'" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:var(--r);flex-shrink:0;">'
       :'<div style="width:44px;height:44px;background:#fff3;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👓</div>';
     return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">'
       +img+'<div style="flex:1;min-width:0;">'
@@ -2209,23 +2590,39 @@ function _toggleRastreio(){
 }
 
 var __receitaUrl=null;
+var _pupRecPadrao='<span style="font-size:32px;">📄</span><span style="font-weight:600;">Toque para enviar a receita</span><span style="font-size:12px;color:var(--d3);">Foto ou PDF · Apenas para verificar elegibilidade</span>';
 async function uploadReceita(){
   var input=document.getElementById('receita-input');
   var ok=document.getElementById('rec-ok');
   var pup=document.getElementById('pup-rec');
   if(!input||!input.files||!input.files.length)return;
   if(!currentUser){showToast('Faça login para enviar receita');return;}
-  if(pup)pup.innerHTML='<span style="font-size:24px;">⏳</span><span>Enviando...</span>';
+
+  // O arquivo só sai daqui DEPOIS do consentimento específico de dado de saúde.
+  var cons=document.getElementById('rec-consent');
+  if(cons&&!cons.checked){
+    input.value='';
+    showToast('Marque o consentimento acima antes de enviar a receita',4200);
+    return;
+  }
   var file=input.files[0];
-  var path=currentUser.id+'/'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
-  var r=await sb.storage.from('receitas').upload(path,file,{contentType:file.type});
-  if(!r.error){
+  if(file.size>10*1024*1024){input.value='';showToast('Arquivo muito grande (máx. 10 MB)');return;}
+
+  if(pup)pup.innerHTML='<span style="font-size:24px;">⏳</span><span>Enviando...</span>';
+  // try/catch: sem ele, uma queda de rede no meio do upload deixava a tela
+  // presa em "Enviando..." para sempre.
+  try{
+    await _registrarConsentimento('dado_saude_receita');
+    var path=currentUser.id+'/'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    var r=await sb.storage.from('receitas').upload(path,file,{contentType:file.type});
+    if(r.error)throw r.error;
     __receitaUrl=path;
     if(pup)pup.style.display='none';
     if(ok)ok.style.display='block';
-  }else{
-    showToast('Erro ao enviar receita: '+r.error.message);
-    if(pup)pup.innerHTML='<span style="font-size:32px;">📄</span><span style="font-weight:600;">Toque para enviar a receita</span><span style="font-size:12px;color:var(--d3);">Foto ou PDF · Apenas para verificar elegibilidade</span>';
+  }catch(e){
+    showToast('Erro ao enviar receita: '+(e.message||e));
+    if(pup){pup.style.display='';pup.innerHTML=_pupRecPadrao;}
+    if(input)input.value='';
   }
 }
 function checkDoacao(){if(donacaoAtiva){go('sb5-bloq');}else{go('sb5-rec');}}
@@ -2254,50 +2651,127 @@ function irCheckout(produto){
 
 async function pagarComMP(){
   var btn=document.getElementById('btn-pagar');
-  if(btn){btn.textContent='⏳ Aguarde...';btn.disabled=true;}
   var __pedidoReservado=null;
+  if(!currentUser){showToast('Faça login para finalizar a compra');go('s1');return;}
+
+  // Não existe mais produto "demo" com preço fixo de R$198,90 no cliente:
+  // sem produto real selecionado, não há cobrança.
+  var p=__currentProduct;
+  if(!p||!p.id){showToast('Selecione um produto antes de pagar');return;}
+
+  var cepEl=document.getElementById('cep-entrega');
+  var cep=cepEl?cepEl.value.replace(/\D/g,''):'';
+  var tipoFrete=_freteTipo||'pac';
+  if(tipoFrete!=='retirada'&&cep.length<8){showToast('Informe o CEP de entrega');return;}
+
+  if(btn){btn.textContent='⏳ Aguarde...';btn.disabled=true;}
   try{
-    var p=__currentProduct||{titulo:'Óculos',descricao:'Óculos via Visão Circular',preco:198.90,id:'demo'};
-    // RESERVA: decrementa estoque + cria pedido atomicamente (anti-concorrência).
-    // O estoque será confirmado pelo webhook na aprovação, ou devolvido se o pagamento falhar/expirar.
-    if(p.id&&p.id!=='demo'){
-      var sr=await sb.rpc('criar_pedido_reserva',{p_produto_id:p.id,p_comprador_id:currentUser?currentUser.id:null,p_valor:parseFloat(p.preco)||0});
-      if(!sr.data||!sr.data.ok){
-        showToast(sr.data&&sr.data.msg?sr.data.msg:'Produto esgotado — outra pessoa acabou de comprá-lo!');
-        if(btn){btn.textContent='💳 Pagar com Mercado Pago';btn.disabled=false;}
-        return;
-      }
-      __pedidoReservado=sr.data.pedido_id;
+    // RESERVA: decrementa estoque + cria pedido numa transação só.
+    // O PREÇO e o FRETE são calculados dentro do banco a partir de
+    // produtos.preco e do CEP — o app não envia mais valor nenhum, então não
+    // há como pagar R$0,01 por um produto de R$500. O comprador também vem de
+    // auth.uid(), e não mais de um parâmetro que dava para forjar.
+    var sr=await sb.rpc('criar_pedido_reserva',{
+      p_produto_id:p.id,
+      p_frete_tipo:tipoFrete,
+      p_cep:cep||null
+    });
+    if(sr.error)throw sr.error;
+    if(!sr.data||!sr.data.ok){
+      showToast(sr.data&&sr.data.msg?sr.data.msg:'Produto indisponível no momento');
+      if(btn){btn.textContent='💳 Pagar com Mercado Pago';btn.disabled=false;}
+      return;
     }
+    __pedidoReservado=sr.data.pedido_id;
+
+    // A Edge Function agora exige o JWT do próprio comprador (antes bastava a
+    // chave anon, que é pública) e lê título/valor do banco pelo pedido_id.
+    var sess=await sb.auth.getSession();
+    var token=sess.data&&sess.data.session?sess.data.session.access_token:null;
+    if(!token)throw new Error('Sessão expirada, entre novamente');
+
     var r=await fetch(SUPABASE_URL+'/functions/v1/mp-payment',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_KEY},
-      body:JSON.stringify({titulo:p.titulo||'Óculos',descricao:p.descricao||p.titulo||'Óculos via Visão Circular',valor:parseFloat(p.preco)||198.90,produto_id:p.id||'demo',pedido_id:__pedidoReservado,tipo:'venda'})
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({pedido_id:__pedidoReservado})
     });
     var data=await r.json();
     if(data.init_point){location.href=data.init_point;}
     else{throw new Error(data.error||'Erro ao criar pagamento');}
   }catch(e){
-    // se a reserva foi criada mas o checkout falhou, devolve o estoque imediatamente
-    if(__pedidoReservado){try{await sb.rpc('restaurar_pedido',{p_pedido_id:__pedidoReservado,p_novo_status:'cancelado'});}catch(_e){}}
-    showToast('Erro no pagamento: '+e.message);
+    // reserva criada mas checkout falhou -> devolve o estoque na hora.
+    // `cancelar_minha_reserva` só aceita o próprio comprador e só enquanto o
+    // pedido está reservado (a antiga `restaurar_pedido` era chamável por
+    // qualquer visitante anônimo, para qualquer pedido).
+    if(__pedidoReservado){try{await sb.rpc('cancelar_minha_reserva',{p_pedido_id:__pedidoReservado});}catch(_e){}}
+    showToast('Erro no pagamento: '+(e.message||e));
     if(btn){btn.textContent='💳 Pagar com Mercado Pago';btn.disabled=false;}
   }
 }
 
+// Retorno do Mercado Pago.
+// Antes isto usava um setTimeout fixo de 600ms para decidir a navegação, mas
+// `currentUser` só existe quando a sessão termina de ser restaurada — tempo
+// variável. Passando de 600ms, quem acabou de PAGAR caía na tela "Faça login".
+// Agora espera a sessão de verdade (_sessionReady), sem tempo mágico.
 (function(){
   var p=new URLSearchParams(location.search);
   var status=p.get('payment');
-  if(status){
-    if(history.replaceState)history.replaceState({},'',location.pathname);
-    setTimeout(function(){
-      if(status==='success'){showToast('✅ Pagamento confirmado! Seu pedido foi realizado.');go('sb7');}
-      else if(status==='pending'){showToast('⏳ Pagamento pendente. Aguardando confirmação do banco.');go('sb7');}
-      else if(status==='failure'){showToast('❌ Pagamento não aprovado. Tente novamente.');}
-    },600);
-  }
+  if(!status)return;
+  if(history.replaceState)history.replaceState({},'',location.pathname);
+  // Marca o destino ANTES de a sessão resolver (este bloco roda de forma
+  // síncrona na carga). Assim há uma navegação só, sem dois setTimeout
+  // concorrentes puxando o comprador de volta ao hub logo após ver o pedido.
+  _destinoPosSessao=(status==='failure')?'s2':'sb7';
+  _sessionReady.then(function(){
+    if(status==='success')showToast('✅ Pagamento confirmado! Seu pedido foi realizado.');
+    else if(status==='pending')showToast('⏳ Pagamento pendente. Aguardando confirmação do banco.');
+    else if(status==='failure')showToast('❌ Pagamento não aprovado. Tente novamente.',4200);
+  });
 })();
-function setStar(n){var spans=document.querySelectorAll('#star-row span');spans.forEach(function(s,i){s.textContent=i<n?'⭐':'☆';});}
+var _notaSel=0;
+function setStar(n){
+  _notaSel=n;
+  var spans=document.querySelectorAll('#star-row span');
+  spans.forEach(function(s,i){s.textContent=i<n?'⭐':'☆';});
+  var rot=document.getElementById('aval-rotulo');
+  if(rot)rot.textContent=['Toque nas estrelas para avaliar','Ruim','Regular','Bom','Muito bom','Excelente!'][n]||'';
+}
+
+async function enviarAvaliacao(){
+  if(!currentUser){showToast('Faça login para avaliar');return;}
+  if(!_notaSel){showToast('Escolha de 1 a 5 estrelas');return;}
+  var ped=__currentPedido;
+  if(!ped||ped.tipo!=='compra'){showToast('Abra a compra que você quer avaliar');return;}
+  var cmEl=document.getElementById('aval-comentario');
+  var btn=document.getElementById('btn-enviar-aval');
+  if(btn){btn.textContent='Enviando...';btn.disabled=true;}
+  try{
+    // busca o vendedor e o produto do pedido para registrar quem foi avaliado
+    var p=await sb.from('pedidos').select('vendedor_id,produto_id').eq('id',ped.id).maybeSingle();
+    if(p.error)throw p.error;
+    var r=await sb.from('avaliacoes').insert({
+      pedido_id:ped.id,
+      autor_id:currentUser.id,
+      avaliado_id:p.data?p.data.vendedor_id:null,
+      produto_id:p.data?p.data.produto_id:null,
+      nota:_notaSel,
+      comentario:cmEl&&cmEl.value.trim()?cmEl.value.trim():null
+    });
+    if(r.error){
+      if(r.error.code==='23505')throw new Error('Você já avaliou este pedido');
+      throw r.error;
+    }
+    if(cmEl)cmEl.value='';
+    _notaSel=0;setStar(0);
+    showToast('⭐ Avaliação enviada, obrigado!');
+    go('sb0');
+  }catch(e){
+    showToast('Erro ao avaliar: '+(e.message||e));
+  }finally{
+    if(btn){btn.textContent='Enviar avaliação';btn.disabled=false;}
+  }
+}
 
 function atualizarSidebarUser(user){
   var av=document.getElementById('dt-avatar');
@@ -2340,30 +2814,28 @@ function atualizarNomes(){
 
 var _perfilFotoUrl=null;
 
-function atualizarCardS2(dados){
-  if(!currentUser)return;
-  var nome=(dados&&dados.nome)||getNome(currentUser);
-  var letra=nome?nome.charAt(0).toUpperCase():'?';
-  var av=document.getElementById('s2-av');
-  var nm=document.getElementById('s2-nome');
-  var em=document.getElementById('s2-email');
-  if(nm)nm.textContent=nome;
-  if(em)em.textContent=currentUser.email||'';
-  if(av){
-    if(dados&&dados.foto_url){av.innerHTML='<img src="'+dados.foto_url+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';}
-    else{av.textContent=letra;}
-  }
-}
+// (REMOVIDO) atualizarCardS2() era código morto: mexia nos elementos s2-av,
+// s2-nome e s2-email, que não existem no DOM — nenhuma das três chamadas tinha
+// qualquer efeito. Quem de fato atualiza saudação e avatar é atualizarNomes().
 
 async function carregarPerfil(){
   if(!currentUser)return;
-  var r=await sb.from('perfis').select('*').eq('usuario_id',currentUser.id).maybeSingle();
+  var r;
+  try{
+    r=await sb.from('perfis').select('*').eq('usuario_id',currentUser.id).maybeSingle();
+    if(r.error)throw r.error;
+  }catch(e){
+    console.warn('carregarPerfil:',e);
+    showToast('Não foi possível carregar seu perfil agora');
+    return;
+  }
   var dados=r.data||{};
   var set=function(id,v){var el=document.getElementById(id);if(el&&v!=null)el.value=v;};
   set('perf-nome',dados.nome||getNome(currentUser));
   var em=document.getElementById('perf-email');if(em)em.value=currentUser.email||'';
   set('perf-cpf',dados.cpf?await decryptField(dados.cpf,currentUser.id):'');
   set('perf-rg',dados.rg?await decryptField(dados.rg,currentUser.id):'');
+  set('perf-nascimento',dados.nascimento||'');
   set('perf-cep',dados.cep||'');
   set('perf-rua',dados.endereco||'');
   set('perf-num',dados.numero||'');
@@ -2375,22 +2847,46 @@ async function carregarPerfil(){
   var letra=document.getElementById('perfil-foto-letra');
   if(_perfilFotoUrl&&img&&letra){img.src=_perfilFotoUrl;img.style.display='block';letra.style.display='none';}
   else if(img&&letra){img.style.display='none';letra.style.display='block';letra.textContent=getLetra(currentUser);}
-  atualizarCardS2(dados);
 }
 
 async function salvarPerfil(){
   if(!currentUser){showToast('Faça login primeiro');return;}
-  var g=function(id){var el=document.getElementById(id);return el?el.value.trim():'';};
-  var cpfEnc=await encryptField(g('perf-cpf'),currentUser.id);
-  var rgEnc=await encryptField(g('perf-rg'),currentUser.id);
-  var dados={usuario_id:currentUser.id,nome:g('perf-nome'),cpf:cpfEnc,rg:rgEnc,cep:g('perf-cep'),endereco:g('perf-rua'),numero:g('perf-num'),bairro:g('perf-bairro'),cidade:g('perf-cidade'),estado:g('perf-uf').toUpperCase(),foto_url:_perfilFotoUrl||null,atualizado_em:new Date().toISOString()};
-  var r=await sb.from('perfis').upsert(dados,{onConflict:'usuario_id'});
-  if(r.error){showToast('Erro ao salvar: '+r.error.message);return;}
-  if(dados.nome)await sb.auth.updateUser({data:{nome:dados.nome}});
-  atualizarCardS2(dados);
-  atualizarNomes();
-  showToast('✅ Perfil salvo!');
-  bk();
+  var btn=document.getElementById('btn-salvar-perfil');
+  var rot=btn?btn.textContent:'';
+  if(btn){btn.textContent='Salvando...';btn.disabled=true;}
+  // try/catch em volta de tudo: qualquer falha de rede aqui deixava o botão
+  // travado em "Salvando..." para sempre.
+  try{
+    var g=function(id){var el=document.getElementById(id);return el?el.value.trim():'';};
+    var cpfEnc,rgEnc;
+    try{
+      cpfEnc=await encryptField(g('perf-cpf'),currentUser.id);
+      rgEnc=await encryptField(g('perf-rg'),currentUser.id);
+    }catch(ce){
+      // não grava documento em texto puro por causa de uma falha de cripto
+      showToast('Não foi possível proteger CPF/RG neste navegador. Perfil não salvo.',5000);
+      return;
+    }
+    // maioridade: os Termos a exigem, então é validado onde o dado é coletado
+    var nasc=g('perf-nascimento');
+    if(nasc){
+      var d=new Date(nasc+'T00:00:00');
+      var idade=Math.floor((Date.now()-d.getTime())/(365.2425*24*3600*1000));
+      if(isNaN(idade)||idade<0||idade>120){showToast('Data de nascimento inválida');return;}
+      if(idade<18){showToast('É necessário ter 18 anos ou mais para usar a plataforma',5000);return;}
+    }
+    var dados={usuario_id:currentUser.id,nome:g('perf-nome'),cpf:cpfEnc,rg:rgEnc,nascimento:nasc||null,cep:g('perf-cep'),endereco:g('perf-rua'),numero:g('perf-num'),bairro:g('perf-bairro'),cidade:g('perf-cidade'),estado:g('perf-uf').toUpperCase(),foto_url:_perfilFotoUrl||null,atualizado_em:new Date().toISOString()};
+    var r=await sb.from('perfis').upsert(dados,{onConflict:'usuario_id'});
+    if(r.error)throw r.error;
+    if(dados.nome)await sb.auth.updateUser({data:{nome:dados.nome}});
+    atualizarNomes();
+    showToast('✅ Perfil salvo!');
+    bk();
+  }catch(e){
+    showToast('Erro ao salvar: '+(e.message||e));
+  }finally{
+    if(btn){btn.textContent=rot||'Salvar perfil';btn.disabled=false;}
+  }
 }
 
 function uploadFotoPerfil(input){
@@ -2452,9 +2948,27 @@ async function buscarEnderecoCEP(){
 // ===== DASHBOARDS =====
 var _dashCharts={};
 function _destroyChart(id){if(_dashCharts[id]){try{_dashCharts[id].destroy();}catch(e){}delete _dashCharts[id];}}
-function _mkChart(id,type,data,opts){
-  _destroyChart(id);
+// Chart.js (~200KB) so e baixado quando um dashboard e realmente aberto.
+var _chartJsPromise=null;
+function _ensureChartJs(){
+  if(window.Chart)return Promise.resolve();
+  if(!_chartJsPromise){
+    _chartJsPromise=new Promise(function(res,rej){
+      var s=document.createElement('script');
+      s.src='https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+      s.crossOrigin='anonymous';
+      s.onload=function(){res();};
+      s.onerror=function(){_chartJsPromise=null;rej(new Error('falha ao carregar Chart.js'));};
+      document.head.appendChild(s);
+    });
+  }
+  return _chartJsPromise;
+}
+async function _mkChart(id,type,data,opts){
   var el=document.getElementById(id);if(!el)return;
+  try{await _ensureChartJs();}catch(e){console.warn('grafico indisponivel:',e);return;}
+  _destroyChart(id);
+  if(!document.getElementById(id))return; // usuario saiu da tela enquanto baixava
   _dashCharts[id]=new Chart(el,{type:type,data:data,options:Object.assign({responsive:true,maintainAspectRatio:false,animation:{duration:600}},opts||{})});
 }
 function _meses6(){
@@ -2483,9 +2997,12 @@ var _chartDefaults={
 async function carregarDashboardDoador(dias){
   if(!currentUser)return;
   var desde=new Date();desde.setDate(desde.getDate()-dias);
-  var rF=await sb.from('doacoes').select('*').eq('beneficiario_id',currentUser.id).gte('criado_em',desde.toISOString());
-  var rA=await sb.from('doacoes').select('*').eq('beneficiario_id',currentUser.id);
-  var data=rF.data||[];var all=rA.data||[];
+  // Eram DUAS consultas sequenciais à mesma tabela, sendo que a segunda já
+  // continha a primeira. Uma consulta só, e o recorte por período é feito aqui.
+  var rA=await sb.from('doacoes').select('status,criado_em').eq('beneficiario_id',currentUser.id).order('criado_em',{ascending:false}).limit(500);
+  var all=rA.data||[];
+  var corte=desde.getTime();
+  var data=all.filter(function(d){return new Date(d.criado_em).getTime()>=corte;});
   var st={pendente:0,aprovado:0,entregue:0,recusado:0};
   data.forEach(function(d){var s=d.status||'pendente';if(st[s]!=null)st[s]++;else st.pendente++;});
   var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
@@ -2505,7 +3022,7 @@ function filtrarDashD(dias,el){if(el)_filtroTb(el);carregarDashboardDoador(dias)
 // --- VENDEDOR ---
 async function carregarDashboardVendedor(dias){
   if(!currentUser)return;
-  var rA=await sb.from('produtos').select('*').eq('vendedor_id',currentUser.id);
+  var rA=await sb.from('produtos').select('status,preco,criado_em').eq('vendedor_id',currentUser.id).limit(1000);
   var all=rA.data||[];
   var ativos=all.filter(function(p){return p.status==='ativo';}).length;
   var vendidos=all.filter(function(p){return p.status==='vendido';}).length;
@@ -2541,9 +3058,14 @@ function filtrarDashV(dias,el){if(el)_filtroTb(el);carregarDashboardVendedor(dia
 async function carregarDashboardOtica(dias){
   if(!currentUser)return;
   var desde=new Date();desde.setDate(desde.getDate()-dias);
-  var rP=await sb.from('produtos').select('*').eq('vendedor_id',currentUser.id);
-  var rD=await sb.from('doacoes').select('*').gte('criado_em',desde.toISOString());
-  var prods=rP.data||[];var doacoes=rD.data||[];
+  // As duas consultas são independentes: rodam em paralelo, não em fila.
+  // A de doações também não tinha filtro de usuário nenhum — varria a tabela
+  // inteira e dependia só da RLS para não vazar o que não é desta ótica.
+  var res=await Promise.all([
+    sb.from('produtos').select('status,preco,criado_em').eq('vendedor_id',currentUser.id).limit(1000),
+    sb.from('doacoes').select('status,criado_em').eq('doador_id',currentUser.id).gte('criado_em',desde.toISOString()).limit(500)
+  ]);
+  var prods=res[0].data||[];var doacoes=res[1].data||[];
   var ativos=prods.filter(function(p){return p.status==='ativo';}).length;
   var pendentes=prods.filter(function(p){return!p.status||p.status==='pendente';}).length;
   var aprovados=prods.filter(function(p){return p.status==='aprovado'||p.status==='ativo';}).length;
@@ -2594,7 +3116,7 @@ function buildCarrossel(imgId,dotsId,fotos,fallbackUrl,videoUrl){
   el.style.cssText='background:var(--d5);width:100%;height:210px;border-radius:var(--r);margin-bottom:13px;overflow-x:scroll;display:flex;flex-direction:row;justify-content:flex-start;align-items:stretch;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;';
   var slides=urls.map(function(url){
     return '<div style="flex:0 0 100%;min-width:100%;height:100%;scroll-snap-align:start;overflow:hidden;">'
-      +'<img src="'+url+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\'">'
+      +'<img src="'+url+'" alt="Foto do produto" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\'">'
       +'</div>';
   });
   if(videoUrl){
@@ -2665,7 +3187,7 @@ function renderEditFotos(){
   row.innerHTML=__editFotos.map(function(url,i){
     var isCapa=i===0;
     return '<div style="position:relative;flex-shrink:0;" onclick="_setCapaFoto('+i+')">'
-      +'<img src="'+url+'" style="width:80px;height:80px;object-fit:cover;border-radius:var(--r);border:2px solid '+(isCapa?'var(--a0)':'transparent')+';display:block;">'
+      +'<img src="'+url+'" alt="Foto '+(i+1)+' do anuncio" style="width:80px;height:80px;object-fit:cover;border-radius:var(--r);border:2px solid '+(isCapa?'var(--a0)':'transparent')+';display:block;">'
       +(isCapa?'<div style="position:absolute;bottom:2px;left:2px;background:var(--a0);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;pointer-events:none;">CAPA</div>':'')
       +'<button onclick="event.stopPropagation();_removeFotoEdicao('+i+')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#D32F2F;color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;">×</button>'
       +'</div>';
@@ -2728,7 +3250,18 @@ async function carregarAnunciosVendedor(){
   var el=document.getElementById('lista-anuncios-v');
   if(!el)return;
   el.innerHTML='<div style="text-align:center;padding:24px;color:var(--d3);">Carregando...</div>';
-  var r=await sb.from('produtos').select('*').eq('vendedor_id',currentUser.id).order('criado_em',{ascending:false});
+  var r;
+  try{
+    r=await sb.from('produtos').select('*').eq('vendedor_id',currentUser.id).order('criado_em',{ascending:false});
+    if(r.error)throw r.error;
+  }catch(e){
+    // ERRO e LISTA VAZIA são coisas diferentes. Antes qualquer falha caía no
+    // mesmo "Você ainda não tem anúncios" — o vendedor achava que tinha perdido
+    // todos os anúncios quando na verdade era a rede.
+    console.warn('carregarAnunciosVendedor:',e);
+    el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:32px;margin-bottom:8px;">⚠️</div><p style="font-size:14px;">Não foi possível carregar seus anúncios.</p><p style="font-size:12px;margin-top:4px;">Seus anúncios continuam no ar — foi só esta consulta que falhou.</p><button class="btn bg" style="margin-top:14px;max-width:220px;" onclick="carregarAnunciosVendedor()">Tentar de novo</button></div>';
+    return;
+  }
   var data=r.data;
   if(!data||data.length===0){
     el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:36px;margin-bottom:8px;">🛒</div><p style="font-size:14px;">Você ainda não tem anúncios.</p><button class="btn ba" style="margin-top:14px;" onclick="go(\'sv1\')">Publicar meu primeiro anúncio</button></div>';
@@ -2739,7 +3272,7 @@ async function carregarAnunciosVendedor(){
       ?'<span style="background:#E8F5E9;color:#2E7D32;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;">● Ativo</span>'
       :'<span style="background:#FFF3E0;color:#E65100;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:700;">● Pausado</span>';
     var imgHtml=p.foto_url
-      ?'<img src="'+p.foto_url+'" style="width:64px;height:64px;object-fit:cover;border-radius:var(--r);flex-shrink:0;" onerror="this.outerHTML=\'<div style=width:64px;height:64px;background:var(--d5);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:26px;>👓</div>\'">'
+      ?'<img src="'+p.foto_url+'" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:var(--r);flex-shrink:0;" onerror="this.outerHTML=\'<div style=width:64px;height:64px;background:var(--d5);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:26px;>👓</div>\'">'
       :'<div style="width:64px;height:64px;background:var(--d5);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:26px;">👓</div>';
     var preco=p.tipo==='doacao'?'Doação gratuita':'R$ '+(p.preco?Number(p.preco).toFixed(2).replace('.',','):'--');
     var pid=p.id;
@@ -2786,17 +3319,18 @@ async function salvarEdicaoAnuncio(){
   var precoStr=document.getElementById('sv-edit-preco').value.replace(',','.');
   var statusBtn=document.querySelector('#sv-edit-status .tb.on');
   var status=statusBtn?({'Ativo':'ativo','Pausado':'pausado','Vendido':'vendido'}[statusBtn.textContent]||'ativo'):'ativo';
-  var rastreio=(document.getElementById('sv-edit-rastreio')||{}).value||null;
   var estEl=document.getElementById('sv-edit-estoque');
   var estoque=estEl?Math.max(0,parseInt(estEl.value)||0):0;
   // consistência: "Vendido" zera estoque; estoque 0 com status ativo vira esgotado
   if(status==='vendido')estoque=0;
   if(status==='ativo'&&estoque<=0)status='esgotado';
   if(status==='esgotado'&&estoque>0)status='ativo';
-  var r=await sb.from('produtos').update({titulo:titulo,descricao:desc,preco:precoStr?parseFloat(precoStr):null,status:status,estoque:estoque,fotos:__editFotos,foto_url:__editFotos[0]||null,video_url:__editVideoUrl||null,codigo_rastreio:rastreio||null}).eq('id',__editProduto.id).eq('vendedor_id',currentUser.id);
-  if(r.error){showToast('Erro: '+r.error.message);return;}
-  showToast('✅ Anúncio atualizado!');
-  go('sv0');
+  try{
+    var r=await sb.from('produtos').update({titulo:titulo,descricao:desc,preco:precoStr?parseFloat(precoStr):null,status:status,estoque:estoque,fotos:__editFotos,foto_url:__editFotos[0]||null,video_url:__editVideoUrl||null}).eq('id',__editProduto.id).eq('vendedor_id',currentUser.id);
+    if(r.error)throw r.error;
+    showToast('✅ Anúncio atualizado!');
+    go('sv0');
+  }catch(e){showToast('Erro ao salvar: '+(e.message||e));}
 }
 async function excluirAnuncio(id){
   if(!confirm('Excluir este anúncio permanentemente? Esta ação não pode ser desfeita.'))return;
@@ -2817,7 +3351,7 @@ async function carregarDoacoes(){
     window._doacoesCache=r.data;
     el.innerHTML=r.data.map(function(d,i){
       var status={'ativo':'✅ Disponível','pausado':'⏸️ Pausado','vendido':'📦 Doado'}[d.status]||'⏳ Pendente';
-      var img=d.foto_url?'<img src="'+d.foto_url+'" style="width:56px;height:56px;object-fit:cover;border-radius:var(--r);flex-shrink:0;">':'<div style="width:56px;height:56px;background:var(--g6);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">👓</div>';
+      var img=d.foto_url?'<img src="'+d.foto_url+'" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:var(--r);flex-shrink:0;">':'<div style="width:56px;height:56px;background:var(--g6);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">👓</div>';
       return '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--d5);">'
         +img+'<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+d.titulo+'</div><div style="font-size:12px;color:var(--d3);margin-top:2px;">'+status+'</div></div>'
         +'<button class="btn bg" style="padding:5px 12px;font-size:12px;width:auto;" onclick="_editDoacaoIdx('+i+')">Editar</button>'
@@ -2826,6 +3360,55 @@ async function carregarDoacoes(){
   }catch(e){console.warn('carregarDoacoes:',e);}
 }
 function _editDoacaoIdx(i){if(window._doacoesCache&&window._doacoesCache[i])abrirEditAnuncio(window._doacoesCache[i]);}
+
+// Solicitações que o DOADOR recebeu, com dados reais do banco.
+async function carregarSolicitacoesDoacao(){
+  var el=document.getElementById('lista-solicitacoes-d');if(!el)return;
+  if(!currentUser){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--d3);">Faça login para ver as solicitações.</div>';return;}
+  el.innerHTML='<div style="text-align:center;padding:24px;color:var(--d3);">Carregando...</div>';
+  try{
+    var r=await sb.from('doacoes').select('id,status,criado_em,produto_id,produtos(titulo,foto_url)').eq('doador_id',currentUser.id).order('criado_em',{ascending:false}).limit(30);
+    if(r.error)throw r.error;
+    var data=r.data||[];
+    if(!data.length){
+      el.innerHTML='<div style="text-align:center;padding:28px 0;color:var(--d3);"><div style="font-size:34px;margin-bottom:8px;">📭</div><p style="font-size:14px;">Nenhuma solicitação ainda.</p><p style="font-size:12px;margin-top:4px;">Assim que alguém pedir um dos óculos que você doou, aparece aqui.</p></div>';
+      return;
+    }
+    el.innerHTML=data.map(function(d){
+      var prod=d.produtos||{};
+      var rot={'pendente':'⏳ Aguardando sua resposta','aprovado':'✅ Aprovada','recusado':'❌ Recusada'}[d.status]||d.status;
+      var img=prod.foto_url?'<img src="'+prod.foto_url+'" alt="" style="width:52px;height:52px;object-fit:cover;border-radius:var(--r);flex-shrink:0;">':'<div style="width:52px;height:52px;background:var(--g6);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">👓</div>';
+      var acoes=d.status==='pendente'
+        ?'<div style="display:flex;gap:8px;margin-top:8px;"><button class="btn bg" style="padding:6px 12px;font-size:12px;width:auto;" onclick="responderDoacao(\''+d.id+'\',true,this)">Aprovar</button><button style="border:1px solid #D32F2F;color:#D32F2F;background:none;border-radius:var(--r);padding:6px 12px;font-size:12px;cursor:pointer;" onclick="responderDoacao(\''+d.id+'\',false,this)">Recusar</button></div>'
+        :'';
+      return '<div style="display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--d5);">'+img
+        +'<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:13px;">'+((prod.titulo||'Óculos doado').replace(/</g,'&lt;'))+'</div>'
+        +'<div style="font-size:12px;color:var(--d3);margin-top:2px;">'+new Date(d.criado_em).toLocaleDateString('pt-BR')+' · '+rot+'</div>'
+        +'<div style="font-size:11px;color:var(--d3);margin-top:2px;">Protocolo #'+String(d.id).substring(0,8).toUpperCase()+'</div>'
+        +acoes+'</div></div>';
+    }).join('');
+  }catch(e){
+    console.warn('carregarSolicitacoesDoacao:',e);
+    el.innerHTML='<div style="text-align:center;padding:24px;color:var(--d3);font-size:13px;">Não foi possível carregar agora.<br><button class="btn bg" style="margin-top:12px;max-width:200px;" onclick="carregarSolicitacoesDoacao()">Tentar de novo</button></div>';
+  }
+}
+
+// Recusar devolve o estoque — antes, toda solicitação recusada sumia com uma
+// unidade para sempre, porque nem existia como recusar.
+async function responderDoacao(id,aprovar,btn){
+  if(btn){btn.disabled=true;btn.textContent='...';}
+  try{
+    var r=await sb.rpc('responder_doacao',{p_doacao_id:id,p_aprovar:!!aprovar});
+    if(r.error)throw r.error;
+    if(!r.data||!r.data.ok){showToast((r.data&&r.data.msg)||'Não foi possível responder');return;}
+    showToast(aprovar?'✅ Solicitação aprovada':'Solicitação recusada — óculos de volta ao estoque',4000);
+    carregarSolicitacoesDoacao();
+  }catch(e){
+    showToast('Erro: '+(e.message||e));
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent=aprovar?'Aprovar':'Recusar';}
+  }
+}
 
 var __pedidosCache=[];
 var __currentPedido=null;
@@ -2862,20 +3445,156 @@ async function carregarPedidos(){
   }
 }
 
-function gerarProtocolo(){
-  var n='OTC-'+new Date().getFullYear()+'-'+Math.floor(1000+Math.random()*9000);
-  var el=document.getElementById('so7-protocolo');if(el)el.textContent='#'+n;
+// ===== ÁREA DA ÓTICA =====
+// Todo este fluxo era decorativo: o login não autenticava nada, o formulário
+// inteiro (CNPJ, endereço, senha) era descartado ao fechar o app, e o número
+// de parceiro vinha de Math.random(). Agora usa Supabase Auth + tabela `oticas`.
+var __oticaCad={};
+
+function maskCNPJ(el){
+  var v=el.value.replace(/\D/g,'').substring(0,14);
+  if(v.length>12)v=v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2}).*/,'$1.$2.$3/$4-$5');
+  else if(v.length>8)v=v.replace(/^(\d{2})(\d{3})(\d{3})(\d{1,4})/,'$1.$2.$3/$4');
+  else if(v.length>5)v=v.replace(/^(\d{2})(\d{3})(\d{1,3})/,'$1.$2.$3');
+  else if(v.length>2)v=v.replace(/^(\d{2})(\d{1,3})/,'$1.$2');
+  el.value=v;
+}
+
+// Valida os dígitos verificadores — evita cadastrar CNPJ inventado.
+function _cnpjValido(cnpj){
+  var c=(cnpj||'').replace(/\D/g,'');
+  if(c.length!==14||/^(\d)\1{13}$/.test(c))return false;
+  var calc=function(base,pesos){
+    var s=0;for(var i=0;i<pesos.length;i++)s+=parseInt(base[i],10)*pesos[i];
+    var r=s%11;return r<2?0:11-r;
+  };
+  var d1=calc(c,[5,4,3,2,9,8,7,6,5,4,3,2]);
+  var d2=calc(c,[6,5,4,3,2,9,8,7,6,5,4,3,2]);
+  return d1===parseInt(c[12],10)&&d2===parseInt(c[13],10);
+}
+
+function validarOticaPasso1(){
+  var g=function(id){var el=document.getElementById(id);return el?el.value.trim():'';};
+  var nome=g('otica-nome'),cnpj=g('otica-cnpj'),email=g('otica-email'),tel=g('otica-tel'),pw=g('otica-pw');
+  if(!nome){showToast('Informe o nome da ótica');return;}
+  if(!_cnpjValido(cnpj)){showToast('CNPJ inválido — confira os números');return;}
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){showToast('E-mail inválido');return;}
+  if(pw.length<8){showToast('A senha precisa ter pelo menos 8 caracteres');return;}
+  __oticaCad.nome=nome;__oticaCad.cnpj=cnpj;__oticaCad.email=email;
+  __oticaCad.telefone=tel;__oticaCad.senha=pw;
+  go('so3');
+}
+
+function validarOticaPasso2(){
+  var g=function(id){var el=document.getElementById(id);return el?el.value.trim():'';};
+  var rua=g('otica-rua'),cidade=g('otica-cidade'),cep=g('otica-cep');
+  if(!rua){showToast('Informe a rua');return;}
+  if(!cidade){showToast('Informe a cidade');return;}
+  if(cep.replace(/\D/g,'').length!==8){showToast('CEP inválido');return;}
+  __oticaCad.endereco=rua;__oticaCad.numero=g('otica-num');
+  __oticaCad.bairro=g('otica-bairro');__oticaCad.cidade=cidade;
+  __oticaCad.estado=g('otica-uf');__oticaCad.cep=cep;
+  go('so4');
+}
+
+async function loginOtica(){
+  var em=document.getElementById('otica-login-email');
+  var pwEl=document.getElementById('otica-login-pw');
+  var email=em?em.value.trim():'',pw=pwEl?pwEl.value:'';
+  if(!email||!pw){showToast('Preencha e-mail e senha');return;}
+  var btn=document.getElementById('btn-otica-login');
+  if(btn){btn.textContent='Entrando...';btn.disabled=true;}
+  try{
+    var r=await sb.auth.signInWithPassword({email:email,password:pw});
+    if(r.error)throw r.error;
+    currentUser=r.data.user;
+    // só entra no painel quem realmente tem ótica cadastrada
+    var o=await sb.from('oticas').select('id').eq('usuario_id',currentUser.id).maybeSingle();
+    if(!o.data){showToast('Esta conta não tem uma ótica cadastrada',4200);go('so2');return;}
+    go('so8');
+  }catch(e){
+    showToast(e.message==='Invalid login credentials'?'E-mail ou senha incorretos':e.message);
+  }finally{
+    if(btn){btn.textContent='Entrar';btn.disabled=false;}
+  }
+}
+
+async function finalizarCadastroOtica(){
+  var btn=document.getElementById('btn-ativar-otica');
+  if(!__oticaCad.email||!__oticaCad.senha){showToast('Complete os dados da ótica primeiro');go('so2');return;}
+  if(btn){btn.textContent='Ativando...';btn.disabled=true;}
+  try{
+    // cria (ou reaproveita) a conta de autenticação da ótica
+    if(!currentUser){
+      var su=await sb.auth.signUp({
+        email:__oticaCad.email,password:__oticaCad.senha,
+        options:{data:{nome:__oticaCad.nome,tipo:'otica'}}
+      });
+      if(su.error){
+        if(/already/i.test(su.error.message)){
+          var si=await sb.auth.signInWithPassword({email:__oticaCad.email,password:__oticaCad.senha});
+          if(si.error)throw new Error('Já existe conta com este e-mail. Entre pela tela de login.');
+          currentUser=si.data.user;
+        }else throw su.error;
+      }else{
+        currentUser=su.data.user;
+        await _registrarConsentimento('termos_privacidade');
+      }
+    }
+    if(!currentUser)throw new Error('Confirme seu e-mail antes de continuar');
+
+    var r=await sb.from('oticas').upsert({
+      usuario_id:currentUser.id,
+      nome:__oticaCad.nome,cnpj:__oticaCad.cnpj,
+      email:__oticaCad.email,telefone:__oticaCad.telefone||null,
+      cep:__oticaCad.cep||null,endereco:__oticaCad.endereco||null,
+      numero:__oticaCad.numero||null,bairro:__oticaCad.bairro||null,
+      cidade:__oticaCad.cidade||null,estado:__oticaCad.estado||null,
+      plano:'piloto',status:'ativo'
+    },{onConflict:'usuario_id'}).select('id').maybeSingle();
+    if(r.error)throw r.error;
+
+    // número de parceiro REAL, derivado do id da ótica no banco
+    var el=document.getElementById('so7-protocolo');
+    if(el&&r.data)el.textContent='#OTC-'+String(r.data.id).substring(0,8).toUpperCase();
+    __oticaCad.senha=null;
+    go('so7');
+  }catch(e){
+    showToast('Erro ao ativar: '+(e.message||e),5000);
+  }finally{
+    if(btn){btn.textContent='Ativar minha ótica — grátis';btn.disabled=false;}
+  }
+}
+
+async function carregarPainelOtica(){
+  if(!currentUser)return;
+  try{
+    var r=await sb.from('oticas').select('*').eq('usuario_id',currentUser.id).maybeSingle();
+    if(r.error)throw r.error;
+    if(!r.data){showToast('Cadastre sua ótica para acessar o painel');go('so2');return;}
+    var nm=document.getElementById('so8-otica-nome');
+    if(nm)nm.textContent=r.data.nome||'Ótica Parceira';
+    var pr=document.getElementById('so8-plano-preco');
+    if(pr)pr.textContent=r.data.plano==='piloto'?'Gratuito · piloto':r.data.plano;
+    var sd=document.getElementById('saud-o');
+    if(sd)sd.textContent='Olá, '+((r.data.nome||'').split(' ')[0]||'parceiro')+'! 👋';
+    var av=document.getElementById('av-o');
+    if(av)av.textContent=(r.data.nome||'?').charAt(0).toUpperCase();
+  }catch(e){console.warn('carregarPainelOtica:',e);}
 }
 
 function preencherRevisao(){
   var titulo=document.getElementById('titulo-v');
   var desc=document.getElementById('desc-v');
   var preco=document.getElementById('sv-preco');
-  var env1=document.getElementById('env1');
   var vidPrev=document.getElementById('vid-prev');
   var t=(titulo&&titulo.value.trim())||'—';
   var pr='R$ '+((preco&&preco.value)?Number(preco.value.replace(/[R$\s]/g,'').replace(',','.')).toFixed(2).replace('.',','):'--');
-  var sv={'sv5-titulo':t,'sv5-sub':'Usado','sv5-preco':pr,'sv5-envio':env1&&env1.classList.contains('on')?'Correios':'Entrega em mãos','sv5-video':vidPrev&&vidPrev.style.display!=='none'?'✅ Incluído':'Não incluído','sv5-local':'Ver no anúncio'};
+  // Antes isto lia o elemento `env1`, que NÃO existe no DOM — a revisão sempre
+  // mostrava "Entrega em mãos", mesmo sendo Correios em 100% dos casos.
+  // A fonte real é __retiradaSv (a opção de retirada no local do vendedor).
+  var envio=__retiradaSv?'Correios ou retirada no local':'Correios';
+  var sv={'sv5-titulo':t,'sv5-sub':'Usado','sv5-preco':pr,'sv5-envio':envio,'sv5-video':vidPrev&&vidPrev.style.display!=='none'?'✅ Incluído':'Não incluído','sv5-local':'Ver no anúncio'};
   Object.keys(sv).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=sv[id];});
 }
 
@@ -3009,14 +3728,63 @@ function atualizarTotalCheckout(){
   if(totalEl&&total>0)totalEl.textContent='R$ '+total.toFixed(2).replace('.',',');
 }
 
-if(window.innerWidth>=900){
-  carregarStatsDesktop();
-  sb.auth.getSession().then(function(r){atualizarSidebarUser(r.data&&r.data.session?r.data.session.user:null);});
+// (a sidebar do desktop já é atualizada pelo bloco único de sessão no topo —
+//  o 3º getSession/onAuthStateChange que existia aqui virou duplicata)
+if(window.innerWidth>=900)carregarStatsDesktop();
+// (removido) O manifest era montado aqui em JS e servido por blob: URL, com
+// ícones de emoji em data URI — por isso o ícone do app mudava de desenho
+// conforme o aparelho. Agora é o arquivo manifest.webmanifest, com os PNGs
+// da marca real em marca/.
+// ── Estado offline ──────────────────────────────────────────────────────────
+// O app não tinha nenhum tratamento de rede caída: as ações simplesmente
+// falhavam com mensagens genéricas e o usuário não sabia o motivo.
+(function(){
+  var barra=null;
+  function mostrarBarra(){
+    if(!barra){
+      barra=document.createElement('div');
+      barra.setAttribute('role','status');
+      barra.style.cssText='position:fixed;top:0;left:0;right:0;background:#B71C1C;color:#fff;font-size:13px;font-weight:600;text-align:center;padding:7px 12px;z-index:10000;';
+      barra.textContent='📡 Sem conexão — algumas ações ficam indisponíveis';
+      document.body.appendChild(barra);
+    }
+    barra.style.display='block';
+  }
+  function esconderBarra(){if(barra)barra.style.display='none';}
+  window.addEventListener('offline',mostrarBarra);
+  window.addEventListener('online',function(){
+    esconderBarra();
+    showToast('✅ Conexão restabelecida');
+    if(currentUser)carregarProdutos();
+  });
+  if(!navigator.onLine)mostrarBarra();
+})();
+
+// Service Worker em arquivo proprio (./sw.js), versionado a cada deploy.
+// Antes era uma string embutida registrada por blob: URL — nunca mudava de
+// bytes, entao nenhuma correcao publicada chegava a quem ja tinha instalado.
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./sw.js').then(function(reg){
+      // versao nova detectada -> avisa o usuario em vez de deixar preso na antiga
+      reg.addEventListener('updatefound',function(){
+        var nv=reg.installing;if(!nv)return;
+        nv.addEventListener('statechange',function(){
+          // controller existente = é atualização, não primeira instalação
+          if(nv.state==='installed'&&navigator.serviceWorker.controller){
+            // Só avisa. NÃO força a troca nem recarrega a página: um reload no
+            // meio de um checkout ou de um formulário de anúncio jogaria fora
+            // o que a pessoa digitou. A versão nova entra ao reabrir o app.
+            showToast('✨ Nova versão pronta — ela entra quando você reabrir o app',6000);
+          }
+        });
+      });
+      // procura atualizacao a cada abertura e a cada hora com o app aberto
+      try{reg.update();}catch(e){}
+      setInterval(function(){try{reg.update();}catch(e){}},60*60*1000);
+    }).catch(function(e){console.warn('SW:',e);});
+  });
 }
-sb.auth.onAuthStateChange(function(ev,session){atualizarSidebarUser(session?session.user:null);});
-var mf={name:'Visão Circular',short_name:'Visão Circular',description:'Marketplace de óculos — doe, compre ou venda.',start_url:'.',display:'standalone',background_color:'#fff',theme_color:'#2E7D32',icons:[{src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%232E7D32"/><text y=".9em" font-size="80">👓</text></svg>',sizes:'192x192',type:'image/svg+xml'}]};
-try{var mb=new Blob([JSON.stringify(mf)],{type:'application/json'});document.getElementById('ml').href=URL.createObjectURL(mb);}catch(e){}
-if('serviceWorker' in navigator){try{var sw='const C="vc2";self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(["./"])));});self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));});';navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'})));}catch(e){}}
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dPr=e;setTimeout(function(){document.getElementById('inst').style.display='block';},4000);});
 function installApp(){if(dPr){dPr.prompt();dPr.userChoice.then(function(){dPr=null;closeInst();});}else closeInst();}
 function closeInst(){document.getElementById('inst').style.display='none';}
