@@ -22,11 +22,11 @@
 --d1:#212121;--d2:#424242;--d3:#757575;--d4:#E0E0E0;--d5:#F5F5F5;
 --wh:#fff;--tx:#212121;--tx2:#616161;--rd:#C62828;
 --sh:0 2px 8px rgba(0,0,0,.10);--sh2:0 4px 16px rgba(0,0,0,.14);
---r:12px;--r2:8px;--r3:20px;}
+--r:12px;--r2:8px;--r3:20px;--appw:430px;}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#E0E0E0;display:flex;justify-content:center;}
-#app{width:100%;max-width:430px;height:100vh;overflow:hidden;position:relative;background:var(--wh);}
+#app{width:100%;max-width:var(--appw);height:100vh;overflow:hidden;position:relative;background:var(--wh);}
 .scr{position:absolute;inset:0;background:var(--wh);display:none;flex-direction:column;overflow:hidden;animation:si .22s ease;}
 .scr.on{display:flex;}
 @keyframes si{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
@@ -38,16 +38,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .pcd-img img{opacity:0;transition:opacity .35s ease;}
 .pcd-img img.loaded{opacity:1;}
 .body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 20px 90px;}
+@media(min-width:700px) and (max-width:899px){
+  :root{--appw:640px;}
+  #app{box-shadow:0 0 40px rgba(0,0,0,.14);}
+}
 @media(min-width:900px){
   html,body{overflow:auto;}
+  :root{--appw:560px;}
   body{background:#F0F2F5;justify-content:flex-start;padding-left:240px;}
-  #app{max-width:430px;height:100vh;box-shadow:0 0 40px rgba(0,0,0,.18);}
+  #app{height:100vh;box-shadow:0 0 40px rgba(0,0,0,.18);}
   #dt-sidebar{display:flex!important;position:fixed;left:0;top:0;bottom:0;width:240px;flex-direction:column;background:#fff;border-right:1.5px solid var(--d4);z-index:200;padding:28px 0 20px;}
-  #dt-main{display:block!important;position:fixed;left:670px;top:0;right:0;bottom:0;overflow-y:auto;padding:32px 36px;background:#F0F2F5;}
+  #dt-main{display:block!important;position:fixed;left:calc(240px + var(--appw));top:0;right:0;bottom:0;overflow-y:auto;padding:32px 36px;background:#F0F2F5;}
   .bnav{display:none!important;}
-  .pgrid{grid-template-columns:1fr 1fr 1fr!important;}
   .hdr{padding-top:24px!important;}
 }
+/* Entre 900 e 1100px nao cabe barra lateral + coluna + painel da direita:
+   o painel viraria uma tira de ~100px. Nessa faixa ele sai e a coluna fica
+   centralizada no espaco ao lado da barra lateral. */
+@media(min-width:900px) and (max-width:1099px){
+  #dt-main{display:none!important;}
+  body{justify-content:center;}
+}
+@media(min-width:1280px){:root{--appw:680px;}}
 @media(max-width:899px){#dt-sidebar,#dt-main{display:none!important;}}
 .body::-webkit-scrollbar{display:none;}
 h2{font-size:21px;font-weight:700;color:var(--tx);}
@@ -88,7 +100,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .bp{background:var(--p2);color:var(--p0);}
 .bgy{background:var(--d5);color:var(--d3);}
 .bb2{background:var(--b3);color:var(--b0);}
-.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px;}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:11px;margin-bottom:16px;}
 .pcd{background:var(--wh);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;cursor:pointer;}
 .pcd:active{transform:scale(.98);}
 .pcd-img{background:var(--d5);height:105px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative;}

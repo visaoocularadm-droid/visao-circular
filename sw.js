@@ -5,7 +5,7 @@
  *
  * IMPORTANTE: a cada publicacao, incremente SW_VERSION.
  */
-const SW_VERSION = '2026-09-11-2';
+const SW_VERSION = '2026-09-11-3';
 const CACHE = 'vc-' + SW_VERSION;
 
 // Assets estaveis que valem cache. O HTML NAO entra aqui (ver estrategia abaixo).
