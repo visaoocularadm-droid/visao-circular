@@ -26,7 +26,7 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#E0E0E0;display:flex;justify-content:center;}
-#app{width:100%;max-width:var(--appw);height:100vh;overflow:hidden;position:relative;background:var(--wh);}
+#app{width:100%;max-width:var(--appw);height:100vh;height:100dvh;overflow:hidden;position:relative;background:var(--wh);}
 .scr{position:absolute;inset:0;background:var(--wh);display:none;flex-direction:column;overflow:hidden;animation:si .22s ease;}
 .scr.on{display:flex;}
 @keyframes si{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
@@ -46,7 +46,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   html,body{overflow:auto;}
   :root{--appw:560px;}
   body{background:#F0F2F5;justify-content:flex-start;padding-left:240px;}
-  #app{height:100vh;box-shadow:0 0 40px rgba(0,0,0,.18);}
+  #app{height:100vh;height:100dvh;box-shadow:0 0 40px rgba(0,0,0,.18);}
   #dt-sidebar{display:flex!important;position:fixed;left:0;top:0;bottom:0;width:240px;flex-direction:column;background:#fff;border-right:1.5px solid var(--d4);z-index:200;padding:28px 0 20px;}
   #dt-main{display:block!important;position:fixed;left:calc(240px + var(--appw));top:0;right:0;bottom:0;overflow-y:auto;padding:32px 36px;background:#F0F2F5;}
   .bnav{display:none!important;}
@@ -706,7 +706,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="intro-overlay" style="display:none;position:absolute;inset:0;z-index:99999;background:#1A1714;align-items:center;justify-content:center;">
   <video id="intro-vid" muted playsinline preload="auto" style="max-width:100%;max-height:100%;width:auto;height:auto;display:none;"></video>
   <img id="intro-img" alt="" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:none;">
-  <button onclick="fecharIntro()" style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);background:#2E7D32;color:#fff;border:none;padding:14px 42px;border-radius:30px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:2;">Continuar</button>
+  <button onclick="fecharIntro()" style="position:absolute;bottom:calc(40px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:#2E7D32;color:#fff;border:none;padding:14px 42px;border-radius:30px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:2;">Continuar</button>
 </div>
 
 <!-- ============ ESCOLHA PERFIL ============ -->
@@ -1201,7 +1201,7 @@ input:checked+.sl:before{transform:translateX(22px);}
 <div id="sb6" class="scr">
   <div class="hdr"><button class="btn-ic" onclick="bk()"><span style="color:#fff;font-size:26px;">←</span></button><h3 style="flex:1;">Finalizar compra</h3><div style="width:44px;"></div></div>
   <div class="body">
-    <div class="cardf"><div style="display:flex;align-items:center;gap:12px;"><div style="font-size:36px;">👓</div><div><h4 id="ck-titulo">—</h4><p style="font-size:13px;" id="ck-sub">—</p></div></div></div>
+    <div class="cardf"><div style="display:flex;align-items:center;gap:12px;"><div id="ck-img" style="font-size:36px;width:56px;height:56px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">👓</div><div><h4 id="ck-titulo">—</h4><p style="font-size:13px;" id="ck-sub">—</p></div></div></div>
     <h4 style="margin-bottom:12px;">Endereço de entrega</h4>
     <div class="fg"><label class="fl">CEP de entrega</label><input class="fi" id="cep-entrega" placeholder="00000-000" maxlength="9" oninput="this.value=this.value.replace(/\D/g,'').replace(/^(\d{5})(\d)/,'$1-$2');if(this.value.replace(/\D/g,'').length>=8)calcularFrete();" onblur="calcularFrete()"></div>
     <div class="fg"><label class="fl">Endereço</label><input class="fi" placeholder="Rua, número, complemento"></div>
@@ -3164,6 +3164,19 @@ function atualizarDetalheProduto(p){
     'aval-produto':p.titulo||'—'
   };
   Object.keys(campos).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=campos[id];});
+  // Miniatura do checkout: antes era sempre o emoji generico, cravado no HTML.
+  // Agora usa a capa do anuncio; sem foto (ou se ela falhar), volta o emoji.
+  var ckImg=document.getElementById('ck-img');
+  if(ckImg){
+    var capa=(p.fotos&&p.fotos.length?p.fotos[0]:p.foto_url)||'';
+    if(capa){
+      var im=new Image();
+      im.alt='Foto de '+(p.titulo||'produto');
+      im.style.cssText='width:56px;height:56px;object-fit:cover;border-radius:var(--r2);';
+      im.onerror=function(){ckImg.textContent='👓';};
+      ckImg.textContent='';ckImg.appendChild(im);im.src=capa;
+    }else ckImg.textContent='👓';
+  }
   buildCarrossel('sb3-img','sb3-dots',p.fotos,p.foto_url,p.video_url);
   buildCarrossel('sb4-img','sb4-dots',p.fotos,p.foto_url,p.video_url);
   var est=typeof p.estoque==='number'?p.estoque:(parseInt(p.estoque)||0);
